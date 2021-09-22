@@ -1,0 +1,23 @@
+{
+  "uid": "",
+  "name": "",
+  "email": "",
+  "photoUrl": "",
+  "creationTime": "",
+  "lastSignTime": "",
+  "updateTime": "",
+  "Favorite": [
+    {
+      "title": "makanan",
+      "rating": "",
+      "image": "",
+      "vendor": ""
+    },
+    {
+      "title": "makanan",
+      "rating": "",
+      "image": "",
+      "vendor": ""
+    }
+  ]
+}

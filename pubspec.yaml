@@ -1,0 +1,45 @@
+name: kakikeenam
+version: 1.0.0+1
+publish_to: none
+description: A new Flutter project.
+environment: 
+  sdk: '>=2.12.0 <3.0.0'
+
+dependencies: 
+  cupertino_icons: ^1.0.2
+  get: 4.3.8
+  firebase_core: 1.6.0
+  firebase_auth: 3.1.0
+  get_storage: 2.0.3
+  introduction_screen: 2.1.0
+  animated_bottom_navigation_bar: 0.3.2
+  flutter_svg: 0.22.0
+  flutter_rating_bar: 4.0.0
+  cached_network_image: 3.1.0
+  card_swiper: 1.0.4
+  google_sign_in: 5.1.0
+  cloud_firestore: 2.5.1
+  avatar_glow: 2.0.1
+  image_picker: 0.8.4
+  firebase_storage: 10.0.3
+  google_maps_flutter: 2.0.6
+  location: 4.3.0
+  flutter_animarker: 3.2.0
+  email_validator: 2.0.1
+  modal_bottom_sheet: 2.0.0
+  maps_toolkit: 2.0.0
+  geocoding: 2.0.1
+  connectivity_plus: 1.1.0
+  flutter: 
+    sdk: flutter
+
+dev_dependencies: 
+  flutter_test: 
+    sdk: flutter
+
+flutter: 
+  assets: 
+    - assets/images/
+    - assets/svg/
+  uses-material-design: true
+

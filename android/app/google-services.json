@@ -1,0 +1,76 @@
+{
+  "project_info": {
+    "project_number": "1052025068850",
+    "project_id": "kakikeenam-startup",
+    "storage_bucket": "kakikeenam-startup.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1052025068850:android:e2e123ae7cbe8620538b2b",
+        "android_client_info": {
+          "package_name": "com.keenam.kakikeenam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1052025068850-hc5oc0sd51updnefj0pn2ot5hpkpd5qv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.keenam.kakikeenam",
+            "certificate_hash": "40a57d404adc5375de4476732efacfa24e9cc7a6"
+          }
+        },
+        {
+          "client_id": "1052025068850-gd1mpburef5iukai96e9cueagmv2gvrk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAW9IHtYJ5aAf4B2s3Vqw09o8G3rHhQO2M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1052025068850-gd1mpburef5iukai96e9cueagmv2gvrk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1052025068850:android:a2d8c3f7f6fb9a6e538b2b",
+        "android_client_info": {
+          "package_name": "com.keenam.kakikeenam.vendor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1052025068850-gd1mpburef5iukai96e9cueagmv2gvrk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAW9IHtYJ5aAf4B2s3Vqw09o8G3rHhQO2M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1052025068850-gd1mpburef5iukai96e9cueagmv2gvrk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
