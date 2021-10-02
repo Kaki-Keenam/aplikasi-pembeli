@@ -1,4 +1,5 @@
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/controllers/auth_controller.dart';
@@ -11,7 +12,6 @@ class ProfileView extends GetView<ProfileController> {
 
   @override
   Widget build(BuildContext context) {
-    print(authC.user.value.email);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -36,14 +36,15 @@ class ProfileView extends GetView<ProfileController> {
                           height: 175,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(200),
-                            child: authC.user.value.photoUrl == null
-                                ? Image.asset(
-                              "assets/images/person.png",
-                              fit: BoxFit.cover,
-                            )
-                                : Image.network(
-                              authC.user.value.photoUrl ?? "",
-                              fit: BoxFit.cover,
+                            child: CachedNetworkImage(
+                              imageUrl: "${authC.userValue.photoUrl}",
+                              fit: BoxFit.fill,
+                              placeholder: (context, url) => Transform.scale(
+                                scale: 0.5,
+                                child: CircularProgressIndicator(),
+                              ),
+                              errorWidget: (context, url, error) =>
+                              new Image.asset("assets/images/person.png"),
                             ),
                           ),
                         ),
@@ -52,7 +53,7 @@ class ProfileView extends GetView<ProfileController> {
                 Obx(
                       () =>
                       Text(
-                        "${authC.user.value.name ?? ""}",
+                        "${authC.userValue.name}",
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -61,7 +62,7 @@ class ProfileView extends GetView<ProfileController> {
                       ),
                 ),
                 Text(
-                  "${authC.user.value.email ?? ""}",
+                  "${authC.userValue.email}",
                   style: TextStyle(
                     fontSize: 20,
                   ),

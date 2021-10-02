@@ -1,282 +1,244 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/controllers/auth_controller.dart';
+import 'package:kakikeenam/app/data/services/transaction/transaction_state.dart';
+import 'package:kakikeenam/app/modules/components/modal_view/food_nearby_view.dart';
 import 'package:kakikeenam/app/modules/components/widgets/custom_button.dart';
+import 'package:kakikeenam/app/modules/components/widgets/loading_view.dart';
+import 'package:kakikeenam/app/routes/app_pages.dart';
 
 import '../controllers/detailitem_controller.dart';
 
 class DetailItemView extends GetView<DetailItemController> {
   final authC = Get.find<AuthController>();
+  final idleC = Get.find<Transaction_state_controller>();
   final food = Get.arguments;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.amber[600],
-      body: SafeArea(
+      backgroundColor: Colors.amber,
+      body: SingleChildScrollView(
         child: Stack(
           children: [
-            Column(
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: Container(
-                    width: double.infinity,
-                    height: Get.height * 0.4,
-                    child: CachedNetworkImage(
-                      imageUrl: food.image,
-                      fit: BoxFit.fill,
-                      errorWidget: (context, url, error) =>
-                          new Icon(Icons.error),
-                    ),
-                  ),
+            Container(
+              height: Get.height * 0.5,
+              width: Get.width,
+              child: CachedNetworkImage(
+                imageUrl: "${food!.image}",
+                fit: BoxFit.fill,
+                placeholder: (context, url) => Transform.scale(
+                  scale: 0.5,
+                  child: CircularProgressIndicator(),
                 ),
-                Expanded(
-                  child: SizedBox(
-                    height: 10,
-                  ),
-                  flex: 6,
-                ),
-              ],
+                errorWidget: (context, url, error) => new Icon(Icons.error),
+              ),
             ),
             AppBar(
-              iconTheme: IconThemeData(color: Colors.white),
-              elevation: 0,
               backgroundColor: Colors.transparent,
+              elevation: 0,
             ),
             Container(
-              margin: EdgeInsets.only(top: Get.height * 0.4),
+              margin: EdgeInsets.only(top: Get.height * 0.45),
+              height: Get.height,
+              width: Get.width,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(30),
-                  topLeft: Radius.circular(30),
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
                 ),
               ),
               child: Padding(
-                padding: EdgeInsets.only(top: 20, right: 20, left: 20),
-                child: Container(
-                  width: double.infinity,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        food.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: "roboto"),
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${food.name}",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.values[4],
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              RatingBar.builder(
-                                initialRating: 3.5,
-                                minRating: 1,
-                                direction: Axis.horizontal,
-                                allowHalfRating: true,
-                                itemCount: 5,
-                                itemSize: 20,
-                                itemBuilder: (context, _) => Icon(
-                                  Icons.star,
-                                  color: Colors.amber,
-                                ),
-                                onRatingUpdate: (rating) {
-                                  print(rating);
-                                },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 10,
+                            ),
+                            RatingBar.builder(
+                              initialRating: 3.5,
+                              minRating: 1,
+                              direction: Axis.horizontal,
+                              allowHalfRating: true,
+                              itemCount: 5,
+                              itemSize: 20,
+                              itemBuilder: (context, _) => Icon(
+                                Icons.star,
+                                color: Colors.amber,
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 15, left: 5),
-                                child: Text(
-                                  "${food.rating} reviews)",
-                                  style: TextStyle(
-                                      fontSize: 10, fontFamily: "roboto"),
-                                ),
-                              )
-                            ],
-                          ),
-                          Center(
-                            child: Container(
-                              height: 80,
-                              width: 1,
-                              color: Colors.black12,
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(Icons.location_on),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text("500 M dari sini")
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 15),
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.timer),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text("5 menit")
-                                  ],
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-
-                      Center(
-                        heightFactor: 12,
-                        child: Container(
-                          height: 1,
-                          width: 550,
-                          color: Colors.black12,
-                        ),
-                      ),
-                      // vendor card
-                      Flexible(
-                        child: Card(
-                          color: Colors.white,
-                          elevation: 3,
-                          shadowColor: Colors.black26,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Container(
-                            height: 150,
-                            width: Get.width,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: 150,
-                                  height: 150,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(15),
-                                    child: Image(
-                                      fit: BoxFit.fill,
-                                      image: AssetImage(
-                                          "assets/images/vendor.png"),
-                                    ),
-                                  ),
-                                ),
-                                Flexible(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.only(left: 10, top: 10),
-                                        child: Text(
-                                          "${food.vendor}",
-                                          maxLines: 1,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                              fontFamily: "roboto"),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.only(left: 10, top: 15),
-                                        child: Text(
-                                          "Posisi Saat ini:",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12,
-                                              color: Colors.black,
-                                              fontFamily: "roboto"),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 10, top: 5),
-                                        child: Text(
-                                            "Jln Tgh Amrillah Bunut Baok praya",
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Color(0xFF444444),
-                                                fontFamily: "roboto")),
-                                      ),
-                                      Container(
-                                        width: Get.width * 0.4,
-                                        padding:
-                                            EdgeInsets.only(left: 10, top: 15),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Flexible(
-                                              child: Text(
-                                                "Kabari pedagang",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontFamily: "roboto"),
-                                              ),
-                                            ),
-                                            Flexible(
-                                              child: Container(
-                                                width: 35,
-                                                height: 35,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  color: Colors.amber[700],
-                                                ),
-                                                child: Icon(Icons
-                                                    .notifications_none_outlined),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Flexible(
-                            flex: 4,
-                            child: CustomButton(
-                              text: "Beli Sekarang",
-                              backgroundColor: Colors.amber[600],
-                              func: () {
-                                print("${controller.isFav.value}");
+                              onRatingUpdate: (rating) {
+                                print(rating);
                               },
                             ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text("200 reviews"),
+                          ],
+                        ),
+                        Center(
+                          child: Container(
+                            height: 70,
+                            width: 1,
+                            color: Colors.black45,
                           ),
-                          SizedBox(
-                            width: 10,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(Icons.add_location),
+                                Text("500 M dari sini")
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                Icon(Icons.watch_later_outlined),
+                                Text("500 Menit")
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Center(
+                      child: Container(
+                        width: Get.width,
+                        height: 1,
+                        color: Colors.black45,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Container(
+                        width: Get.width,
+                        height: Get.height * 0.2,
+                        child: Row(
+                          children: [
+                            Container(
+                              height: Get.height * 0.2,
+                              width: Get.width * 0.3,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Obx(() {
+                                if(controller.vendor.value.image != null){
+                                  return CachedNetworkImage(
+                                    imageUrl: "${controller.vendor.value.image}",
+                                    fit: BoxFit.fill,
+                                    placeholder: (context, url) =>
+                                        Transform.scale(
+                                          scale: 0.5,
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                    errorWidget: (context, url, error) =>
+                                    new Icon(Icons.error),
+                                  );
+                                }
+                                return CircularProgressIndicator();
+                              }),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Container(
+                                  width: Get.width * 0.5,
+                                  child: Obx(
+                                    () => Text(
+                                      controller.vendor.value.storeName ??
+                                          "Loading",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  "Posisi saat ini:",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                Obx(
+                                  () => Text(controller.vendor.value.street ??
+                                      "Loading"),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Obx(() => Text("Status:" +
+                                    " ${controller.vendor.value.status}")),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          flex: 4,
+                          child: CustomButton(
+                            text: "Panggil Sekarang",
+                            backgroundColor: Colors.amber[600],
+                            func: () {
+                              idleC.stateProposedTrans(food);
+                            },
                           ),
-                          Flexible(
-                              child: ElevatedButton(
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Flexible(
+                          child: ElevatedButton(
                             onPressed: () {},
                             child: Container(
                               height: 25,
@@ -295,51 +257,72 @@ class DetailItemView extends GetView<DetailItemController> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
-                          )),
-                        ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      height: 200,
+                      width: Get.width,
+                      child: Obx(
+                        () => ListView.builder(
+                          itemCount: controller.foodOther?.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            if (food.vendorId != null) {
+                              controller.setVendorId = food.vendorId;
+                              return FoodNearbyView(
+                                  product: controller.foodOther?[index],
+                                  func: () {
+                                    Navigator.pushReplacementNamed(
+                                        context, Routes.DETAILITEM,
+                                        arguments:
+                                            controller.foodOther?[index]);
+                                  });
+                            }
+                            return LoadingView();
+                          },
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
             Positioned(
               right: Get.width * 0.1,
-              top: Get.height * 0.37,
+              top: Get.height * 0.4,
               child: GetBuilder<DetailItemController>(
-                initState: (_){
-                  controller.initFav(food.id.toString());
+                initState: (_) {
+                  controller.initFav(food.productId.toString());
                 },
-                builder: (c){
-                return Obx(() => FloatingActionButton(
-                    onPressed: () {
-                      var toggle = controller.isFav.toggle();
-                      if (toggle.value) {
-                        print("${controller.isFav.value}");
-                        c.addFavorite(
-                          id: food.id.toString(),
-                          title: food.title,
-                          rating: food.rating.toString(),
-                          image: food.image,
-                          vendor: food.vendor,
-                        );
-                      } else {
-                        c.removeFavorite(food.id.toString());
-                      }
-                    },
-                    backgroundColor: Colors.amber[600],
-                    child: c.isFav.value
+                builder: (c) {
+                  return Obx(
+                    () => FloatingActionButton(
+                      onPressed: () {
+                        var toggle = controller.isFav.toggle();
+                        if (toggle.value) {
+                          c.addFavorite(food: food);
+                        } else {
+                          c.removeFavorite(food.productId.toString());
+                        }
+                      },
+                      backgroundColor: Colors.amber[600],
+                      child: c.isFav.value
                           ? Icon(
-                        Icons.favorite,
-                        color: Colors.red,
-                      )
+                              Icons.favorite,
+                              color: Colors.red,
+                            )
                           : Icon(
-                        Icons.favorite_border,
-                      color: Colors.white,
-                      ),
-                  ),
-                );
-              },
+                              Icons.favorite_border,
+                              color: Colors.white,
+                            ),
+                    ),
+                  );
+                },
               ),
             ),
           ],

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animarker/flutter_map_marker_animation.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:kakikeenam/app/data/services/transaction/transaction_state.dart';
 import 'package:kakikeenam/app/modules/components/widgets/loading_view.dart';
 import 'package:kakikeenam/app/modules/maps_location/views/components/detail_marker.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
@@ -14,6 +15,8 @@ import 'components/bottom_sheet/item_vendor.dart';
 import 'components/my_location.dart';
 
 class MapsLocationView extends GetView<MapsLocationController> {
+  final idleC = Get.find<Transaction_state_controller>();
+
   @override
   Widget build(BuildContext context) {
     // set firs location update
@@ -30,6 +33,7 @@ class MapsLocationView extends GetView<MapsLocationController> {
                 mapId: getController.mController.future
                     .then((value) => value.mapId),
                 isActiveTrip: true,
+                useRotation: false,
                 rippleRadius: Constants.RIPPLE_RADIUS,
                 zoom: Constants.CAMERA_ZOOM_IN,
                 shouldAnimateCamera: false,
@@ -41,6 +45,7 @@ class MapsLocationView extends GetView<MapsLocationController> {
                   myLocationButtonEnabled: false,
                   zoomControlsEnabled: false,
                   compassEnabled: false,
+                  mapToolbarEnabled: false,
                   myLocationEnabled: !getController.isDismissibleDialog.value,
                   mapType: MapType.normal,
                   circles: getController.isDismissibleDialog.value
@@ -107,11 +112,16 @@ class MapsLocationView extends GetView<MapsLocationController> {
               if (snapshot.hasData) {
                 var _index = 0;
                 var data = snapshot.data!.docs;
-                var markerId = data.map((vendor) => vendor["email"]);
+                var markerId = data.map((vendor) => vendor["uid"]);
                 var latLng = data.map((vendor) => vendor["lastLocation"]);
                 var name = data.map((vendor) => vendor["storeName"]);
                 var image = data.map((vendor) => vendor["storeImage"]);
-                controller.setDataVendor(markerId, latLng, name, image);
+                controller.setDataVendor(
+                  marker: markerId,
+                  latLng: latLng,
+                  name: name,
+                  image: image,
+                );
                 return Obx(() => controller.isLoadingDismiss.value
                     ? DetailMarker(
                         listNear: controller.nearMarker.value.markersList,

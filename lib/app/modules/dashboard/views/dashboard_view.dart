@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/modules/favorite/views/favorite_view.dart';
 import 'package:kakikeenam/app/modules/home/views/home_view.dart';
-import 'package:kakikeenam/app/modules/notification/views/notification_view.dart';
 import 'package:kakikeenam/app/modules/settings/views/settings_view.dart';
+import 'package:kakikeenam/app/modules/trans_history/views/trans_history_view.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 
 import '../controllers/dashboard_controller.dart';
@@ -15,7 +15,7 @@ class DashboardView extends GetView<DashboardController> {
   final iconList = <IconData>[
     Icons.home,
     Icons.favorite,
-    Icons.rate_review,
+    Icons.history,
     Icons.settings,
   ];
 
@@ -68,7 +68,7 @@ class DashboardView extends GetView<DashboardController> {
           children: [
             HomeView(),
             FavoriteView(),
-            NotificationView(),
+            TransHistoryView(),
             SettingsView()
           ],
         ),

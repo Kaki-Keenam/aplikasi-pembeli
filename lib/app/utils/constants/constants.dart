@@ -32,7 +32,9 @@ abstract class Constants{
   // Main collection of buyer firestore database
   static const String BUYER = "buyer";
   // Main collection of vendor firesore database
-  static const String VENDOR = "users";
+  static const String VENDOR = "vendors";
+  static const String PRODUCTS = "products";
+  static const String TRANSACTION = "transaction";
 
   //save shared preference
 static const String SKIP_INTRO = "skipIntro";

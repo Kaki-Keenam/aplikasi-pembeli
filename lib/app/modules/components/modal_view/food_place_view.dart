@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
-import 'package:kakikeenam/app/data/models/food_model.dart';
+import 'package:kakikeenam/app/data/models/product_model.dart';
 
 class FoodPlaceView extends StatelessWidget {
   const FoodPlaceView({
     Key? key,
     this.func,
     this.direction,
-    this.icon, this.popularFoods,
+    this.icon, this.product,
   }) : super(key: key);
 
-  final FoodModel? popularFoods;
+  final ProductModel? product;
   final Widget? icon;
   final Axis? direction;
   final VoidCallback? func;
@@ -52,7 +52,7 @@ class FoodPlaceView extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: CachedNetworkImage(
-                          imageUrl: popularFoods?.image ?? "",
+                          imageUrl: "${product?.image}",
                           fit: BoxFit.fill,
                           placeholder: (context, url) => Transform.scale(
                             scale: 0.5,
@@ -70,7 +70,7 @@ class FoodPlaceView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                            popularFoods!.title ?? "",
+                              product?.name ?? "Loading",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontFamily: "roboto"),
@@ -100,7 +100,7 @@ class FoodPlaceView extends StatelessWidget {
                                 Padding(
                                   padding: EdgeInsets.only(left: 5),
                                   child: Text(
-                                    "${popularFoods?.rating} Reviews",
+                                    "200 Reviews",
                                     style: TextStyle(
                                         fontSize: 10, fontFamily: "roboto"),
                                   ),

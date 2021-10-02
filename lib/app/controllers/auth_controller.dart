@@ -282,7 +282,7 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<void> addToFirebase([String name = ""]) async {
+  Future<void> addToFirebase([String name = "User"]) async {
     try {
       CollectionReference users = _firestore.collection(Constants.BUYER);
       User _currentUser = _auth.currentUser!;
@@ -309,7 +309,7 @@ class AuthController extends GetxController {
       final currUser = await users.doc(_currentUser.email).get();
       final currUserData = currUser.data() as Map<String, dynamic>;
 
-      user(UserModel.fromJson(currUserData));
+      user(UserModel.fromDocument(currUserData));
       user.refresh();
     } catch (e) {
       print(e.toString());
@@ -324,8 +324,6 @@ class AuthController extends GetxController {
     try {
       await users.doc(_auth.currentUser!.email).update({
         "name": name,
-        "lastSignTime":
-            _auth.currentUser!.metadata.lastSignInTime!.toIso8601String(),
         "updateTime": date,
       });
       // Update model

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
+UserModel userModelFromJson(String str) => UserModel.fromDocument(json.decode(str));
 
 String userModelToJson(UserModel data) => json.encode(data.toJson());
 
@@ -23,7 +23,7 @@ class UserModel {
   String? lastSignTime;
   String? updateTime;
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+  factory UserModel.fromDocument(Map<String, dynamic> json) => UserModel(
     uid: json["uid"],
     name: json["name"],
     email: json["email"],
@@ -31,7 +31,6 @@ class UserModel {
     creationTime: json["creationTime"],
     lastSignTime: json["lastSignTime"],
     updateTime: json["updateTime"],
-    // favorite: List<Favorite>.from(json["Favorite"].map((x) => Favorite.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -42,6 +41,5 @@ class UserModel {
     "creationTime": creationTime,
     "lastSignTime": lastSignTime,
     "updateTime": updateTime,
-    // "Favorite": List<dynamic>.from(favorite!.map((x) => x.toJson())),
   };
 }

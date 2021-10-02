@@ -16,7 +16,7 @@ class Markers{
     this.latLng,
     this.street,
     this.image,
-});
+  });
   String? id;
   String? name;
   MarkerId? markerId;

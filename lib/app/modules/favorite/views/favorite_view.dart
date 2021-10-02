@@ -1,11 +1,8 @@
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/controllers/auth_controller.dart';
 import 'package:kakikeenam/app/modules/components/modal_view/favorite_food_view.dart';
 import 'package:kakikeenam/app/modules/components/widgets/custom_textfield.dart';
-import 'package:kakikeenam/app/modules/components/widgets/loading_view.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 
 import '../controllers/favorite_controller.dart';
@@ -18,8 +15,7 @@ class FavoriteView extends GetView<FavoriteController> {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
-        print("list : ${controller.listFav[1].title}");
-        },
+      },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: PreferredSize(
@@ -86,35 +82,27 @@ class FavoriteView extends GetView<FavoriteController> {
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: StreamBuilder<DocumentSnapshot?>(
-            stream: controller.getListFav(),
-            builder: (context, snapshot) {
-              var data = snapshot.data?["favorites"] ?? null;
-              var favorite = controller.setDataList(data);
-              if (snapshot.hasData) {
-                return favorite?.length == 0
-                    ? Center(
-                        child: Text("Belum ada Favorit"),
-                      )
-                    : ListView.builder(
-                        itemCount: favorite?.length,
-                        scrollDirection: Axis.vertical,
-                        itemBuilder: (context, index) {
-                          return FavoriteFoodView(
-                            popularFoods: favorite?[index],
-                            direction: Axis.vertical,
-                            icon: Icon(
-                              Icons.favorite,
-                              color: Colors.red,
-                            ),
-                            func: () => Get.toNamed(Routes.DETAILITEM,
-                                arguments: favorite?[index]),
-                          );
-                        },
+          child: Obx(
+            () => controller.food?.length == 0
+                ? Center(
+                    child: Text("Belum ada Favorit"),
+                  )
+                : ListView.builder(
+                    itemCount: controller.food?.length,
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (context, index) {
+                      return FavoriteFoodView(
+                        product: controller.food?[index],
+                        direction: Axis.vertical,
+                        icon: Icon(
+                          Icons.favorite,
+                          color: Colors.red,
+                        ),
+                        func: () => Get.toNamed(Routes.DETAILITEM,
+                            arguments: controller.food?[index]),
                       );
-              }
-              return LoadingView();
-            },
+                    },
+                  ),
           ),
         ),
       ),

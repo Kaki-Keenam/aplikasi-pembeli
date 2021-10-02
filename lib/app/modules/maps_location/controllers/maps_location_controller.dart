@@ -10,6 +10,7 @@ import 'package:flutter_animarker/core/i_lat_lng.dart';
 import 'package:flutter_animarker/core/ripple_marker.dart';
 import 'package:flutter_animarker/helpers/spherical_util.dart';
 import 'package:geocoding/geocoding.dart' as Geo;
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kakikeenam/app/data/models/markers_model.dart';
@@ -17,23 +18,12 @@ import 'package:kakikeenam/app/modules/maps_location/views/components/bottom_she
 import 'package:kakikeenam/app/modules/maps_location/views/components/bottom_sheet/widget_modal.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 import 'package:kakikeenam/app/utils/maps_style.dart';
-import 'package:location/location.dart';
+
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class MapsLocationController extends GetxController {
   var allMarker = MarkersModel().obs;
   var nearMarker = MarkersModel().obs;
-
-  static const kLocations = [
-    LatLng(-8.701222875817272, 116.29381039347386),
-    LatLng(-8.702442489541962, 116.29251220438319),
-    LatLng(-8.702612174614872, 116.29518368441276)
-  ];
-  static const markersId = [
-    MarkerId("marker1"),
-    MarkerId("marker2"),
-    MarkerId("marker3"),
-  ];
 
   // for marker model
   List<dynamic> coordVendor = List<dynamic>.empty(growable: true);
@@ -42,13 +32,14 @@ class MapsLocationController extends GetxController {
   List<dynamic> markersID = List<dynamic>.empty(growable: true);
   List<dynamic> vendorName = List<dynamic>.empty(growable: true);
   List<dynamic> vendorImage = List<dynamic>.empty(growable: true);
+  List<dynamic> vendorEmail = List<dynamic>.empty(growable: true);
   GeoPoint? lastLocationData;
 
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
   Completer<GoogleMapController> mController = Completer();
   GoogleMapController? mapController;
-  Location location = Location();
+  // Location location = Location();
 
   // custom marker
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
@@ -57,11 +48,9 @@ class MapsLocationController extends GetxController {
   QueryDocumentSnapshot<Object?>? dataVendor;
 
   // current location
-  LocationData? currentLocation;
-  StreamSubscription<LocationData>? _locationSubscription;
-
-  bool? _serviceEnabled;
-  PermissionStatus? _permissionGranted;
+  // Position? currentLocation;
+  GeolocatorPlatform geolocatorAndroid = GeolocatorPlatform.instance;
+  Position? streamPosition;
 
   bool ripple = true;
 
@@ -72,25 +61,23 @@ class MapsLocationController extends GetxController {
   RxBool isLoadingDismiss = false.obs;
   RxBool isDismissibleMarker = true.obs;
 
-
-  @override
-  void onInit() async {
-    // aks permission
-    requestPermission();
-    super.onInit();
-  }
-
   @override
   void onClose() async {
-    _locationSubscription?.cancel();
     var controller = await mController.future;
     controller.dispose();
-    currentLocation = null;
+    streamPosition = null;
     ripple = false;
     super.onClose();
   }
 
-
+  @override
+  onInit(){
+    getCurrentPosition();
+    Timer.periodic(Duration(seconds: 3), (timer) {
+      restartMarkerMap();
+    });
+    super.onInit();
+  }
 
   /// this set for last location of user.
   /// when user use map to find vendor
@@ -98,6 +85,8 @@ class MapsLocationController extends GetxController {
   set setLastLocation(GeoPoint lastLocation) {
     lastLocationData = lastLocation;
   }
+
+  set positionStream(Position position) => this.streamPosition = position;
 
   /// This is function for firs initial camera position
   CameraPosition initPosition = CameraPosition(
@@ -111,8 +100,8 @@ class MapsLocationController extends GetxController {
   List<double> setNearestLocation() {
     List<double> _listNear = List<double>.empty(growable: true);
     final myLocation = ILatLng.point(
-      currentLocation!.latitude!,
-      currentLocation!.longitude!,
+      streamPosition!.latitude,
+      streamPosition!.longitude,
     );
 
     for (var i = 0; i < vendorName.length; i++) {
@@ -135,9 +124,9 @@ class MapsLocationController extends GetxController {
     Set<Circle> circle = Set.from([
       Circle(
           circleId: CircleId(Constants.MY_LOCATION_ID),
-          center: currentLocation != null
-              ? LatLng(currentLocation!.latitude!, currentLocation!.longitude!)
-              : LatLng(-8.701783364949815, 116.29560783100068),
+          center: streamPosition != null
+              ? LatLng(streamPosition!.latitude, streamPosition!.longitude)
+              : Constants.SOURCE_LOCATION,
           radius: Constants.CIRCLE_RADIUS,
           fillColor: Color.fromRGBO(251, 221, 50, 0.12),
           strokeWidth: 2,
@@ -160,37 +149,49 @@ class MapsLocationController extends GetxController {
 
   /// This function for get data stream from all vendors.
   Stream<QuerySnapshot<Object?>> addLatLangMarkers() {
-    final users = _firestore.collection(Constants.VENDOR).snapshots();
+    // var currentLoc = Get.find<LocationController>().currentLoc;
+    // final distanceInMile = 1;
+    // final lat = 0.0144927536231884;
+    // final lon = 0.0181818181818182;
+    //
+    // final greaterLat = cu!.latitude! + (lat * distanceInMile);
+    // final greaterLong = currentLoc.longitude! + (lon * distanceInMile);
+    // final greaterGeoPoint = GeoPoint(greaterLat, greaterLong);
+    final users = _firestore
+        .collection(Constants.VENDOR)
+    // .where("position", isLessThanOrEqualTo: greaterGeoPoint)
+        .snapshots();
     return users;
   }
 
   /// This function is for set data from vendors firestore database.
   /// And it will store to list [markersID] and [coordVendor].
-  void setDataVendor(
-    Iterable<dynamic> marker,
-    Iterable<dynamic> latLng,
-    Iterable<dynamic> name,
-    Iterable<dynamic> image,
-  ) {
+  void setDataVendor({
+    Iterable<dynamic>? marker,
+    Iterable<dynamic>? latLng,
+    Iterable<dynamic>? name,
+    Iterable<dynamic>? image,
+  }) {
     try {
-      marker.forEach((mark) {
+      marker?.forEach((mark) {
         markersID.add(MarkerId(mark));
       });
-      marker.forEach((idMarker) {
+      marker?.forEach((idMarker) {
         id.add(idMarker);
       });
-      latLng.forEach((latLng) {
+      latLng?.forEach((latLng) {
         coordVendor.add(LatLng(latLng.latitude, latLng.longitude));
       });
-      name.forEach((name) {
+      name?.forEach((name) {
         vendorName.add(name);
       });
-      image.forEach((img) {
+      image?.forEach((img) {
         vendorImage.add(img);
       });
       coordVendor.forEach((coordinate) {
         Geo.placemarkFromCoordinates(coordinate.latitude, coordinate.longitude)
-            .then((value) => street.add("${value.first.street}, ${value.first.subLocality}"));
+            .then((value) => street
+            .add("${value.first.street}, ${value.first.subLocality}"));
       });
       getAllVendorMarker();
     } catch (e) {
@@ -226,12 +227,12 @@ class MapsLocationController extends GetxController {
   /// buyer move from their position
   void restartMarkerMap() async {
     var markerId = MarkerId(Constants.MY_LOCATION_ID);
+    var currentPosition = await geolocatorAndroid.getCurrentPosition();
     var pinPosition =
-        LatLng(currentLocation!.latitude!, currentLocation!.longitude!);
+    LatLng(currentPosition.latitude, currentPosition.longitude);
     try {
       markers.removeWhere(
-          (_, id) => id.markerId.value == Constants.MY_LOCATION_ID);
-      // allVendor();
+              (_, id) => id.markerId.value == Constants.MY_LOCATION_ID);
       if (isDismissibleDialog.value) {
         markers[markerId] = RippleMarker(
           markerId: markerId,
@@ -253,7 +254,6 @@ class MapsLocationController extends GetxController {
     var _markerList = allMarker.value.markersList!;
 
     if (isDismissibleMarker.value) {
-      // print("coba: ${isDismissibleMarker.value}");
       for (var i = 0; i < _markerList.length; i++) {
         markers[_markerList[i].markerId!] = Marker(
           markerId: _markerList[i].markerId!,
@@ -321,68 +321,71 @@ class MapsLocationController extends GetxController {
     }
   }
 
-  /// This function use for request permission of google map location.
-  void requestPermission() async {
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled!) {
-      return;
-    }
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-    location.changeSettings(accuracy: LocationAccuracy.high);
-  }
-
   /// This function to setting listener realtime location
   /// every buyer move from their position
-  void setRealtimeLocation() async {
-    _locationSubscription =
-        await location.onLocationChanged.handleError((dynamic err) {
-      if (err is PlatformException) {
-        print(err);
+  Future<void> getCurrentPosition() async {
+    final hasPermission = await _handlePermission();
+
+    if (!hasPermission) {
+      return;
+    }
+    positionStream = await
+    geolocatorAndroid.getCurrentPosition();
+  }
+
+  Future<bool> _handlePermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await geolocatorAndroid.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return false;
+    }
+
+    permission = await geolocatorAndroid.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await geolocatorAndroid.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return false;
       }
-      _locationSubscription?.cancel();
-      _locationSubscription = null;
-    }).listen((LocationData cLoc) {
-      currentLocation = cLoc;
-      location.enableBackgroundMode(enable: true);
-      restartMarkerMap();
-    });
-    update();
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return false;
+    }
+
+    return true;
   }
 
   /// This function will pont camera to current position.
   /// and it will get last location that can store to firestore
   void getLastLocation() async {
-    final users = _firestore.collection(Constants.BUYER);
     try {
-      currentLocation = await location.getLocation();
+      final users = _firestore.collection(Constants.BUYER);
       await users.doc(_auth.currentUser!.email).update({
         "lastLocation": GeoPoint(
-          currentLocation!.latitude!,
-          currentLocation!.longitude!,
+          streamPosition!.latitude,
+          streamPosition!.longitude,
         )
       });
+      getNearVendorMarker();
+      myLocation();
+      update();
     } catch (e) {
-      currentLocation = null;
     }
-    myLocation();
-    getNearVendorMarker();
-    update();
   }
 
   void myLocation() async {
     final GoogleMapController _controller = await mController.future;
+    final currentLocation = await geolocatorAndroid.getCurrentPosition();
     _controller.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(
         bearing: Constants.CAMERA_BEARING,
         target: LatLng(
-          currentLocation!.latitude!,
-          currentLocation!.longitude!,
+          currentLocation.latitude,
+          currentLocation.longitude,
         ),
         zoom: Constants.CAMERA_ZOOM_OUT,
       ),
@@ -394,14 +397,13 @@ class MapsLocationController extends GetxController {
     mapController = controller;
     mController.complete(controller);
     setCustomMaker();
-    setRealtimeLocation();
   }
 
   void itemMarkerAnimation(int index) {
-    var _markerList = nearMarker.value.markersList!;
-    if (_markerList[index].latLng != null) {
+    var _markerList = nearMarker.value.markersList;
+    if (_markerList?[index].latLng != null) {
       initPosition = CameraPosition(
-        target: _markerList[index].latLng!,
+        target: _markerList![index].latLng!,
         zoom: Constants.CAMERA_ZOOM_IN,
       );
     }
@@ -432,8 +434,8 @@ class MapsLocationController extends GetxController {
         elevation: 15,
         barrierColor: Colors.transparent,
         containerWidget: (_, animation, child) => WidgetModal(
-              child: child,
-            ),
+          child: child,
+        ),
         expand: false,
         isDismissible: dismissible,
         enableDrag: false,

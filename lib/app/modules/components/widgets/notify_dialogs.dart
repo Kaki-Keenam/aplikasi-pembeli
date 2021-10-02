@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -102,5 +101,26 @@ class NotifyDialogs {
           Get.back();
         },
         textConfirm: "Ok");
+  }
+
+  void proposedDialog({VoidCallback? func}) {
+    Get.defaultDialog(
+      title: "Menunggu Konfirmasi",
+      barrierDismissible: false,
+      content: CircularProgressIndicator(),
+      onCancel: func,
+      onConfirm: () => Get.back(),
+      textConfirm: "Hide"
+    );
+  }
+
+  void arrivedDialog({VoidCallback? func}) {
+    Get.defaultDialog(
+        title: "Pedagang sudah samapai",
+        barrierDismissible: false,
+        content: Text("Silahkan melakukan transaksi ! \nJika sudah klik transaksi berhasil"),
+        onConfirm: func,
+        textConfirm: "Berhasil"
+    );
   }
 }

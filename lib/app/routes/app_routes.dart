@@ -17,6 +17,7 @@ abstract class Routes {
   static const SETTINGS = _Paths.SETTINGS;
   static const PROFILE = _Paths.PROFILE;
   static const CHANGE_PROFILE = _Paths.CHANGE_PROFILE;
+  static const TRANS_HISTORY = _Paths.TRANS_HISTORY;
 }
 
 abstract class _Paths {
@@ -33,4 +34,5 @@ abstract class _Paths {
   static const SETTINGS = '/settings';
   static const PROFILE = '/profile';
   static const CHANGE_PROFILE = '/change-profile';
+  static const TRANS_HISTORY = '/trans-history';
 }

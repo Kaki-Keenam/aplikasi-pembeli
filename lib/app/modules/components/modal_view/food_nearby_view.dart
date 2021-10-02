@@ -1,15 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:kakikeenam/app/data/models/food_model.dart';
+import 'package:kakikeenam/app/data/models/product_model.dart';
 
 class FoodNearbyView extends StatelessWidget {
   const FoodNearbyView({
     Key? key,
-    this.func, this.nearFoods,
+    this.func, this.product,
   }) : super(key: key);
 
-  final FoodModel? nearFoods;
+  final ProductModel? product;
   final VoidCallback? func;
 
   @override
@@ -42,7 +42,7 @@ class FoodNearbyView extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: CachedNetworkImage(
-                      imageUrl: nearFoods?.image ?? "",
+                      imageUrl: "${product?.image}",
                       fit: BoxFit.fill,
                       placeholder: (context, url) => Transform.scale(
                         scale: 0.5,
@@ -59,7 +59,7 @@ class FoodNearbyView extends StatelessWidget {
                     top: 10,
                   ),
                   child: Text(
-                    nearFoods!.title ?? "",
+                    product?.name ?? "Loading",
                     maxLines: 1,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -93,7 +93,7 @@ class FoodNearbyView extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(left: 5),
                         child: Text(
-                          "${nearFoods?.rating} reviews",
+                          "200 reviews",
                           style: TextStyle(
                             fontSize: 10,
                             fontFamily: "roboto",

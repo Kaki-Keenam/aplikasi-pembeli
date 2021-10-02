@@ -61,7 +61,7 @@ class DetailMarker extends StatelessWidget {
                                 child: CircularProgressIndicator(),
                               ),
                               errorWidget: (context, url, error) =>
-                                  new Icon(Icons.error),
+                              new Icon(Icons.error),
                             ),
                           ),
                         ),
@@ -86,11 +86,11 @@ class DetailMarker extends StatelessWidget {
                                   ),
                                 ),
                                 Container(
-                                  width: Get.width * 0.45,
+                                  width: Get.width * 0.4,
                                   child: Text(
                                     "${listNear?[i].id}",
                                     overflow: TextOverflow.ellipsis,
-                                    maxLines: 4,
+                                    maxLines: 1,
                                     style: TextStyle(
                                       fontFamily: "Montserrat",
                                       fontSize: 10,
@@ -98,18 +98,21 @@ class DetailMarker extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 10,),
+                                SizedBox(
+                                  height: 10,
+                                ),
                                 Container(
-                                  width: Get.width * 0.45,
+                                  width: Get.width * 0.4,
                                   child: Text(
                                     listNear?[i].street ?? "",
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Color(0xff000000),
                                     ),
                                   ),
                                 ),
-
                               ],
                             )
                           ],
