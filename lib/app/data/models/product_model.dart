@@ -21,7 +21,7 @@ class ProductModel {
   String? vendorId;
   String? name;
   String? image;
-  String? price;
+  int? price;
   bool? isFavorite;
   String? creationTime;
   String? updateTime;
@@ -34,7 +34,7 @@ class ProductModel {
       name: doc["name"],
       isFavorite: doc["isFavorite"],
       image: doc["image"],
-      price: doc["price"].toString(),
+      price: doc["price"],
      );
    }
   factory ProductModel.fromMap(Map<String, dynamic> json) {
@@ -44,7 +44,7 @@ class ProductModel {
       name: json["name"],
       isFavorite: json["isFavorite"],
       image: json["image"],
-      price: json["price"].toString(),
+      price: json["price"],
     );
   }
 }

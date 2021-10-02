@@ -142,7 +142,7 @@ class DetailItemController extends GetxController {
        ven?.uid = data.get("uid");
        ven?.email = data.get("email");
        ven?.status = data.get("status");
-       ven?.rating = data.get("rating").toString();
+       ven?.rating = data.get("rating");
        ven?.street = streetValue;
      });
    }catch (e){

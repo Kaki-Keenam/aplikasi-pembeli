@@ -24,7 +24,7 @@ class TransactionModel {
   String? image;
   String? storeName;
   String? orderDate;
-  String? rating;
+  int? rating;
   String? state;
   List<ProductModel>? product;
 
@@ -37,7 +37,7 @@ class TransactionModel {
         image: doc["storeImage"],
         storeName: doc["storeName"],
         orderDate: doc["orderDate"],
-        rating: doc["rating"].toString(),
+        rating: doc["rating"],
         state: doc["state"],
      );
    }

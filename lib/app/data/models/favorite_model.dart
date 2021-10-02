@@ -22,9 +22,9 @@ class Favorite {
 
   String? productId;
   String? name;
-  String? rating;
+  int? rating;
   String? image;
-  String? price;
+  int? price;
   String? vendorId;
   String? vendor;
   bool? isFavorite;
@@ -34,7 +34,7 @@ class Favorite {
     productId: json["productId"],
     name: json["name"],
     image: json["image"],
-    price: json["price"].toString(),
+    price: json["price"],
     vendorId: json["vendorId"],
     vendor: json["vendor"],
     lastTime: json["lastTime"],
