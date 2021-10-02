@@ -1,16 +1,22 @@
 # kakikeenam
 
-A new Flutter project.
+# State Management menggunakan GetX
 
-## Getting Started
+### Fitur update
+1. SplashScreen
+2. Authentication
+3. Onboarding
+4. Home Page
+5. Favorite Page
+6. Profile Page
+7. Change Profile Page
+8. Maps Page
+9. Setting Page
 
-This project is a starting point for a Flutter application.
+### Logic Maps Page
+1. Dapat menemukan penjual disekitar
+2. Lokasi Terdekat jarak 200 m / 1 km
+3. Detail setiap marker terdekat
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Figma Desain
+https://www.figma.com/file/gmxqIcSL7psvXHp6gdm0LV/flutter-project?node-id=0%3A1
