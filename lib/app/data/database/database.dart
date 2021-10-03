@@ -6,17 +6,16 @@ import 'package:kakikeenam/app/data/models/transaction_model.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 class Database {
-  FirebaseFirestore _dbStore = FirebaseFirestore.instance;
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
   GeocodingPlatform geoCoding = GeocodingPlatform.instance;
 
   //PRODUCT
   Stream<List<ProductModel>> streamProduct(List<String>? query) {
     try {
-      return _dbStore
+      return _firestore
           .collection(Constants.PRODUCTS)
           .where(Constants.VENDOR_ID_QUERY, whereIn: query)
-          .where(Constants.STATUS_QUERY, isEqualTo: Constants.ONLINE)
           .snapshots()
           .map((QuerySnapshot query) {
         List<ProductModel> listData = List.empty(growable: true);
@@ -32,24 +31,21 @@ class Database {
   }
 
   //VENDOR
-  Stream<List<String>> streamVendorId(GeoPoint? location) {
+  Stream<List<String>?> streamVendorId(GeoPoint? location) {
     try {
-      double lowerLat = location!.latitude -
-          (Constants.DISTANCE_LATITUDE * Constants.DISTANCE_MILE);
-      double lowerLong = location.longitude -
-          (Constants.DISTANCE_LONGITUDE * Constants.DISTANCE_MILE);
 
-      double greaterLat = location.latitude +
-          (Constants.DISTANCE_LATITUDE * Constants.DISTANCE_MILE);
-      double greaterLong = location.longitude +
-          (Constants.DISTANCE_LONGITUDE * Constants.DISTANCE_MILE);
+      double lowerLat = location!.latitude - (Constants.LAT * Constants.DISTANCE_MILE);
+      double lowerLong = location.longitude - (Constants.LONG * Constants.DISTANCE_MILE);
+
+      double greaterLat = location.latitude + (Constants.LAT * Constants.DISTANCE_MILE);
+      double greaterLong = location.longitude + (Constants.LONG * Constants.DISTANCE_MILE);
 
       GeoPoint lesserGeoPoint = GeoPoint(lowerLat, lowerLong);
       GeoPoint greaterGeoPoint = GeoPoint(greaterLat, greaterLong);
-      return _dbStore
+      return _firestore
           .collection(Constants.VENDOR)
-          .where('lastLocation', isGreaterThanOrEqualTo: lesserGeoPoint)
-          .where('lastLocation', isLessThanOrEqualTo: greaterGeoPoint)
+          .where(Constants.LAST_LOCATION, isGreaterThanOrEqualTo: lesserGeoPoint)
+          .where(Constants.LAST_LOCATION, isLessThanOrEqualTo: greaterGeoPoint)
           .snapshots()
           .map((QuerySnapshot query) {
         List<String> listData = List.empty(growable: true);
@@ -68,7 +64,7 @@ class Database {
   //BuyerLocation
   Stream<GeoPoint> streamBuyerLoc() {
     try {
-      return _dbStore
+      return _firestore
           .collection(Constants.BUYER)
           .doc(_auth.currentUser!.email)
           .snapshots()
@@ -81,7 +77,7 @@ class Database {
 
   //Stream product in detail
   Stream<List<ProductModel>> getStreamProduct(String vendorId) {
-    return _dbStore
+    return _firestore
         .collection(Constants.PRODUCTS)
         .where(Constants.VENDOR_ID_QUERY, isEqualTo: vendorId)
         .snapshots()
@@ -96,7 +92,7 @@ class Database {
 
   Stream<List<ProductModel>> streamListFavorite() {
     try {
-      return _dbStore
+      return _firestore
           .collection(Constants.BUYER)
           .doc(_auth.currentUser!.email)
           .collection(Constants.FAVORITE)
@@ -104,7 +100,7 @@ class Database {
           .snapshots()
           .map((DocumentSnapshot doc) {
         var fav = doc.data() as dynamic;
-        var data = fav[Constants.FAVORITES];
+        var data = fav["favorites"];
         List<ProductModel> listData = List.empty(growable: true);
         data.forEach((element) {
           listData.add(ProductModel.fromMap(element));
@@ -120,7 +116,7 @@ class Database {
   //TRANSACTION
   Stream<List<TransactionModel>> streamListTrans() {
     try {
-      return _dbStore
+      return _firestore
           .collection(Constants.TRANSACTION)
           .orderBy(Constants.ORDER_DATE, descending: true)
           .where(Constants.BUYER_ID_QUERY, isEqualTo: _auth.currentUser?.uid)

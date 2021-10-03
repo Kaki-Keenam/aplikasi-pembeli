@@ -22,6 +22,8 @@ class LocationController extends GetxController {
   Rxn<Position>? streamPosition;
   var statusStream = false.obs;
 
+  set currentPosition(Position current) => this.streamPosition?.value = current;
+
   @override
   void onReady(){
     getLocationPermission();
@@ -34,6 +36,8 @@ class LocationController extends GetxController {
     if (!hasPermission) {
       return;
     }
+    var currentPosition = await geolocatorAndroid.getCurrentPosition();
+    addToFirebase(currentPosition);
   }
 
   Future<bool> _handlePermission() async {

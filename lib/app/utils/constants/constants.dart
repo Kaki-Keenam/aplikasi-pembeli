@@ -46,6 +46,7 @@ abstract class Constants {
   static const String VENDOR_ID_QUERY = "vendorId";
   static const String BUYER_ID_QUERY = "buyerId";
   static const String ORDER_DATE = "orderDate";
+  static const String LAST_LOCATION = "lastLocation";
 
   // maps Query
   static const String STATUS_QUERY = "status";
@@ -54,8 +55,8 @@ abstract class Constants {
   // Asset image
   static const String PROFILE = "assets/images/person.png";
 
-  // Radius Vendor Filter
-  static const double DISTANCE_MILE = 0.25;
-  static const double DISTANCE_LATITUDE = 0.0144927536231884;
-  static const double DISTANCE_LONGITUDE = 0.0181818181818182;
+  // Radius Filter
+  static double DISTANCE_MILE = 0.13;
+  static double LAT = 0.0144927536231884;
+  static double LONG = 0.0181818181818182;
 }
