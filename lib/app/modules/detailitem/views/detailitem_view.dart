@@ -170,7 +170,6 @@ class DetailItemView extends GetView<DetailItemController> {
                                         ),
                                       )
                                     : Icon(Icons.error);
-                                return CircularProgressIndicator();
                               }),
                             ),
                             SizedBox(
@@ -299,19 +298,19 @@ class DetailItemView extends GetView<DetailItemController> {
                 initState: (_) {
                   controller.initFav(food.productId.toString());
                 },
-                builder: (c) {
+                builder: (control) {
                   return Obx(
                     () => FloatingActionButton(
                       onPressed: () {
                         var toggle = controller.isFav.toggle();
                         if (toggle.value) {
-                          c.addFavorite(food: food);
+                          control.addFavorite(food: food);
                         } else {
-                          c.removeFavorite(food.productId.toString());
+                          control.removeFavorite(food.productId.toString());
                         }
                       },
                       backgroundColor: Colors.amber[600],
-                      child: c.isFav.value
+                      child: control.isFav.value
                           ? Icon(
                               Icons.favorite,
                               color: Colors.red,
