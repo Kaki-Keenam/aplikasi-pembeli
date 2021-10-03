@@ -29,14 +29,16 @@ class DetailItemView extends GetView<DetailItemController> {
             Container(
               height: Get.height * 0.5,
               width: Get.width,
-              child: food?.image != null ? CachedNetworkImage(
-                imageUrl: "${food!.image}",
-                fit: BoxFit.fill,
-                placeholder: (context, url) => Transform.scale(
-                  scale: 0.5,
-                  child: CircularProgressIndicator(),
-                ),
-              ): Icon(Icons.error),
+              child: food?.image != null
+                  ? CachedNetworkImage(
+                      imageUrl: "${food!.image}",
+                      fit: BoxFit.fill,
+                      placeholder: (context, url) => Transform.scale(
+                        scale: 0.5,
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  : Icon(Icons.error),
             ),
             AppBar(
               backgroundColor: Colors.transparent,

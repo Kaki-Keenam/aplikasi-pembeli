@@ -13,6 +13,7 @@ import 'package:kakikeenam/app/modules/components/modal_view/food_nearby_view.da
 import 'package:kakikeenam/app/modules/components/modal_view/food_place_view.dart';
 import 'package:kakikeenam/app/modules/components/widgets/loading_view.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
+import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -63,7 +64,7 @@ class HomeView extends GetView<HomeController> {
                             ),
                           );
                         }
-                        return Image.asset("assets/images/person.png");
+                        return Image.asset(Constants.PROFILE);
                       }),
                     ),
                   ),

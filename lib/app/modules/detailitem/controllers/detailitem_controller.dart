@@ -9,7 +9,7 @@ import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 class DetailItemController extends GetxController {
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  FirebaseFirestore _dbStore = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
   RxBool isFav = false.obs;
   var vendorId = "".obs;
@@ -17,6 +17,7 @@ class DetailItemController extends GetxController {
 
   set setVendor(VendorModel data) => vendor.value = data;
   Rxn<List<ProductModel>> _foodModel = Rxn<List<ProductModel>>();
+
   List<ProductModel>? get foodOther => _foodModel.value;
   GeocodingPlatform geoCoding = GeocodingPlatform.instance;
 
@@ -36,7 +37,7 @@ class DetailItemController extends GetxController {
   set setVendorId(String _vendorId) => this.vendorId.value = _vendorId;
 
   Future<bool> isFavorite([String? id]) async {
-    CollectionReference users = _firestore.collection(Constants.BUYER);
+    CollectionReference users = _dbStore.collection(Constants.BUYER);
     final docUser = await users
         .doc(_auth.currentUser!.email)
         .collection(Constants.FAVORITE)
@@ -54,7 +55,7 @@ class DetailItemController extends GetxController {
   }
 
   void addFavorite({ProductModel? food}) async {
-    CollectionReference users = _firestore.collection(Constants.BUYER);
+    CollectionReference users = _dbStore.collection(Constants.BUYER);
     String update = DateTime.now().toIso8601String();
     try {
       final docUser = await users
@@ -86,7 +87,7 @@ class DetailItemController extends GetxController {
   }
 
   void removeFavorite(String? id) async {
-    CollectionReference users = _firestore.collection(Constants.BUYER);
+    CollectionReference users = _dbStore.collection(Constants.BUYER);
 
     try {
       final docUser = await users
@@ -113,12 +114,14 @@ class DetailItemController extends GetxController {
   }
 
   void getVendor() async {
-    try{
-      CollectionReference ven = _firestore
-          .collection(Constants.VENDOR);
-      DocumentSnapshot data  = await ven.doc(vendorId.value).get();
-      var lastLocation = data.get("lastLocation") == null ? GeoPoint(-8.58189186561154, 116.10003256768428) :  GeoPoint(-8.58189186561154, 116.10003256768428);
-      List<Placemark> street = await geoCoding.placemarkFromCoordinates(lastLocation.latitude, lastLocation.longitude);
+    try {
+      CollectionReference ven = _dbStore.collection(Constants.VENDOR);
+      DocumentSnapshot data = await ven.doc(vendorId.value).get();
+      var lastLocation = data.get("lastLocation") == null
+          ? GeoPoint(-8.58189186561154, 116.10003256768428)
+          : GeoPoint(-8.58189186561154, 116.10003256768428);
+      List<Placemark> street = await geoCoding.placemarkFromCoordinates(
+          lastLocation.latitude, lastLocation.longitude);
       String streetValue = "${street.first.street} ${street.first.subLocality}";
 
       vendor.update((ven) {
@@ -130,9 +133,8 @@ class DetailItemController extends GetxController {
         ven?.rating = data.get("rating");
         ven?.street = streetValue;
       });
-    }catch (e){
+    } catch (e) {
       print(e.toString());
     }
-
   }
 }

@@ -3,20 +3,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/transaction_model.dart';
-import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 class Database {
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  FirebaseFirestore _dbStore = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
   GeocodingPlatform geoCoding = GeocodingPlatform.instance;
 
   //PRODUCT
   Stream<List<ProductModel>> streamProduct(List<String>? query) {
     try {
-      return _firestore
+      return _dbStore
           .collection(Constants.PRODUCTS)
-          .where("vendorId", whereIn: query)
+          .where(Constants.VENDOR_ID_QUERY, whereIn: query)
+          .where(Constants.STATUS_QUERY, isEqualTo: Constants.ONLINE)
           .snapshots()
           .map((QuerySnapshot query) {
         List<ProductModel> listData = List.empty(growable: true);
@@ -34,19 +34,19 @@ class Database {
   //VENDOR
   Stream<List<String>> streamVendorId(GeoPoint? location) {
     try {
-      double distanceInMile = 0.25;
-      double lat = 0.0144927536231884;
-      double lon = 0.0181818181818182;
+      double lowerLat = location!.latitude -
+          (Constants.DISTANCE_LATITUDE * Constants.DISTANCE_MILE);
+      double lowerLong = location.longitude -
+          (Constants.DISTANCE_LONGITUDE * Constants.DISTANCE_MILE);
 
-      double lowerLat = location!.latitude - (lat * distanceInMile);
-      double lowerLong = location.longitude - (lon * distanceInMile);
-
-      double greaterLat = location.latitude + (lat * distanceInMile);
-      double greaterLong = location.longitude + (lon * distanceInMile);
+      double greaterLat = location.latitude +
+          (Constants.DISTANCE_LATITUDE * Constants.DISTANCE_MILE);
+      double greaterLong = location.longitude +
+          (Constants.DISTANCE_LONGITUDE * Constants.DISTANCE_MILE);
 
       GeoPoint lesserGeoPoint = GeoPoint(lowerLat, lowerLong);
       GeoPoint greaterGeoPoint = GeoPoint(greaterLat, greaterLong);
-      return _firestore
+      return _dbStore
           .collection(Constants.VENDOR)
           .where('lastLocation', isGreaterThanOrEqualTo: lesserGeoPoint)
           .where('lastLocation', isLessThanOrEqualTo: greaterGeoPoint)
@@ -68,7 +68,7 @@ class Database {
   //BuyerLocation
   Stream<GeoPoint> streamBuyerLoc() {
     try {
-      return _firestore
+      return _dbStore
           .collection(Constants.BUYER)
           .doc(_auth.currentUser!.email)
           .snapshots()
@@ -79,44 +79,11 @@ class Database {
     }
   }
 
-  //VENDOR
-  Stream<List<VendorModel>> streamVendorModel(GeoPoint? location) {
-    try {
-      double distanceInMile = 0.25;
-      double lat = 0.0144927536231884;
-      double lon = 0.0181818181818182;
-
-      double lowerLat = location!.latitude - (lat * distanceInMile);
-      double lowerLong = location.longitude - (lon * distanceInMile);
-
-      double greaterLat = location.latitude + (lat * distanceInMile);
-      double greaterLong = location.longitude + (lon * distanceInMile);
-
-      GeoPoint lesserGeoPoint = GeoPoint(lowerLat, lowerLong);
-      GeoPoint greaterGeoPoint = GeoPoint(greaterLat, greaterLong);
-      return _firestore
-          .collection(Constants.VENDOR)
-          .where('lastLocation', isGreaterThanOrEqualTo: lesserGeoPoint)
-          .where('lastLocation', isLessThanOrEqualTo: greaterGeoPoint)
-          .snapshots()
-          .map((QuerySnapshot query) {
-        List<VendorModel> listData = List.empty(growable: true);
-        query.docs.forEach((element) {
-          listData.add(VendorModel.fromDocument(element));
-        });
-        return listData;
-      });
-    } catch (e) {
-      print(e.toString());
-      rethrow;
-    }
-  }
-
   //Stream product in detail
   Stream<List<ProductModel>> getStreamProduct(String vendorId) {
-    return _firestore
+    return _dbStore
         .collection(Constants.PRODUCTS)
-        .where("vendorId", isEqualTo: vendorId)
+        .where(Constants.VENDOR_ID_QUERY, isEqualTo: vendorId)
         .snapshots()
         .map((QuerySnapshot query) {
       List<ProductModel> listData = List.empty(growable: true);
@@ -129,7 +96,7 @@ class Database {
 
   Stream<List<ProductModel>> streamListFavorite() {
     try {
-      return _firestore
+      return _dbStore
           .collection(Constants.BUYER)
           .doc(_auth.currentUser!.email)
           .collection(Constants.FAVORITE)
@@ -137,7 +104,7 @@ class Database {
           .snapshots()
           .map((DocumentSnapshot doc) {
         var fav = doc.data() as dynamic;
-        var data = fav["favorites"];
+        var data = fav[Constants.FAVORITES];
         List<ProductModel> listData = List.empty(growable: true);
         data.forEach((element) {
           listData.add(ProductModel.fromMap(element));
@@ -153,10 +120,10 @@ class Database {
   //TRANSACTION
   Stream<List<TransactionModel>> streamListTrans() {
     try {
-      return _firestore
+      return _dbStore
           .collection(Constants.TRANSACTION)
-          .orderBy("orderDate", descending: true)
-          .where("buyerId", isEqualTo: _auth.currentUser?.uid)
+          .orderBy(Constants.ORDER_DATE, descending: true)
+          .where(Constants.BUYER_ID_QUERY, isEqualTo: _auth.currentUser?.uid)
           .snapshots()
           .map((QuerySnapshot query) {
         List<TransactionModel> listData = List.empty(growable: true);
