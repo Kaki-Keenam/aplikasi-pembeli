@@ -34,7 +34,7 @@ class DashboardView extends GetView<DashboardController> {
             : FloatingActionButton(
                 onPressed: () {
                   controller.loading.value = true;
-                  Future.delayed(Duration(seconds: 3), ()
+                  Future.delayed(Duration(seconds: 2), ()
                       {
                         controller.loading.value = false;
                         Get.toNamed(Routes.MAPS_LOCATION);

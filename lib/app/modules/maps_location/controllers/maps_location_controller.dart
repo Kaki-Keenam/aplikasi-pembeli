@@ -102,7 +102,8 @@ class MapsLocationController extends GetxController {
         coordinate[i].longitude,
       );
       double distance =
-          SphericalUtil.computeDistanceBetween(myLocation, toMarkers) / 1000.0;
+          SphericalUtil.computeDistanceBetween(myLocation, toMarkers) /
+              Constants.MARKER_RADIUS;
       _listNear.add(distance);
     }
     return _listNear;
