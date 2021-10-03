@@ -1,16 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/transaction_model.dart';
+import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 class Database {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
+  GeocodingPlatform geoCoding = GeocodingPlatform.instance;
 
   //PRODUCT
   Stream<List<ProductModel>> streamProduct(List<String>? query) {
-    try{
+    try {
       return _firestore
           .collection(Constants.PRODUCTS)
           .where("vendorId", whereIn: query)
@@ -22,7 +25,7 @@ class Database {
         });
         return listData;
       });
-    }catch (e){
+    } catch (e) {
       print(e.toString());
       rethrow;
     }
@@ -30,7 +33,7 @@ class Database {
 
   //VENDOR
   Stream<List<String>> streamVendorId(GeoPoint? location) {
-    try{
+    try {
       double distanceInMile = 0.25;
       double lat = 0.0144927536231884;
       double lon = 0.0181818181818182;
@@ -56,7 +59,7 @@ class Database {
         });
         return listData;
       });
-    }catch (e){
+    } catch (e) {
       print(e.toString());
       rethrow;
     }
@@ -64,26 +67,75 @@ class Database {
 
   //BuyerLocation
   Stream<GeoPoint> streamBuyerLoc() {
-    try{
+    try {
       return _firestore
           .collection(Constants.BUYER)
           .doc(_auth.currentUser!.email)
           .snapshots()
           .map((DocumentSnapshot doc) => doc.get("lastLocation"));
-    }catch (e){
+    } catch (e) {
       print(e.toString());
       rethrow;
     }
   }
 
+  //VENDOR
+  Stream<List<VendorModel>> streamVendorModel(GeoPoint? location) {
+    try {
+      double distanceInMile = 0.25;
+      double lat = 0.0144927536231884;
+      double lon = 0.0181818181818182;
+
+      double lowerLat = location!.latitude - (lat * distanceInMile);
+      double lowerLong = location.longitude - (lon * distanceInMile);
+
+      double greaterLat = location.latitude + (lat * distanceInMile);
+      double greaterLong = location.longitude + (lon * distanceInMile);
+
+      GeoPoint lesserGeoPoint = GeoPoint(lowerLat, lowerLong);
+      GeoPoint greaterGeoPoint = GeoPoint(greaterLat, greaterLong);
+      return _firestore
+          .collection(Constants.VENDOR)
+          .where('lastLocation', isGreaterThanOrEqualTo: lesserGeoPoint)
+          .where('lastLocation', isLessThanOrEqualTo: greaterGeoPoint)
+          .snapshots()
+          .map((QuerySnapshot query) {
+        List<VendorModel> listData = List.empty(growable: true);
+        query.docs.forEach((element) {
+          listData.add(VendorModel.fromDocument(element));
+        });
+        return listData;
+      });
+    } catch (e) {
+      print(e.toString());
+      rethrow;
+    }
+  }
+
+  //Stream product in detail
+  Stream<List<ProductModel>> getStreamProduct(String vendorId) {
+    return _firestore
+        .collection(Constants.PRODUCTS)
+        .where("vendorId", isEqualTo: vendorId)
+        .snapshots()
+        .map((QuerySnapshot query) {
+      List<ProductModel> listData = List.empty(growable: true);
+      query.docs.forEach((element) {
+        listData.add(ProductModel.fromDocument(element));
+      });
+      return listData;
+    });
+  }
+
   Stream<List<ProductModel>> streamListFavorite() {
-    try{
+    try {
       return _firestore
           .collection(Constants.BUYER)
           .doc(_auth.currentUser!.email)
           .collection(Constants.FAVORITE)
           .doc(_auth.currentUser!.email)
-          .snapshots().map((DocumentSnapshot doc) {
+          .snapshots()
+          .map((DocumentSnapshot doc) {
         var fav = doc.data() as dynamic;
         var data = fav["favorites"];
         List<ProductModel> listData = List.empty(growable: true);
@@ -92,7 +144,7 @@ class Database {
         });
         return listData;
       });
-    } catch (e){
+    } catch (e) {
       print(e.toString());
       rethrow;
     }
@@ -100,7 +152,7 @@ class Database {
 
   //TRANSACTION
   Stream<List<TransactionModel>> streamListTrans() {
-    try{
+    try {
       return _firestore
           .collection(Constants.TRANSACTION)
           .orderBy("orderDate", descending: true)
@@ -113,7 +165,7 @@ class Database {
         });
         return listData;
       });
-    }catch(e){
+    } catch (e) {
       print(e.toString());
       rethrow;
     }

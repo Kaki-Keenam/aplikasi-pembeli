@@ -53,16 +53,14 @@ class DetailMarker extends StatelessWidget {
                           width: 94.0,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10.0),
-                            child: CachedNetworkImage(
-                              imageUrl: listNear?[i].image ?? "",
+                            child: listNear != null ? CachedNetworkImage(
+                              imageUrl: "${listNear?[i].image}",
                               fit: BoxFit.fill,
                               placeholder: (context, url) => Transform.scale(
                                 scale: 0.5,
                                 child: CircularProgressIndicator(),
                               ),
-                              errorWidget: (context, url, error) =>
-                              new Icon(Icons.error),
-                            ),
+                            ): Icon(Icons.error),
                           ),
                         ),
                       ),

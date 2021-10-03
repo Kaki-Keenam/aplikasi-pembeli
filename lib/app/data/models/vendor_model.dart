@@ -11,6 +11,7 @@ class VendorModel {
     this.email,
     this.image,
     this.street,
+    this.location,
     this.status,
     this.rating,
   });
@@ -18,6 +19,7 @@ class VendorModel {
   String? uid;
   String? storeName;
   String? street;
+  GeoPoint? location;
   String? email;
   String? image;
   String? status;
@@ -29,7 +31,7 @@ class VendorModel {
       uid: doc["uid"],
       storeName: doc["storeName"],
       email: doc["email"],
-      street: doc["lastLocation"],
+      location: doc["lastLocation"],
       image: doc["storeImage"],
       status: doc["status"],
       rating: doc["rating"],

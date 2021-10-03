@@ -55,17 +55,15 @@ class HomeView extends GetView<HomeController> {
                       child: Obx(() {
                         if (authC.userValue.photoUrl != null) {
                           return CachedNetworkImage(
-                            imageUrl: authC.userValue.photoUrl ?? "Loading",
+                            imageUrl: "${authC.userValue.photoUrl}",
                             fit: BoxFit.fill,
                             placeholder: (context, url) => Transform.scale(
                               scale: 0.5,
                               child: CircularProgressIndicator(),
                             ),
-                            errorWidget: (context, url, error) =>
-                                new Image.asset("assets/images/person.png"),
                           );
                         }
-                        return CircularProgressIndicator();
+                        return Image.asset("assets/images/person.png");
                       }),
                     ),
                   ),

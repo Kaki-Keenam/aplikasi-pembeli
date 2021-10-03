@@ -40,16 +40,14 @@ class TransactionView extends StatelessWidget {
                   height: 120,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
-                    child: CachedNetworkImage(
+                    child: trans?.image != null ? CachedNetworkImage(
                       imageUrl: "${trans?.image}",
                       fit: BoxFit.fill,
                       placeholder: (context, url) => Transform.scale(
                         scale: 0.5,
                         child: CircularProgressIndicator(),
                       ),
-                      errorWidget: (context, url, error) =>
-                          new Icon(Icons.error),
-                    ),
+                    ) : Icon(Icons.error),
                   ),
                 ),
                 Flexible(

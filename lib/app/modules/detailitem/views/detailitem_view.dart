@@ -29,15 +29,14 @@ class DetailItemView extends GetView<DetailItemController> {
             Container(
               height: Get.height * 0.5,
               width: Get.width,
-              child: CachedNetworkImage(
+              child: food?.image != null ? CachedNetworkImage(
                 imageUrl: "${food!.image}",
                 fit: BoxFit.fill,
                 placeholder: (context, url) => Transform.scale(
                   scale: 0.5,
                   child: CircularProgressIndicator(),
                 ),
-                errorWidget: (context, url, error) => new Icon(Icons.error),
-              ),
+              ): Icon(Icons.error),
             ),
             AppBar(
               backgroundColor: Colors.transparent,
@@ -157,19 +156,18 @@ class DetailItemView extends GetView<DetailItemController> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Obx(() {
-                                if(controller.vendor.value.image != null){
-                                  return CachedNetworkImage(
-                                    imageUrl: "${controller.vendor.value.image}",
-                                    fit: BoxFit.fill,
-                                    placeholder: (context, url) =>
-                                        Transform.scale(
+                                return controller.vendor.value.image != null
+                                    ? CachedNetworkImage(
+                                        imageUrl:
+                                            "${controller.vendor.value.image}",
+                                        fit: BoxFit.fill,
+                                        placeholder: (context, url) =>
+                                            Transform.scale(
                                           scale: 0.5,
                                           child: CircularProgressIndicator(),
                                         ),
-                                    errorWidget: (context, url, error) =>
-                                    new Icon(Icons.error),
-                                  );
-                                }
+                                      )
+                                    : Icon(Icons.error);
                                 return CircularProgressIndicator();
                               }),
                             ),
@@ -203,8 +201,8 @@ class DetailItemView extends GetView<DetailItemController> {
                                       fontSize: 18),
                                 ),
                                 Obx(
-                                  () => Text(controller.vendor.value.street ??
-                                      "Loading"),
+                                  () =>
+                                      Text("${controller.vendor.value.street}"),
                                 ),
                                 SizedBox(
                                   height: 10,

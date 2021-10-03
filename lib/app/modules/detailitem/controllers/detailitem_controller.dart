@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
+import 'package:kakikeenam/app/data/database/database.dart';
 import 'package:kakikeenam/app/data/models/favorite_model.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/vendor_model.dart';
@@ -21,7 +22,7 @@ class DetailItemController extends GetxController {
 
   @override
   void onReady() {
-    _foodModel.bindStream(getStreamData());
+    _foodModel.bindStream(Database().getStreamProduct(vendorId.value));
     getVendor();
     super.onReady();
   }
@@ -30,6 +31,9 @@ class DetailItemController extends GetxController {
   void initFav(String? id) async {
     isFavorite(id).then((value) => {if (value) isFav.value = true});
   }
+
+  /// other products
+  set setVendorId(String _vendorId) => this.vendorId.value = _vendorId;
 
   Future<bool> isFavorite([String? id]) async {
     CollectionReference users = _firestore.collection(Constants.BUYER);
@@ -108,46 +112,27 @@ class DetailItemController extends GetxController {
     update();
   }
 
-  /// other products
-  set setVendorId(String _vendorId) => this.vendorId.value = _vendorId;
-
-  //Stream
-  Stream<List<ProductModel>> getStreamData() {
-    return _firestore
-        .collection(Constants.PRODUCTS)
-        .where("vendorId", isEqualTo: vendorId.value)
-        .snapshots()
-        .map((QuerySnapshot query) {
-      List<ProductModel> listData = List.empty(growable: true);
-      query.docs.forEach((element) {
-        listData.add(ProductModel.fromDocument(element));
-      });
-      _foodModel.refresh();
-      return listData;
-    });
-  }
-
   void getVendor() async {
-   try{
-     CollectionReference ven = _firestore
-         .collection(Constants.VENDOR);
-     DocumentSnapshot data  = await ven.doc(vendorId.value).get();
-     var lastLocation = data.get("lastLocation") == null ? GeoPoint(-8.58189186561154, 116.10003256768428) :  GeoPoint(-8.58189186561154, 116.10003256768428);
-     List<Placemark> street = await geoCoding.placemarkFromCoordinates(lastLocation.latitude, lastLocation.longitude);
-     String streetValue = "${street.first.street} ${street.first.subLocality}";
+    try{
+      CollectionReference ven = _firestore
+          .collection(Constants.VENDOR);
+      DocumentSnapshot data  = await ven.doc(vendorId.value).get();
+      var lastLocation = data.get("lastLocation") == null ? GeoPoint(-8.58189186561154, 116.10003256768428) :  GeoPoint(-8.58189186561154, 116.10003256768428);
+      List<Placemark> street = await geoCoding.placemarkFromCoordinates(lastLocation.latitude, lastLocation.longitude);
+      String streetValue = "${street.first.street} ${street.first.subLocality}";
 
-     vendor.update((ven) {
-       ven?.image = data.get("storeImage");
-       ven?.storeName = data.get("storeName");
-       ven?.uid = data.get("uid");
-       ven?.email = data.get("email");
-       ven?.status = data.get("status");
-       ven?.rating = data.get("rating");
-       ven?.street = streetValue;
-     });
-   }catch (e){
-     print(e.toString());
-   }
+      vendor.update((ven) {
+        ven?.image = data.get("storeImage");
+        ven?.storeName = data.get("storeName");
+        ven?.uid = data.get("uid");
+        ven?.email = data.get("email");
+        ven?.status = data.get("status");
+        ven?.rating = data.get("rating");
+        ven?.street = streetValue;
+      });
+    }catch (e){
+      print(e.toString());
+    }
 
   }
 }

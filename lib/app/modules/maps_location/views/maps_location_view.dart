@@ -89,14 +89,14 @@ class MapsLocationView extends GetView<MapsLocationController> {
             ),
           ),
           Obx(
-            () => MyLocation(
+                () => MyLocation(
                 isDismissible: controller.isDismissibleDialog.value,
                 func: () {
                   controller.myLocation();
                 }),
           ),
           Obx(
-            () => ItemVendor(
+                () => ItemVendor(
                 isDismissible: controller.isDismissibleDialog.value,
                 func: () {
                   controller.getLastLocation();
@@ -124,13 +124,13 @@ class MapsLocationView extends GetView<MapsLocationController> {
                 );
                 return Obx(() => controller.isLoadingDismiss.value
                     ? DetailMarker(
-                        listNear: controller.nearMarker.value.markersList,
-                        onPageChanged: (index) {
-                          _index = index;
-                          controller.itemMarkerAnimation(index);
-                        },
-                        index: _index,
-                      )
+                  listNear: controller.nearMarker.value.markersList,
+                  onPageChanged: (index) {
+                    _index = index;
+                    controller.itemMarkerAnimation(index);
+                  },
+                  index: _index,
+                )
                     : Container());
               }
               return LoadingView();

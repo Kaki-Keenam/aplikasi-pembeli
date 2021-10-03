@@ -23,8 +23,43 @@ class LocationController extends GetxController {
   var statusStream = false.obs;
 
   @override
-  void onInit(){
-    super.onInit();
+  void onReady(){
+    getLocationPermission();
+    super.onReady();
+  }
+
+  Future<void> getLocationPermission() async {
+    final hasPermission = await _handlePermission();
+
+    if (!hasPermission) {
+      return;
+    }
+  }
+
+  Future<bool> _handlePermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await geolocatorAndroid.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return false;
+    }
+
+    permission = await geolocatorAndroid.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await geolocatorAndroid.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return false;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return false;
+    }
+
+    return true;
   }
 
 

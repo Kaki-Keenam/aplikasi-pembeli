@@ -15,6 +15,12 @@ class TransHistoryController extends GetxController {
     super.onInit();
   }
 
+  @override
+  void onReady() {
+    stateVendorArrived();
+    super.onReady();
+  }
+
   void stateVendorArrived(){
     try{
       transaction?.forEach((element) {

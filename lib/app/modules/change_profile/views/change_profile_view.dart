@@ -15,7 +15,7 @@ class ChangeProfileView extends GetView<ChangeProfileController> {
 
   @override
   Widget build(BuildContext context) {
-    controller.emailC.text = args.email ?? "";
+    controller.emailC.text = args.email;
     controller.nameC.text = args.name.toString();
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -141,8 +141,7 @@ class ChangeProfileView extends GetView<ChangeProfileController> {
                   hintText: "Name",
                   controller: controller.nameC,
                 ),
-                SizedBox(height: 10),
-                SizedBox(height: 30),
+                SizedBox(height: 40),
                 Container(
                   margin: EdgeInsets.only(
                     bottom: context.mediaQueryPadding.bottom,

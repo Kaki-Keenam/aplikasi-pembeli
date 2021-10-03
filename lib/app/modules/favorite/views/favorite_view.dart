@@ -29,41 +29,6 @@ class FavoriteView extends GetView<FavoriteController> {
               ),
             ),
             actions: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.notifications_none_outlined,
-                  color: Colors.white,
-                ),
-              ),
-              Container(
-                width: 45,
-                height: 45,
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(30),
-                    onTap: () => Get.toNamed(Routes.PROFILE),
-                    child: Obx(
-                      () => CircleAvatar(
-                        backgroundColor: Colors.white,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: authC.user.value.photoUrl == null
-                              ? Image.asset(
-                                  "assets/images/person.png",
-                                  fit: BoxFit.cover,
-                                )
-                              : Image.network(
-                                  authC.user.value.photoUrl ?? "",
-                                  fit: BoxFit.cover,
-                                ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
               SizedBox(
                 width: 20,
               ),

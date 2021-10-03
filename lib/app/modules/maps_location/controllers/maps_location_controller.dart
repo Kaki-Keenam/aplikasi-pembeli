@@ -18,7 +18,6 @@ import 'package:kakikeenam/app/modules/maps_location/views/components/bottom_she
 import 'package:kakikeenam/app/modules/maps_location/views/components/bottom_sheet/widget_modal.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 import 'package:kakikeenam/app/utils/maps_style.dart';
-
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class MapsLocationController extends GetxController {
@@ -39,6 +38,7 @@ class MapsLocationController extends GetxController {
   FirebaseAuth _auth = FirebaseAuth.instance;
   Completer<GoogleMapController> mController = Completer();
   GoogleMapController? mapController;
+
   // Location location = Location();
 
   // custom marker
@@ -71,7 +71,7 @@ class MapsLocationController extends GetxController {
   }
 
   @override
-  onInit(){
+  onInit() {
     getCurrentPosition();
     Timer.periodic(Duration(seconds: 3), (timer) {
       restartMarkerMap();
@@ -149,17 +149,9 @@ class MapsLocationController extends GetxController {
 
   /// This function for get data stream from all vendors.
   Stream<QuerySnapshot<Object?>> addLatLangMarkers() {
-    // var currentLoc = Get.find<LocationController>().currentLoc;
-    // final distanceInMile = 1;
-    // final lat = 0.0144927536231884;
-    // final lon = 0.0181818181818182;
-    //
-    // final greaterLat = cu!.latitude! + (lat * distanceInMile);
-    // final greaterLong = currentLoc.longitude! + (lon * distanceInMile);
-    // final greaterGeoPoint = GeoPoint(greaterLat, greaterLong);
     final users = _firestore
         .collection(Constants.VENDOR)
-    // .where("position", isLessThanOrEqualTo: greaterGeoPoint)
+        .where("status", isEqualTo: "online")
         .snapshots();
     return users;
   }
@@ -191,7 +183,7 @@ class MapsLocationController extends GetxController {
       coordVendor.forEach((coordinate) {
         Geo.placemarkFromCoordinates(coordinate.latitude, coordinate.longitude)
             .then((value) => street
-            .add("${value.first.street}, ${value.first.subLocality}"));
+                .add("${value.first.street}, ${value.first.subLocality}"));
       });
       getAllVendorMarker();
     } catch (e) {
@@ -229,10 +221,10 @@ class MapsLocationController extends GetxController {
     var markerId = MarkerId(Constants.MY_LOCATION_ID);
     var currentPosition = await geolocatorAndroid.getCurrentPosition();
     var pinPosition =
-    LatLng(currentPosition.latitude, currentPosition.longitude);
+        LatLng(currentPosition.latitude, currentPosition.longitude);
     try {
       markers.removeWhere(
-              (_, id) => id.markerId.value == Constants.MY_LOCATION_ID);
+          (_, id) => id.markerId.value == Constants.MY_LOCATION_ID);
       if (isDismissibleDialog.value) {
         markers[markerId] = RippleMarker(
           markerId: markerId,
@@ -329,8 +321,7 @@ class MapsLocationController extends GetxController {
     if (!hasPermission) {
       return;
     }
-    positionStream = await
-    geolocatorAndroid.getCurrentPosition();
+    positionStream = await geolocatorAndroid.getCurrentPosition();
   }
 
   Future<bool> _handlePermission() async {
@@ -373,8 +364,7 @@ class MapsLocationController extends GetxController {
       getNearVendorMarker();
       myLocation();
       update();
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   void myLocation() async {
@@ -434,8 +424,8 @@ class MapsLocationController extends GetxController {
         elevation: 15,
         barrierColor: Colors.transparent,
         containerWidget: (_, animation, child) => WidgetModal(
-          child: child,
-        ),
+              child: child,
+            ),
         expand: false,
         isDismissible: dismissible,
         enableDrag: false,
