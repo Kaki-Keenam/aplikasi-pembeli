@@ -184,7 +184,7 @@ class HomeView extends GetView<HomeController> {
                             },
                           );
                         }
-                        return Center(child: Text("Tidak ada pedagang disekitar anda !"));
+                        return Center(child: Text("Tidak ada pedagang disekitar anda !",),);
                       },
                     );
                   }
@@ -236,7 +236,7 @@ class HomeView extends GetView<HomeController> {
                             },
                           );
                         }
-                        return Center(child: Text("Tidak ada pedagang disekitar anda !"));
+                        return Center(child: Text("Tidak ada pedagang disekitar anda !",),);
                       },
                     );
                   }
