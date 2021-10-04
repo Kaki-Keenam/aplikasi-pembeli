@@ -29,14 +29,16 @@ class DetailItemView extends GetView<DetailItemController> {
             Container(
               height: Get.height * 0.5,
               width: Get.width,
-              child: food?.image != null ? CachedNetworkImage(
-                imageUrl: "${food!.image}",
-                fit: BoxFit.fill,
-                placeholder: (context, url) => Transform.scale(
-                  scale: 0.5,
-                  child: CircularProgressIndicator(),
-                ),
-              ): Icon(Icons.error),
+              child: food?.image != null
+                  ? CachedNetworkImage(
+                      imageUrl: "${food!.image}",
+                      fit: BoxFit.fill,
+                      placeholder: (context, url) => Transform.scale(
+                        scale: 0.5,
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  : Icon(Icons.error),
             ),
             AppBar(
               backgroundColor: Colors.transparent,
@@ -168,7 +170,6 @@ class DetailItemView extends GetView<DetailItemController> {
                                         ),
                                       )
                                     : Icon(Icons.error);
-                                return CircularProgressIndicator();
                               }),
                             ),
                             SizedBox(
@@ -297,19 +298,19 @@ class DetailItemView extends GetView<DetailItemController> {
                 initState: (_) {
                   controller.initFav(food.productId.toString());
                 },
-                builder: (c) {
+                builder: (control) {
                   return Obx(
                     () => FloatingActionButton(
                       onPressed: () {
                         var toggle = controller.isFav.toggle();
                         if (toggle.value) {
-                          c.addFavorite(food: food);
+                          control.addFavorite(food: food);
                         } else {
-                          c.removeFavorite(food.productId.toString());
+                          control.removeFavorite(food.productId.toString());
                         }
                       },
                       backgroundColor: Colors.amber[600],
-                      child: c.isFav.value
+                      child: control.isFav.value
                           ? Icon(
                               Icons.favorite,
                               color: Colors.red,

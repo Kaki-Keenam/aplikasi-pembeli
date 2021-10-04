@@ -9,19 +9,19 @@ import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 class Transaction_state_controller extends GetxController {
   var dialogs = NotifyDialogs();
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  FirebaseFirestore _dbStore = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   // proposed
   Future<void> stateProposedTrans(ProductModel? food) async {
     var stringList =
         DateTime.now().toIso8601String().split(new RegExp(r"[T.]"));
-    var formatedDate = "${stringList[0]} ${stringList[1]}.${stringList[2]}";
+    var formattedDate = "${stringList[0]} ${stringList[1]}.${stringList[2]}";
     try {
       String? buyerName = Get.find<AuthController>().userValue.name;
-      CollectionReference trans = _firestore.collection(Constants.TRANSACTION);
-      CollectionReference vendor = _firestore.collection(Constants.VENDOR);
-      CollectionReference buyer = _firestore.collection(Constants.BUYER);
+      CollectionReference trans = _dbStore.collection(Constants.TRANSACTION);
+      CollectionReference vendor = _dbStore.collection(Constants.VENDOR);
+      CollectionReference buyer = _dbStore.collection(Constants.BUYER);
       DocumentSnapshot buyerLoc =
           await buyer.doc(_auth.currentUser!.email).get();
       String transId = await trans.doc().id;
@@ -44,7 +44,7 @@ class Transaction_state_controller extends GetxController {
         "transactionId": transId,
         "storeImage": vendors.get("storeImage"),
         "storeName": vendors.get("storeName"),
-        "orderDate": formatedDate,
+        "orderDate": formattedDate,
         "rating": 5,
         "state": "PROPOSED",
         "vendorId": food?.vendorId,
@@ -59,7 +59,7 @@ class Transaction_state_controller extends GetxController {
 
   void stateCancelConfirm(String? transId) {
     try {
-      var trans = _firestore.collection(Constants.TRANSACTION);
+      var trans = _dbStore.collection(Constants.TRANSACTION);
       trans.doc(transId).update({
         "state": "CANCEL",
       });

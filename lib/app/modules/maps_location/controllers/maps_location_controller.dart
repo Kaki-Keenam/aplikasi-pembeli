@@ -25,7 +25,7 @@ class MapsLocationController extends GetxController {
   var nearMarker = MarkersModel().obs;
 
   // for marker model
-  List<dynamic> coordVendor = List<dynamic>.empty(growable: true);
+  List<dynamic> coordinate = List<dynamic>.empty(growable: true);
   List<dynamic> street = List<dynamic>.empty(growable: true);
   List<dynamic> id = List<dynamic>.empty(growable: true);
   List<dynamic> markersID = List<dynamic>.empty(growable: true);
@@ -34,7 +34,7 @@ class MapsLocationController extends GetxController {
   List<dynamic> vendorEmail = List<dynamic>.empty(growable: true);
   GeoPoint? lastLocationData;
 
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  FirebaseFirestore _dbStore = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
   Completer<GoogleMapController> mController = Completer();
   GoogleMapController? mapController;
@@ -45,11 +45,10 @@ class MapsLocationController extends GetxController {
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   BitmapDescriptor? buyerIcon;
   BitmapDescriptor? vendorIcon;
-  QueryDocumentSnapshot<Object?>? dataVendor;
 
   // current location
   // Position? currentLocation;
-  GeolocatorPlatform geolocatorAndroid = GeolocatorPlatform.instance;
+  GeolocatorPlatform geoLocator = GeolocatorPlatform.instance;
   Position? streamPosition;
 
   bool ripple = true;
@@ -79,13 +78,6 @@ class MapsLocationController extends GetxController {
     super.onInit();
   }
 
-  /// this set for last location of user.
-  /// when user use map to find vendor
-  /// and this will add to firestore with current account
-  set setLastLocation(GeoPoint lastLocation) {
-    lastLocationData = lastLocation;
-  }
-
   set positionStream(Position position) => this.streamPosition = position;
 
   /// This is function for firs initial camera position
@@ -106,11 +98,12 @@ class MapsLocationController extends GetxController {
 
     for (var i = 0; i < vendorName.length; i++) {
       final toMarkers = ILatLng.point(
-        coordVendor[i].latitude,
-        coordVendor[i].longitude,
+        coordinate[i].latitude,
+        coordinate[i].longitude,
       );
       double distance =
-          SphericalUtil.computeDistanceBetween(myLocation, toMarkers) / 1000.0;
+          SphericalUtil.computeDistanceBetween(myLocation, toMarkers) /
+              Constants.MARKER_RADIUS;
       _listNear.add(distance);
     }
     return _listNear;
@@ -149,15 +142,15 @@ class MapsLocationController extends GetxController {
 
   /// This function for get data stream from all vendors.
   Stream<QuerySnapshot<Object?>> addLatLangMarkers() {
-    final users = _firestore
+    final users = _dbStore
         .collection(Constants.VENDOR)
-        .where("status", isEqualTo: "online")
+        .where(Constants.STATUS_QUERY, isEqualTo: Constants.ONLINE)
         .snapshots();
     return users;
   }
 
   /// This function is for set data from vendors firestore database.
-  /// And it will store to list [markersID] and [coordVendor].
+  /// And it will store to list [markersID] and [coordinate].
   void setDataVendor({
     Iterable<dynamic>? marker,
     Iterable<dynamic>? latLng,
@@ -172,7 +165,7 @@ class MapsLocationController extends GetxController {
         id.add(idMarker);
       });
       latLng?.forEach((latLng) {
-        coordVendor.add(LatLng(latLng.latitude, latLng.longitude));
+        coordinate.add(LatLng(latLng.latitude, latLng.longitude));
       });
       name?.forEach((name) {
         vendorName.add(name);
@@ -180,7 +173,7 @@ class MapsLocationController extends GetxController {
       image?.forEach((img) {
         vendorImage.add(img);
       });
-      coordVendor.forEach((coordinate) {
+      coordinate.forEach((coordinate) {
         Geo.placemarkFromCoordinates(coordinate.latitude, coordinate.longitude)
             .then((value) => street
                 .add("${value.first.street}, ${value.first.subLocality}"));
@@ -219,7 +212,7 @@ class MapsLocationController extends GetxController {
   /// buyer move from their position
   void restartMarkerMap() async {
     var markerId = MarkerId(Constants.MY_LOCATION_ID);
-    var currentPosition = await geolocatorAndroid.getCurrentPosition();
+    var currentPosition = await geoLocator.getCurrentPosition();
     var pinPosition =
         LatLng(currentPosition.latitude, currentPosition.longitude);
     try {
@@ -280,7 +273,7 @@ class MapsLocationController extends GetxController {
           id: id[i],
           name: vendorName[i],
           markerId: markersID[i],
-          latLng: coordVendor[i],
+          latLng: coordinate[i],
           street: street[i],
           image: vendorImage[i],
         ));
@@ -300,7 +293,7 @@ class MapsLocationController extends GetxController {
           id: id[i],
           name: vendorName[i],
           markerId: markersID[i],
-          latLng: coordVendor[i],
+          latLng: coordinate[i],
           image: vendorImage[i],
         ));
       }
@@ -316,45 +309,14 @@ class MapsLocationController extends GetxController {
   /// This function to setting listener realtime location
   /// every buyer move from their position
   Future<void> getCurrentPosition() async {
-    final hasPermission = await _handlePermission();
-
-    if (!hasPermission) {
-      return;
-    }
-    positionStream = await geolocatorAndroid.getCurrentPosition();
-  }
-
-  Future<bool> _handlePermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Test if location services are enabled.
-    serviceEnabled = await geolocatorAndroid.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return false;
-    }
-
-    permission = await geolocatorAndroid.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await geolocatorAndroid.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return false;
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
-      return false;
-    }
-
-    return true;
+    positionStream = await geoLocator.getCurrentPosition();
   }
 
   /// This function will pont camera to current position.
   /// and it will get last location that can store to firestore
   void getLastLocation() async {
     try {
-      final users = _firestore.collection(Constants.BUYER);
+      final users = _dbStore.collection(Constants.BUYER);
       await users.doc(_auth.currentUser!.email).update({
         "lastLocation": GeoPoint(
           streamPosition!.latitude,
@@ -369,7 +331,7 @@ class MapsLocationController extends GetxController {
 
   void myLocation() async {
     final GoogleMapController _controller = await mController.future;
-    final currentLocation = await geolocatorAndroid.getCurrentPosition();
+    final currentLocation = await geoLocator.getCurrentPosition();
     _controller.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(
         bearing: Constants.CAMERA_BEARING,

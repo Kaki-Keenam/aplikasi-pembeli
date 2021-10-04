@@ -13,6 +13,7 @@ import 'package:kakikeenam/app/modules/components/modal_view/food_nearby_view.da
 import 'package:kakikeenam/app/modules/components/modal_view/food_place_view.dart';
 import 'package:kakikeenam/app/modules/components/widgets/loading_view.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
+import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -63,7 +64,7 @@ class HomeView extends GetView<HomeController> {
                             ),
                           );
                         }
-                        return Image.asset("assets/images/person.png");
+                        return Image.asset(Constants.PROFILE);
                       }),
                     ),
                   ),
@@ -159,14 +160,14 @@ class HomeView extends GetView<HomeController> {
                 stream: Database().streamBuyerLoc(),
                 builder: (context, buyer) {
                   if (buyer.hasData) {
-                    return StreamBuilder<List<String>>(
+                    return StreamBuilder<List<String>?>(
                       stream: Database().streamVendorId(buyer.data),
                       builder: (context, vendor) {
-                        if (vendor.hasData) {
+                        if (vendor.hasData && vendor.data!.isNotEmpty) {
                           return StreamBuilder<List<ProductModel>>(
                             stream: Database().streamProduct(vendor.data),
                             builder: (context, product) {
-                              if (product.hasData) {
+                              if (product.hasData && vendor.data!.isNotEmpty) {
                                 return ListView.builder(
                                   itemCount: product.data?.length,
                                   scrollDirection: Axis.horizontal,
@@ -183,7 +184,7 @@ class HomeView extends GetView<HomeController> {
                             },
                           );
                         }
-                        return LoadingView();
+                        return Center(child: Text("Tidak ada pedagang disekitar anda !"));
                       },
                     );
                   }
@@ -207,14 +208,14 @@ class HomeView extends GetView<HomeController> {
                 stream: Database().streamBuyerLoc(),
                 builder: (context, buyer) {
                   if (buyer.hasData) {
-                    return StreamBuilder<List<String>>(
+                    return StreamBuilder<List<String>?>(
                       stream: Database().streamVendorId(buyer.data),
                       builder: (context, vendor) {
-                        if (vendor.hasData) {
+                        if (vendor.hasData && vendor.data!.isNotEmpty) {
                           return StreamBuilder<List<ProductModel>>(
                             stream: Database().streamProduct(vendor.data),
                             builder: (context, product) {
-                              if (product.hasData) {
+                              if (product.hasData && vendor.data!.isNotEmpty) {
                                 return ListView.builder(
                                   itemCount: product.data?.length,
                                   scrollDirection: Axis.horizontal,
@@ -235,7 +236,7 @@ class HomeView extends GetView<HomeController> {
                             },
                           );
                         }
-                        return LoadingView();
+                        return Center(child: Text("Tidak ada pedagang disekitar anda !"));
                       },
                     );
                   }

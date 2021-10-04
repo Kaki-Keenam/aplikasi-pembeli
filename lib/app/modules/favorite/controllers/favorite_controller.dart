@@ -12,9 +12,9 @@ class FavoriteController extends GetxController {
   List<ProductModel>? get food => foodModel.value;
 
   @override
-  void onInit() {
+  void onReady() {
     foodModel.bindStream(Database().streamListFavorite());
-    super.onInit();
+    super.onReady();
   }
 
   @override

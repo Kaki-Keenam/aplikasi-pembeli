@@ -23,7 +23,7 @@ class AuthController extends GetxController {
   GoogleSignInAccount? _currentGoogle;
   FirebaseAuth _auth = FirebaseAuth.instance;
   UserCredential? userCredential;
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  FirebaseFirestore _dbStore = FirebaseFirestore.instance;
   String? errorText;
   var user = UserModel().obs;
   UserModel get userValue => user.value;
@@ -92,7 +92,7 @@ class AuthController extends GetxController {
       }
       final box = GetStorage();
       box.writeIfNull(Constants.SKIP_INTRO, true);
-      CollectionReference users = _firestore.collection(Constants.BUYER);
+      CollectionReference users = _dbStore.collection(Constants.BUYER);
 
       // digunakan untuk mengatasi kebocoran data
       await _googleSignIn.signOut();
@@ -179,7 +179,7 @@ class AuthController extends GetxController {
   }
 
   Future<void> loginAuth(String email, String password) async {
-    CollectionReference users = _firestore.collection(Constants.BUYER);
+    CollectionReference users = _dbStore.collection(Constants.BUYER);
     loading.value = true;
     final box = GetStorage();
     box.writeIfNull(Constants.SKIP_INTRO, true);
@@ -284,8 +284,10 @@ class AuthController extends GetxController {
 
   Future<void> addToFirebase([String name = "User"]) async {
     try {
-      CollectionReference users = _firestore.collection(Constants.BUYER);
+      CollectionReference users = _dbStore.collection(Constants.BUYER);
       User _currentUser = _auth.currentUser!;
+
+      String token = await _currentUser.getIdToken();
 
       final cekUser = await users.doc(_currentUser.email).get();
       if (cekUser.data() == null) {
@@ -294,6 +296,7 @@ class AuthController extends GetxController {
           "name": _currentUser.displayName ?? name,
           "email": _currentUser.email,
           "photoUrl": _currentUser.photoURL,
+          "token": token,
           "creationTime": _currentUser.metadata.creationTime!.toIso8601String(),
           "lastSignTime":
               _currentUser.metadata.lastSignInTime!.toIso8601String(),
@@ -320,7 +323,7 @@ class AuthController extends GetxController {
   void changeProfile(String name) async {
     loading.value = true;
     String date = DateTime.now().toIso8601String();
-    CollectionReference users = _firestore.collection(Constants.BUYER);
+    CollectionReference users = _dbStore.collection(Constants.BUYER);
     try {
       await users.doc(_auth.currentUser!.email).update({
         "name": name,
@@ -346,7 +349,7 @@ class AuthController extends GetxController {
   void updatePhoto(String url) async {
     loading.value = true;
     String date = DateTime.now().toIso8601String();
-    CollectionReference users = _firestore.collection(Constants.BUYER);
+    CollectionReference users = _dbStore.collection(Constants.BUYER);
     try {
       await users.doc(_auth.currentUser!.email).update({
         "photoUrl": url,

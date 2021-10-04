@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/transaction_model.dart';
-import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 class Database {
@@ -16,7 +15,7 @@ class Database {
     try {
       return _firestore
           .collection(Constants.PRODUCTS)
-          .where("vendorId", whereIn: query)
+          .where(Constants.VENDOR_ID_QUERY, whereIn: query)
           .snapshots()
           .map((QuerySnapshot query) {
         List<ProductModel> listData = List.empty(growable: true);
@@ -32,24 +31,21 @@ class Database {
   }
 
   //VENDOR
-  Stream<List<String>> streamVendorId(GeoPoint? location) {
+  Stream<List<String>?> streamVendorId(GeoPoint? location) {
     try {
-      double distanceInMile = 0.25;
-      double lat = 0.0144927536231884;
-      double lon = 0.0181818181818182;
 
-      double lowerLat = location!.latitude - (lat * distanceInMile);
-      double lowerLong = location.longitude - (lon * distanceInMile);
+      double lowerLat = location!.latitude - (Constants.LAT * Constants.DISTANCE_MILE);
+      double lowerLong = location.longitude - (Constants.LONG * Constants.DISTANCE_MILE);
 
-      double greaterLat = location.latitude + (lat * distanceInMile);
-      double greaterLong = location.longitude + (lon * distanceInMile);
+      double greaterLat = location.latitude + (Constants.LAT * Constants.DISTANCE_MILE);
+      double greaterLong = location.longitude + (Constants.LONG * Constants.DISTANCE_MILE);
 
       GeoPoint lesserGeoPoint = GeoPoint(lowerLat, lowerLong);
       GeoPoint greaterGeoPoint = GeoPoint(greaterLat, greaterLong);
       return _firestore
           .collection(Constants.VENDOR)
-          .where('lastLocation', isGreaterThanOrEqualTo: lesserGeoPoint)
-          .where('lastLocation', isLessThanOrEqualTo: greaterGeoPoint)
+          .where(Constants.LAST_LOCATION, isGreaterThanOrEqualTo: lesserGeoPoint)
+          .where(Constants.LAST_LOCATION, isLessThanOrEqualTo: greaterGeoPoint)
           .snapshots()
           .map((QuerySnapshot query) {
         List<String> listData = List.empty(growable: true);
@@ -79,44 +75,11 @@ class Database {
     }
   }
 
-  //VENDOR
-  Stream<List<VendorModel>> streamVendorModel(GeoPoint? location) {
-    try {
-      double distanceInMile = 0.25;
-      double lat = 0.0144927536231884;
-      double lon = 0.0181818181818182;
-
-      double lowerLat = location!.latitude - (lat * distanceInMile);
-      double lowerLong = location.longitude - (lon * distanceInMile);
-
-      double greaterLat = location.latitude + (lat * distanceInMile);
-      double greaterLong = location.longitude + (lon * distanceInMile);
-
-      GeoPoint lesserGeoPoint = GeoPoint(lowerLat, lowerLong);
-      GeoPoint greaterGeoPoint = GeoPoint(greaterLat, greaterLong);
-      return _firestore
-          .collection(Constants.VENDOR)
-          .where('lastLocation', isGreaterThanOrEqualTo: lesserGeoPoint)
-          .where('lastLocation', isLessThanOrEqualTo: greaterGeoPoint)
-          .snapshots()
-          .map((QuerySnapshot query) {
-        List<VendorModel> listData = List.empty(growable: true);
-        query.docs.forEach((element) {
-          listData.add(VendorModel.fromDocument(element));
-        });
-        return listData;
-      });
-    } catch (e) {
-      print(e.toString());
-      rethrow;
-    }
-  }
-
   //Stream product in detail
   Stream<List<ProductModel>> getStreamProduct(String vendorId) {
     return _firestore
         .collection(Constants.PRODUCTS)
-        .where("vendorId", isEqualTo: vendorId)
+        .where(Constants.VENDOR_ID_QUERY, isEqualTo: vendorId)
         .snapshots()
         .map((QuerySnapshot query) {
       List<ProductModel> listData = List.empty(growable: true);
@@ -155,8 +118,8 @@ class Database {
     try {
       return _firestore
           .collection(Constants.TRANSACTION)
-          .orderBy("orderDate", descending: true)
-          .where("buyerId", isEqualTo: _auth.currentUser?.uid)
+          .orderBy(Constants.ORDER_DATE, descending: true)
+          .where(Constants.BUYER_ID_QUERY, isEqualTo: _auth.currentUser?.uid)
           .snapshots()
           .map((QuerySnapshot query) {
         List<TransactionModel> listData = List.empty(growable: true);

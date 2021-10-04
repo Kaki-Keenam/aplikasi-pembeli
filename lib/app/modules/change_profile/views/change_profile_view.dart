@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:kakikeenam/app/controllers/auth_controller.dart';
 import 'package:kakikeenam/app/modules/components/widgets/custom_button.dart';
 import 'package:kakikeenam/app/modules/components/widgets/custom_textfield.dart';
+import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 import '../controllers/change_profile_controller.dart';
 
@@ -102,7 +103,7 @@ class ChangeProfileView extends GetView<ChangeProfileController> {
                                           child: authC.user.value.photoUrl ==
                                                   null
                                               ? Image.asset(
-                                                  "assets/images/person.png",
+                                                  Constants.PROFILE,
                                                   fit: BoxFit.cover,
                                                 )
                                               : Image.network(
