@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/transaction_model.dart';
+import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 class Database {
@@ -11,11 +12,15 @@ class Database {
   GeocodingPlatform geoCoding = GeocodingPlatform.instance;
 
   //PRODUCT
-  Stream<List<ProductModel>> streamProduct(List<String>? query) {
+  Stream<List<ProductModel>> streamProduct(List<VendorModel>? query) {
+    List<String> queryList = List.empty(growable: true);
+    query?.forEach((element) {
+      queryList.add(element.uid ?? "");
+    });
     try {
       return _firestore
           .collection(Constants.PRODUCTS)
-          .where(Constants.VENDOR_ID_QUERY, whereIn: query)
+          .where(Constants.VENDOR_ID_QUERY, whereIn: queryList)
           .snapshots()
           .map((QuerySnapshot query) {
         List<ProductModel> listData = List.empty(growable: true);
@@ -31,27 +36,33 @@ class Database {
   }
 
   //VENDOR
-  Stream<List<String>?> streamVendorId(GeoPoint? location) {
+  Stream<List<VendorModel>?> streamVendorId(GeoPoint? location) {
     try {
+      double lowerLat =
+          location!.latitude - (Constants.LAT * Constants.DISTANCE_MILE);
+      double lowerLong =
+          location.longitude - (Constants.LONG * Constants.DISTANCE_MILE);
 
-      double lowerLat = location!.latitude - (Constants.LAT * Constants.DISTANCE_MILE);
-      double lowerLong = location.longitude - (Constants.LONG * Constants.DISTANCE_MILE);
-
-      double greaterLat = location.latitude + (Constants.LAT * Constants.DISTANCE_MILE);
-      double greaterLong = location.longitude + (Constants.LONG * Constants.DISTANCE_MILE);
+      double greaterLat =
+          location.latitude + (Constants.LAT * Constants.DISTANCE_MILE);
+      double greaterLong =
+          location.longitude + (Constants.LONG * Constants.DISTANCE_MILE);
 
       GeoPoint lesserGeoPoint = GeoPoint(lowerLat, lowerLong);
       GeoPoint greaterGeoPoint = GeoPoint(greaterLat, greaterLong);
       return _firestore
           .collection(Constants.VENDOR)
-          .where(Constants.LAST_LOCATION, isGreaterThanOrEqualTo: lesserGeoPoint)
+          .where(Constants.LAST_LOCATION,
+              isGreaterThanOrEqualTo: lesserGeoPoint)
           .where(Constants.LAST_LOCATION, isLessThanOrEqualTo: greaterGeoPoint)
           .snapshots()
           .map((QuerySnapshot query) {
-        List<String> listData = List.empty(growable: true);
+        List<VendorModel> listData = List.empty(growable: true);
         query.docs.forEach((element) {
           var data = element.data() as dynamic;
-          listData.add(data["uid"]);
+          listData.add(VendorModel(
+            uid: data["uid"],
+          ));
         });
         return listData;
       });

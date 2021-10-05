@@ -11,6 +11,7 @@ class VendorModel {
     this.email,
     this.image,
     this.street,
+    this.distance,
     this.location,
     this.status,
     this.rating,
@@ -20,6 +21,7 @@ class VendorModel {
   String? storeName;
   String? street;
   GeoPoint? location;
+  double? distance;
   String? email;
   String? image;
   String? status;

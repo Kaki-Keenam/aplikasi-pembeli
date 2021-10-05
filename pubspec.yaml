@@ -34,7 +34,6 @@ dependencies:
   date_format: 2.0.4
   after_layout:
   font_awesome_flutter:
-  response:
   flutter: 
     sdk: flutter
 
