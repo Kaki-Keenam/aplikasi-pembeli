@@ -139,53 +139,51 @@ class HomeView extends GetView<HomeController> {
           ),
         ),
       ),
-      body: ListView(
+      body: Column(
         children: [
-          SizedBox(
-            height: 10,
-          ),
+          SizedBox(height: 10,),
           Container(
-            height: Get.height * 0.56,
-            width: double.infinity,
-            child: StreamBuilder<GeoPoint>(
-              stream: Database().streamBuyerLoc(),
-              builder: (context, buyer) {
-                if (buyer.hasData) {
-                  return StreamBuilder<List<VendorModel>?>(
-                    stream: Database().streamVendorId(buyer.data),
-                    builder: (context, vendor) {
-                      if (vendor.hasData && vendor.data!.isNotEmpty) {
-                        return StreamBuilder<List<ProductModel>>(
-                          stream: Database().streamProduct(vendor.data),
-                          builder: (context, product) {
-                            if (product.hasData && vendor.data!.isNotEmpty) {
-                              return ListView.builder(
-                                itemCount: product.data?.length,
-                                itemBuilder: (context, index) {
-                                  return FoodView(
-                                    product: product.data?[index],
-                                    func: () => Get.toNamed(Routes.DETAILITEM,
-                                        arguments: product.data?[index]),
+                height: Get.height * 0.56,
+                width: double.infinity,
+                child: StreamBuilder<GeoPoint>(
+                  stream: Database().streamBuyerLoc(),
+                  builder: (context, buyer) {
+                    if (buyer.hasData) {
+                      return StreamBuilder<List<VendorModel>?>(
+                        stream: Database().streamVendorId(buyer.data),
+                        builder: (context, vendor) {
+                          if (vendor.hasData && vendor.data!.isNotEmpty) {
+                            return StreamBuilder<List<ProductModel>>(
+                              stream: Database().streamProduct(vendor.data),
+                              builder: (context, product) {
+                                if (product.hasData && vendor.data!.isNotEmpty) {
+                                  return ListView.builder(
+                                    itemCount: product.data?.length,
+                                    itemBuilder: (context, index) {
+                                      return FoodView(
+                                        product: product.data?[index],
+                                        func: () => Get.toNamed(Routes.DETAILITEM,
+                                            arguments: product.data?[index]),
+                                      );
+                                    },
                                   );
-                                },
-                              );
-                            }
-                            return LoadingView();
-                          },
-                        );
-                      }
-                      return Center(
-                        child: Text(
-                          "Tidak ada pedagang disekitar anda !",
-                        ),
+                                }
+                                return LoadingView();
+                              },
+                            );
+                          }
+                          return Center(
+                            child: Text(
+                              "Tidak ada pedagang disekitar anda !",
+                            ),
+                          );
+                        },
                       );
-                    },
-                  );
-                }
-                return LoadingView();
-              },
-            ),
-          ),
+                    }
+                    return LoadingView();
+                  },
+                ),
+              ),
         ],
       ),
     );

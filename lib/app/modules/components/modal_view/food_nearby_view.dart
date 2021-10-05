@@ -17,7 +17,7 @@ class FoodNearbyView extends StatelessWidget {
     return InkWell(
       onTap: func,
       child: Card(
-        elevation: 2,
+        elevation: 4,
         shadowColor: Colors.black26,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
@@ -30,7 +30,7 @@ class FoodNearbyView extends StatelessWidget {
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(
-              horizontal: 5,
+              horizontal: 10,
               vertical: 5,
             ),
             child: Column(

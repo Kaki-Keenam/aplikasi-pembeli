@@ -60,6 +60,7 @@ class DetailItemView extends GetView<DetailItemController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
+                    flex: -1,
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                       child: Column(
@@ -215,17 +216,20 @@ class DetailItemView extends GetView<DetailItemController> {
                                       ),
                                       Obx(
                                         () => Text(
-                                            controller.getVendorModel.street ?? "Loading"),
+                                            controller.getVendorModel.street ??
+                                                "Loading"),
                                       ),
                                       SizedBox(
                                         height: 10,
                                       ),
                                       Obx(() => Row(
-                                        children: [
-                                          Text("Status: "),
-                                          Text(controller.getVendorModel.status ?? "Loading"),
-                                        ],
-                                      )),
+                                            children: [
+                                              Text("Status: "),
+                                              Text(controller
+                                                      .getVendorModel.status ??
+                                                  "Loading"),
+                                            ],
+                                          )),
                                     ],
                                   ),
                                 ],
@@ -280,31 +284,34 @@ class DetailItemView extends GetView<DetailItemController> {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 10,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10, top: 30),
+                    child: Text(
+                      "Makanan Lainnya",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    ),
                   ),
-                  Expanded(
-                    child: SizedBox(
-                      width: Get.width,
-                      child: Obx(
-                        () => ListView.builder(
-                          itemCount: controller.foodOther?.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            if (food.vendorId != null) {
-                              controller.setVendorId = food.vendorId;
-                              return FoodNearbyView(
-                                  product: controller.foodOther?[index],
-                                  func: () {
-                                    Navigator.pushReplacementNamed(
-                                        context, Routes.DETAILITEM,
-                                        arguments:
-                                            controller.foodOther?[index]);
-                                  });
-                            }
-                            return LoadingView();
-                          },
-                        ),
+                  SizedBox(
+                    width: Get.width,
+                    height: 200,
+                    child: Obx(
+                      () => ListView.builder(
+                        itemCount: controller.foodOther?.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          if (food.vendorId != null) {
+                            controller.setVendorId = food.vendorId;
+                            return FoodNearbyView(
+                                product: controller.foodOther?[index],
+                                func: () {
+                                  Navigator.pushReplacementNamed(
+                                      context, Routes.DETAILITEM,
+                                      arguments:
+                                          controller.foodOther?[index]);
+                                });
+                          }
+                          return LoadingView();
+                        },
                       ),
                     ),
                   ),

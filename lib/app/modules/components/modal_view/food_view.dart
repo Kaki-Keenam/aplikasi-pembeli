@@ -18,7 +18,7 @@ class FoodView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 180,
+      height: 150,
       width: double.infinity,
       child: Material(
         color: Colors.transparent,
@@ -56,7 +56,7 @@ class FoodView extends StatelessWidget {
                             "${product?.name}",
                             style: TextStyle(
                               color: Colors.black45,
-                              fontSize: 20,
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                             overflow: TextOverflow.ellipsis,
