@@ -5,10 +5,10 @@ class RegisterController extends GetxController {
   var isShowPassword = false.obs;
   var isShowConfirmPassword = false.obs;
 
-  var nameC = TextEditingController(text: "Budi Setiawan");
-  var emailC = TextEditingController(text: "gonisetiawan0@gmail.com");
-  var passwordC = TextEditingController(text: "sinagarendi");
-  var confirmPassC = TextEditingController(text: "sinagarendi");
+  var nameC = TextEditingController();
+  var emailC = TextEditingController();
+  var passwordC = TextEditingController();
+  var confirmPassC = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
 

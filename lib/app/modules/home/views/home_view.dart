@@ -3,14 +3,15 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/controllers/auth_controller.dart';
 import 'package:kakikeenam/app/data/database/database.dart';
 import 'package:kakikeenam/app/data/models/carousels_model.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
-import 'package:kakikeenam/app/modules/components/modal_view/food_nearby_view.dart';
-import 'package:kakikeenam/app/modules/components/modal_view/food_place_view.dart';
+import 'package:kakikeenam/app/data/models/vendor_model.dart';
+import 'package:kakikeenam/app/modules/components/modal_view/food_view.dart';
 import 'package:kakikeenam/app/modules/components/widgets/loading_view.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
@@ -138,114 +139,52 @@ class HomeView extends GetView<HomeController> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(
-          left: 10,
-        ),
-        child: ListView(
-          children: [
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              "Jajanan terdekat",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Container(
-              height: 200,
-              width: Get.width,
-              child: StreamBuilder<GeoPoint>(
-                stream: Database().streamBuyerLoc(),
-                builder: (context, buyer) {
-                  if (buyer.hasData) {
-                    return StreamBuilder<List<String>?>(
-                      stream: Database().streamVendorId(buyer.data),
-                      builder: (context, vendor) {
-                        if (vendor.hasData && vendor.data!.isNotEmpty) {
-                          return StreamBuilder<List<ProductModel>>(
-                            stream: Database().streamProduct(vendor.data),
-                            builder: (context, product) {
-                              if (product.hasData && vendor.data!.isNotEmpty) {
-                                return ListView.builder(
-                                  itemCount: product.data?.length,
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder: (context, index) {
-                                    return FoodNearbyView(
-                                      product: product.data?[index],
-                                      func: () => Get.toNamed(Routes.DETAILITEM,
-                                          arguments: product.data?[index]),
-                                    );
-                                  },
-                                );
-                              }
-                              return LoadingView();
-                            },
+      body: Column(
+        children: [
+          SizedBox(height: 10,),
+          Container(
+                height: Get.height * 0.56,
+                width: double.infinity,
+                child: StreamBuilder<GeoPoint>(
+                  stream: Database().streamBuyerLoc(),
+                  builder: (context, buyer) {
+                    if (buyer.hasData) {
+                      return StreamBuilder<List<VendorModel>?>(
+                        stream: Database().streamVendorId(buyer.data),
+                        builder: (context, vendor) {
+                          if (vendor.hasData && vendor.data!.isNotEmpty) {
+                            return StreamBuilder<List<ProductModel>>(
+                              stream: Database().streamProduct(vendor.data),
+                              builder: (context, product) {
+                                if (product.hasData && vendor.data!.isNotEmpty) {
+                                  return ListView.builder(
+                                    itemCount: product.data?.length,
+                                    itemBuilder: (context, index) {
+                                      return FoodView(
+                                        product: product.data?[index],
+                                        func: () => Get.toNamed(Routes.DETAILITEM,
+                                            arguments: product.data?[index]),
+                                      );
+                                    },
+                                  );
+                                }
+                                return LoadingView();
+                              },
+                            );
+                          }
+                          return Center(
+                            child: Text(
+                              "Tidak ada pedagang disekitar anda !",
+                            ),
                           );
-                        }
-                        return Center(child: Text("Tidak ada pedagang disekitar anda !"));
-                      },
-                    );
-                  }
-                  return LoadingView();
-                },
+                        },
+                      );
+                    }
+                    return LoadingView();
+                  },
+                ),
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              "Makanan di daerahmu",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Container(
-              height: 120,
-              width: Get.width,
-              child: StreamBuilder<GeoPoint>(
-                stream: Database().streamBuyerLoc(),
-                builder: (context, buyer) {
-                  if (buyer.hasData) {
-                    return StreamBuilder<List<String>?>(
-                      stream: Database().streamVendorId(buyer.data),
-                      builder: (context, vendor) {
-                        if (vendor.hasData && vendor.data!.isNotEmpty) {
-                          return StreamBuilder<List<ProductModel>>(
-                            stream: Database().streamProduct(vendor.data),
-                            builder: (context, product) {
-                              if (product.hasData && vendor.data!.isNotEmpty) {
-                                return ListView.builder(
-                                  itemCount: product.data?.length,
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder: (context, index) {
-                                    return FoodPlaceView(
-                                      product: product.data?[index],
-                                      icon: Icon(
-                                        Icons.arrow_forward_ios_outlined,
-                                        color: Colors.black54,
-                                      ),
-                                      func: () => Get.toNamed(Routes.DETAILITEM,
-                                          arguments: product.data?[index]),
-                                    );
-                                  },
-                                );
-                              }
-                              return LoadingView();
-                            },
-                          );
-                        }
-                        return Center(child: Text("Tidak ada pedagang disekitar anda !"));
-                      },
-                    );
-                  }
-                  return LoadingView();
-                },
-              ),
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }

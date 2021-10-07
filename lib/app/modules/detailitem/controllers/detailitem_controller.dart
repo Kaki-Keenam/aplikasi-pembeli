@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/database/database.dart';
 import 'package:kakikeenam/app/data/models/favorite_model.dart';
@@ -13,9 +14,12 @@ class DetailItemController extends GetxController {
   FirebaseAuth _auth = FirebaseAuth.instance;
   RxBool isFav = false.obs;
   var vendorId = "".obs;
-  var vendor = VendorModel().obs;
+  var _vendor = VendorModel().obs;
+  Rxn<GeoPoint> _buyerLocation = Rxn<GeoPoint>();
 
-  set setVendor(VendorModel data) => vendor.value = data;
+  VendorModel get getVendorModel => _vendor.value;
+  GeoPoint? get getBuyerLocation => _buyerLocation.value;
+
   Rxn<List<ProductModel>> _foodModel = Rxn<List<ProductModel>>();
 
   List<ProductModel>? get foodOther => _foodModel.value;
@@ -26,6 +30,11 @@ class DetailItemController extends GetxController {
     _foodModel.bindStream(Database().getStreamProduct(vendorId.value));
     getVendor();
     super.onReady();
+  }
+  @override
+  void onInit() {
+    _buyerLocation.bindStream(Database().streamBuyerLoc());
+    super.onInit();
   }
 
   // TODO REVISI CODE
@@ -44,7 +53,7 @@ class DetailItemController extends GetxController {
         .doc(_auth.currentUser!.email)
         .get();
     final docFavorite =
-        (docUser.data() as Map<String, dynamic>)[Constants.FAVORITES] as List;
+    (docUser.data() as Map<String, dynamic>)[Constants.FAVORITES] as List;
     for (var f in docFavorite) {
       if (f["productId"] == id) {
         return true;
@@ -64,7 +73,7 @@ class DetailItemController extends GetxController {
           .doc(_auth.currentUser!.email)
           .get();
       final docFavorite =
-          (docUser.data() as Map<String, dynamic>)[Constants.FAVORITES] as List;
+      (docUser.data() as Map<String, dynamic>)[Constants.FAVORITES] as List;
 
       docFavorite.add({
         "productId": food?.productId,
@@ -88,7 +97,6 @@ class DetailItemController extends GetxController {
 
   void removeFavorite(String? id) async {
     CollectionReference users = _dbStore.collection(Constants.BUYER);
-
     try {
       final docUser = await users
           .doc(_auth.currentUser!.email)
@@ -96,7 +104,7 @@ class DetailItemController extends GetxController {
           .doc(_auth.currentUser!.email)
           .get();
       final docFavorite =
-          (docUser.data() as Map<String, dynamic>)[Constants.FAVORITES] as List;
+      (docUser.data() as Map<String, dynamic>)[Constants.FAVORITES] as List;
 
       List<Favorite> dataList = List<Favorite>.empty(growable: true);
 
@@ -114,17 +122,19 @@ class DetailItemController extends GetxController {
   }
 
   void getVendor() async {
-    try {
       CollectionReference ven = _dbStore.collection(Constants.VENDOR);
       DocumentSnapshot data = await ven.doc(vendorId.value).get();
-      var lastLocation = data.get("lastLocation") == null
-          ? GeoPoint(-8.58189186561154, 116.10003256768428)
-          : GeoPoint(-8.58189186561154, 116.10003256768428);
+      var lastLocation = data.get("lastLocation") ??
+          GeoPoint(-8.58189186561154, 116.10003256768428);
       List<Placemark> street = await geoCoding.placemarkFromCoordinates(
           lastLocation.latitude, lastLocation.longitude);
       String streetValue = "${street.first.street} ${street.first.subLocality}";
-
-      vendor.update((ven) {
+      double distance = Geolocator.distanceBetween(
+          getBuyerLocation!.latitude,
+          getBuyerLocation!.longitude,
+          lastLocation.latitude,
+          lastLocation.longitude);
+      _vendor.update((ven){
         ven?.image = data.get("storeImage");
         ven?.storeName = data.get("storeName");
         ven?.uid = data.get("uid");
@@ -132,9 +142,8 @@ class DetailItemController extends GetxController {
         ven?.status = data.get("status");
         ven?.rating = data.get("rating");
         ven?.street = streetValue;
+        ven?.distance = distance;
       });
-    } catch (e) {
-      print(e.toString());
-    }
+
   }
 }

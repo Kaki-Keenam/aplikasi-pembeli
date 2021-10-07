@@ -6,8 +6,8 @@ class LoginController extends GetxController {
   var isShowPassword = false.obs;
   var isShowIconButton = false.obs;
 
-  var emailC = TextEditingController(text: "gonisetiawan0@gmail.com");
-  var passwordC = TextEditingController(text: "sinagarendi");
+  var emailC = TextEditingController();
+  var passwordC = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
   final authC = Get.find<AuthController>();

@@ -28,6 +28,15 @@ class AuthController extends GetxController {
   var user = UserModel().obs;
   UserModel get userValue => user.value;
 
+  Rxn<User> _firebaseUser = Rxn<User>();
+  User? get userAuth => _firebaseUser.value;
+
+  @override
+  void onInit() {
+    _firebaseUser.bindStream(_auth.authStateChanges());
+    super.onInit();
+  }
+
   /// This function for initialized auto login and skip intro
   /// after buyer login at first time.
   Future<void> firsInitialized() async {
@@ -137,7 +146,6 @@ class AuthController extends GetxController {
   }
 
   // login dengan auth
-  Stream<User?> get streamAuthStatus => _auth.authStateChanges();
 
   Future<void> registerAuth(
       String email, String password, String name,) async {
