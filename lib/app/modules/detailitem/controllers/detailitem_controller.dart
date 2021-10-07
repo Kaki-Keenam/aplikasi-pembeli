@@ -122,12 +122,10 @@ class DetailItemController extends GetxController {
   }
 
   void getVendor() async {
-
       CollectionReference ven = _dbStore.collection(Constants.VENDOR);
       DocumentSnapshot data = await ven.doc(vendorId.value).get();
-      var lastLocation = data.get("lastLocation") == null
-          ? GeoPoint(-8.58189186561154, 116.10003256768428)
-          : GeoPoint(-8.58189186561154, 116.10003256768428);
+      var lastLocation = data.get("lastLocation") ??
+          GeoPoint(-8.58189186561154, 116.10003256768428);
       List<Placemark> street = await geoCoding.placemarkFromCoordinates(
           lastLocation.latitude, lastLocation.longitude);
       String streetValue = "${street.first.street} ${street.first.subLocality}";
@@ -136,7 +134,6 @@ class DetailItemController extends GetxController {
           getBuyerLocation!.longitude,
           lastLocation.latitude,
           lastLocation.longitude);
-        print("jarak ${distance}");
       _vendor.update((ven){
         ven?.image = data.get("storeImage");
         ven?.storeName = data.get("storeName");
