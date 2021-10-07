@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/controllers/auth_controller.dart';
-import 'package:kakikeenam/app/modules/components/modal_view/favorite_food_view.dart';
-import 'package:kakikeenam/app/modules/components/widgets/custom_textfield.dart';
+import 'package:kakikeenam/app/modules/components/model_view/favorite_food_view.dart';
+import 'package:kakikeenam/app/modules/components/widgets/custom_text_field.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 
 import '../controllers/favorite_controller.dart';
@@ -37,9 +37,9 @@ class FavoriteView extends GetView<FavoriteController> {
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: CustomTextField(
-                  hintText: "Cari disini",
-                  suffixIcon: Icon(Icons.search),
+                child: NewCustomTextField(
+                  title: "Cari",
+                  hint: "Cari disini",
                 ),
               ),
             ),

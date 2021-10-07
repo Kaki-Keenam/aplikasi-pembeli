@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/controllers/auth_controller.dart';
 import 'package:kakikeenam/app/modules/components/widgets/custom_button.dart';
-import 'package:kakikeenam/app/modules/components/widgets/custom_textfield.dart';
+import 'package:kakikeenam/app/modules/components/widgets/custom_text_field.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 
 import '../controllers/forget_password_controller.dart';
@@ -69,10 +69,10 @@ class ForgetPasswordView extends GetView<ForgetPasswordController> {
                         SizedBox(
                           height: 20,
                         ),
-                        CustomTextField(
+                        NewCustomTextField(
+                          title: "Alamat Email",
                           controller: controller.emailC,
-                          hintText: "Alamat Email",
-                          prefixIcon: Icon(Icons.email),
+                          hint: "Email",
                         ),
                         SizedBox(
                           height: 20,
@@ -101,7 +101,7 @@ class ForgetPasswordView extends GetView<ForgetPasswordController> {
                   children: [
                     Text('Sudah punya akun ? '),
                     TextButton(
-                      onPressed: () => Get.offAllNamed(Routes.LOGIN),
+                      onPressed: () => Get.offAllNamed(Routes.WELCOME_PAGE),
                       child: Text('Login Sekarang'),
                     )
                   ],

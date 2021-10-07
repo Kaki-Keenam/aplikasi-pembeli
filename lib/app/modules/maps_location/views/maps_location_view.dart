@@ -16,6 +16,7 @@ import 'components/my_location.dart';
 
 class MapsLocationView extends GetView<MapsLocationController> {
   final idleC = Get.find<Transaction_state_controller>();
+  final mapsC = Get.put(MapsLocationController());
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +64,7 @@ class MapsLocationView extends GetView<MapsLocationController> {
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: () => Get.offAllNamed(Routes.DASHBOARD),
+                onTap: () => Get.offAllNamed(Routes.PAGE_SWITCHER),
                 child: Container(
                   width: 45,
                   height: 45,

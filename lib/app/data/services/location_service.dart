@@ -108,7 +108,7 @@ class LocationController extends GetxController {
         ),
       });
     } catch (e) {
-      print(e.toString());
+      print("location service: ${e.toString()}");
     }
   }
 

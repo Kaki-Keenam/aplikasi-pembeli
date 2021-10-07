@@ -1,9 +1,12 @@
-import 'package:avatar_glow/avatar_glow.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kakikeenam/app/controllers/auth_controller.dart';
-import 'package:kakikeenam/app/routes/app_pages.dart';
+import 'package:kakikeenam/app/modules/components/widgets/notify_dialogs.dart';
+import 'package:kakikeenam/app/modules/components/widgets/user_info_tile.dart';
+import 'package:kakikeenam/app/utils/constants/app_colors.dart';
 
 import '../controllers/profile_controller.dart';
 
@@ -13,136 +16,133 @@ class ProfileView extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
+        brightness: Brightness.dark,
+        backgroundColor: AppColor.primary,
         elevation: 0,
         centerTitle: true,
-        title: Text("Profile"),
+        title: Text('My Profile',
+            style: TextStyle(
+                fontFamily: 'inter',
+                fontWeight: FontWeight.w400,
+                fontSize: 16)),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {},
+            child: Text(
+              'Edit',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600),
+            ),
+            style: TextButton.styleFrom(
+                primary: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100))),
+          ),
+        ],
       ),
-      body: Column(
+      body: ListView(
+        shrinkWrap: true,
+        physics: BouncingScrollPhysics(),
         children: [
+          // Section 1 - Profile Picture Wrapper
           Container(
-            child: Column(
-              children: [
-                Obx(
-                      () =>
-                      AvatarGlow(
-                        endRadius: 110,
-                        glowColor: Colors.black,
-                        duration: Duration(seconds: 2),
-                        child: Container(
-                          margin: EdgeInsets.all(15),
-                          width: 175,
-                          height: 175,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(200),
-                            child: CachedNetworkImage(
-                              imageUrl: "${authC.userValue.photoUrl}",
+            color: AppColor.primary,
+            padding: EdgeInsets.symmetric(vertical: 24),
+            child: GestureDetector(
+              onTap: () {
+                print('Code to open file manager');
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 130,
+                    height: 130,
+                    margin: EdgeInsets.only(bottom: 15),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: authC.userValue.photoUrl != null
+                          ? CachedNetworkImage(
+                              imageUrl: '${authC.userValue.photoUrl}',
                               fit: BoxFit.fill,
                               placeholder: (context, url) => Transform.scale(
                                 scale: 0.5,
                                 child: CircularProgressIndicator(),
                               ),
-                              errorWidget: (context, url, error) =>
-                              new Image.asset("assets/images/person.png"),
-                            ),
-                          ),
-                        ),
-                      ),
-                ),
-                Obx(
-                      () =>
-                      Text(
-                        "${authC.userValue.name}",
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                ),
-                Text(
-                  "${authC.userValue.email}",
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 20),
-          Expanded(
-            child: Container(
-              child: Column(
-                children: [
-                  ListTile(
-                    onTap: () {},
-                    leading: Icon(Icons.note_add_outlined),
-                    title: Text(
-                      "Update Realtime",
-                      style: TextStyle(
-                        fontSize: 22,
-                      ),
-                    ),
-                    trailing: Icon(Icons.arrow_right),
-                  ),
-                  ListTile(
-                    onTap: () => Get.toNamed(Routes.CHANGE_PROFILE, arguments: authC.userValue,),
-                    leading: Icon(Icons.person),
-                    title: Text(
-                      "Edit Profile",
-                      style: TextStyle(
-                        fontSize: 22,
-                      ),
-                    ),
-                    trailing: Icon(Icons.arrow_right),
-                  ),
-                  ListTile(
-                    onTap: () {
-                      Get.defaultDialog(
-                        title: "Logout",
-                        middleText: "Apakah anda yakin ingin logout?",
-                        onConfirm: () {
-                          authC.logout();
-                        },
-                        textConfirm: "Ok",
-                        textCancel: "Batal",
-                      );
-                    },
-                    leading: Icon(Icons.exit_to_app_rounded),
-                    title: Text(
-                      "Logout",
-                      style: TextStyle(
-                        fontSize: 22,
-                      ),
+                            )
+                          : Image.asset('assets/images/person.png'),
                     ),
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Change Profile Picture',
+                          style: TextStyle(
+                              fontFamily: 'inter',
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white)),
+                      SizedBox(width: 8),
+                      SvgPicture.asset('assets/icons/camera.svg',
+                          color: Colors.white),
+                    ],
+                  )
                 ],
               ),
             ),
           ),
+          // Section 2 - User Info Wrapper
           Container(
-            margin:
-            EdgeInsets.only(bottom: context.mediaQueryPadding.bottom + 10),
+            margin: EdgeInsets.only(top: 24),
+            width: MediaQuery.of(context).size.width,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Kaki Keenam",
-                  style: TextStyle(
-                    color: Colors.black54,
-                  ),
+                UserInfoTile(
+                  margin: EdgeInsets.only(bottom: 16),
+                  label: 'Email',
+                  value: '${authC.userValue.email}',
                 ),
-                Text(
-                  "v.1.0",
-                  style: TextStyle(
-                    color: Colors.black54,
-                  ),
+                UserInfoTile(
+                  margin: EdgeInsets.only(bottom: 16),
+                  label: 'Full Name',
+                  value: '${authC.userValue.name}',
                 ),
+                UserInfoTile(
+                  margin: EdgeInsets.only(bottom: 16),
+                  label: 'Subscription Type',
+                  value: 'Premium Subscription',
+                  valueBackground: AppColor.secondary,
+                ),
+                UserInfoTile(
+                  margin: EdgeInsets.only(bottom: 16),
+                  label: 'Terakhir Login',
+                  value: '${DateFormat('EEE, d MMM yyyy HH:mm:ss').format(
+                    DateTime.parse(authC.userValue.lastSignTime ?? ""),
+                  )}',
+                ),
+                ListTile(
+                  leading: Icon(Icons.exit_to_app_rounded),
+                  title: Text('Keluar'),
+                  onTap: (){
+                    NotifyDialogs().exitDialog(func: (){
+                      authC.logout();
+                    });
+                  },
+                )
               ],
             ),
-          ),
+          )
         ],
       ),
     );

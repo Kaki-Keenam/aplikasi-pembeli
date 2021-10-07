@@ -13,6 +13,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await GetStorage.init();
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    systemNavigationBarColor: Colors.black,
+    systemNavigationBarIconBrightness: Brightness.light,
+  ));
   SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
   ).then(
@@ -35,6 +39,7 @@ class MyApp extends StatelessWidget {
                 theme: ThemeData(
                   colorScheme: ColorScheme.light(primary: Color(0xFFFFB300)),
                   primaryIconTheme: IconThemeData(color: Colors.white),
+                  scaffoldBackgroundColor: Colors.white,
                   primaryTextTheme: TextTheme(
                     headline6: TextStyle(
                       color: Colors.white,
@@ -46,8 +51,8 @@ class MyApp extends StatelessWidget {
                             snapshot.hasData &&
                                 authC.connectC.connectionStatus !=
                                     ConnectivityResult.none
-                        ? Routes.DASHBOARD
-                        : Routes.LOGIN
+                        ? Routes.PAGE_SWITCHER
+                        : Routes.WELCOME_PAGE
                     : Routes.ONBOARDING,
                 getPages: AppPages.routes,
               ));

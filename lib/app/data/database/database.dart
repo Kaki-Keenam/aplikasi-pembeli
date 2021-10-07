@@ -30,7 +30,7 @@ class Database {
         return listData;
       });
     } catch (e) {
-      print(e.toString());
+      print("streamProduct service: ${e.toString()}");
       rethrow;
     }
   }
@@ -67,7 +67,7 @@ class Database {
         return listData;
       });
     } catch (e) {
-      print(e.toString());
+      print("streamvendorid service: ${e.toString()}");
       rethrow;
     }
   }
@@ -119,7 +119,7 @@ class Database {
         return listData;
       });
     } catch (e) {
-      print(e.toString());
+      print("streamFavorite service: ${e.toString()}");
       rethrow;
     }
   }
@@ -140,7 +140,7 @@ class Database {
         return listData;
       });
     } catch (e) {
-      print(e.toString());
+      print("streamTrans service: ${e.toString()}");
       rethrow;
     }
   }

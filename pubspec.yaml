@@ -32,7 +32,6 @@ dependencies:
   connectivity_plus: 1.1.0
   geolocator: 7.6.2
   date_format: 2.0.4
-  after_layout:
   font_awesome_flutter:
   flutter: 
     sdk: flutter
@@ -44,21 +43,32 @@ dev_dependencies:
 flutter: 
   assets:
     - assets/images/
-    - assets/svg/
+    - assets/icons/
+    - assets/fonts/
   uses-material-design: true
   fonts:
-    - family: Roboto
+    - family: inter
       fonts:
-        - asset: assets/fonts/Roboto-Thin.ttf
-          weight: 100
-        - asset: assets/fonts/Roboto-Light.ttf
-          weight: 300
-        - asset: assets/fonts/Roboto-Regular.ttf
+        - asset: assets/fonts/inter/Inter-Regular.ttf
           weight: 400
-        - asset: assets/fonts/Roboto-Medium.ttf
+        - asset: assets/fonts/inter/Inter-Medium.ttf
           weight: 500
-        - asset: assets/fonts/Roboto-Bold.ttf
+        - asset: assets/fonts/inter/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/inter/Inter-Bold.ttf
           weight: 700
-        - asset: assets/fonts/Roboto-Black.ttf
+        - asset: assets/fonts/inter/Inter-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/inter/Inter-Black.ttf
           weight: 900
+    - family: Open Sans
+      fonts:
+        - asset: assets/fonts/open sans/OpenSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/open sans/OpenSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/open sans/OpenSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/open sans/OpenSans-ExtraBold.ttf
+          weight: 800
 

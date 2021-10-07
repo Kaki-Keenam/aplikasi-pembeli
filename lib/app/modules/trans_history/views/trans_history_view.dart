@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:kakikeenam/app/modules/components/modal_view/transaction_view.dart';
+import 'package:kakikeenam/app/modules/components/model_view/transaction_view.dart';
 
 import '../controllers/trans_history_controller.dart';
 

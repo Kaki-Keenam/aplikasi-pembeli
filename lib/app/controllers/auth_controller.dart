@@ -136,7 +136,7 @@ class AuthController extends GetxController {
             "favorites": [],
           });
         }
-        Get.offAllNamed(Routes.DASHBOARD);
+        Get.offAllNamed(Routes.PAGE_SWITCHER);
       } else {
         dialogs.errorDialog("Login with Google");
       }
@@ -208,7 +208,7 @@ class AuthController extends GetxController {
       if (_userLogin.user!.emailVerified) {
         addToFirebase();
 
-        Get.offAllNamed(Routes.DASHBOARD);
+        Get.offAllNamed(Routes.PAGE_SWITCHER);
       } else {
         dialogs.repeatVerifyDialog(
           func: () async {
@@ -282,11 +282,11 @@ class AuthController extends GetxController {
       await _googleSignIn.disconnect();
       await _googleSignIn.signOut();
       loading.value = false;
-      Get.offAllNamed(Routes.LOGIN);
+      Get.offAllNamed(Routes.WELCOME_PAGE);
     } else {
       await _auth.signOut();
       loading.value = false;
-      Get.offAllNamed(Routes.LOGIN);
+      Get.offAllNamed(Routes.WELCOME_PAGE);
     }
   }
 

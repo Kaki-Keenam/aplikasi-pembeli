@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/controllers/auth_controller.dart';
 import 'package:kakikeenam/app/modules/components/widgets/custom_button.dart';
-import 'package:kakikeenam/app/modules/components/widgets/custom_textfield.dart';
+import 'package:kakikeenam/app/modules/components/widgets/custom_text_field.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 import '../controllers/change_profile_controller.dart';
@@ -131,15 +131,17 @@ class ChangeProfileView extends GetView<ChangeProfileController> {
                   ),
                 ),
                 SizedBox(height: 20),
-                CustomTextField(
-                  hintText: "Alamat Email",
+                NewCustomTextField(
+                  hint: "Alamat Email",
                   controller: controller.emailC,
                   readOnly: true,
-                  backgroundColor: Colors.grey[300],
+                  backgroundColour: Colors.grey[300],
+                  title: 'Alamat Email',
                 ),
                 SizedBox(height: 10),
-                CustomTextField(
-                  hintText: "Name",
+                NewCustomTextField(
+                  title: "Nama",
+                  hint: "Name",
                   controller: controller.nameC,
                 ),
                 SizedBox(height: 40),
@@ -153,8 +155,9 @@ class ChangeProfileView extends GetView<ChangeProfileController> {
                       text: "UPDATE",
                       backgroundColor: Colors.amber[600],
                       textColor: Colors.white,
-                      loading: authC.loading.value ?
-                      controller.loading.value = true : false,
+                      loading: authC.loading.value
+                          ? controller.loading.value = true
+                          : false,
                       func: () async {
                         authC.changeProfile(
                           controller.nameC.text,

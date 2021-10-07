@@ -123,4 +123,14 @@ class NotifyDialogs {
         textConfirm: "Berhasil"
     );
   }
+  void exitDialog({VoidCallback? func}) {
+    Get.defaultDialog(
+        title: "Keluar Aplikasi",
+        barrierDismissible: false,
+        content: Text("Apakah anda yakin ingin keluar ?"),
+        onConfirm: func,
+        textConfirm: "Ya",
+      textCancel: "Tidak",
+    );
+  }
 }

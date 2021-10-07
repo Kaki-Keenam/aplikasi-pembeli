@@ -4,9 +4,8 @@ import 'package:introduction_screen/introduction_screen.dart';
 import 'package:kakikeenam/app/controllers/auth_controller.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 
-import '../controllers/onboarding_controller.dart';
 
-class OnboardingView extends GetView<OnboardingController> {
+class OnboardingView extends StatelessWidget {
   final authC = Get.find<AuthController>();
 
   @override
@@ -91,7 +90,7 @@ class OnboardingView extends GetView<OnboardingController> {
             ),
           )
         ],
-        onDone: () => Get.offAllNamed(Routes.LOGIN),
+        onDone: () => Get.offAllNamed(Routes.WELCOME_PAGE),
         showSkipButton: true,
         skip: Text(
           "Skip",

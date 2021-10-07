@@ -7,7 +7,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/controllers/auth_controller.dart';
 import 'package:kakikeenam/app/data/services/transaction/transaction_state.dart';
-import 'package:kakikeenam/app/modules/components/modal_view/food_nearby_view.dart';
+import 'package:kakikeenam/app/modules/components/model_view/food_nearby_view.dart';
 import 'package:kakikeenam/app/modules/components/widgets/custom_button.dart';
 import 'package:kakikeenam/app/modules/components/widgets/loading_view.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';

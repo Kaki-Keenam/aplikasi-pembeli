@@ -53,7 +53,7 @@ class Transaction_state_controller extends GetxController {
         stateCancelConfirm(transId);
       });
     } catch (e) {
-      print(e.toString());
+      print("transState service: ${e.toString()}");
     }
   }
 
