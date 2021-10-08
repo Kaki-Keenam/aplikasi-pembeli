@@ -38,7 +38,7 @@ class SettingsView extends GetView<SettingsController> {
                       trailing: Obx(() => Switch(
                             value: statusC.statusStream.value,
                             onChanged: (value) {
-                              statusC.toggleListening();
+                              // statusC.toggleListening();
                               statusC.statusStream.value = value;
                             }),
                       ),

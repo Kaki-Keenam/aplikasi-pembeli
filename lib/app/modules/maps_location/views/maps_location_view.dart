@@ -27,7 +27,7 @@ class MapsLocationView extends GetView<MapsLocationController> {
           GetBuilder<MapsLocationController>(
             initState: (e) {
               Future.delayed(
-                  Duration(seconds: 3), () => e.controller?.myLocation());
+                  Duration(seconds: 3), () => e.controller?.getLastLocation());
             },
             builder: (getController) {
               return Animarker(
