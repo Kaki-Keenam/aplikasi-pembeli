@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:kakikeenam/app/modules/home/views/home_view.dart';
 import 'package:kakikeenam/app/modules/maps_location/views/maps_location_view.dart';
 import 'package:kakikeenam/app/modules/trans_history/views/trans_history_view.dart';
+import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
 
 import '../custom_bottom_navigation_bar.dart';
@@ -15,9 +17,14 @@ class _PageSwitcherState extends State<PageSwitcher> {
   int _selectedIndex = 0;
 
   _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if(index != 1){
+      setState(() {
+        _selectedIndex = index;
+      });
+    }else{
+      Get.offAllNamed(Routes.MAPS_LOCATION);
+    }
+
   }
 
   @override

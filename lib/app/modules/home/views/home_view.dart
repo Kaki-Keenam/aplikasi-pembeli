@@ -170,6 +170,7 @@ class HomeView extends GetView<HomeController> {
                                 builder: (context, product) {
                                   if (product.hasData &&
                                       vendor.data!.isNotEmpty) {
+                                    controller.searchList.value = product.data;
                                     return ListView.separated(
                                       shrinkWrap: true,
                                       physics: NeverScrollableScrollPhysics(),

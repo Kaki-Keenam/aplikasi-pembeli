@@ -17,7 +17,6 @@ class ProfileView extends GetView<ProfileController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        brightness: Brightness.dark,
         backgroundColor: AppColor.primary,
         elevation: 0,
         centerTitle: true,
@@ -137,6 +136,7 @@ class ProfileView extends GetView<ProfileController> {
                   onTap: (){
                     NotifyDialogs().exitDialog(func: (){
                       authC.logout();
+                      Get.back();
                     });
                   },
                 )

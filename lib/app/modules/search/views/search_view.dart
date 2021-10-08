@@ -2,20 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
+import 'package:kakikeenam/app/data/models/product_model.dart';
+import 'package:kakikeenam/app/modules/components/model_view/food_view.dart';
+import 'package:kakikeenam/app/modules/components/widgets/loading_view.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
 
 import '../controllers/search_controller.dart';
 
 class SearchView extends GetView<SearchController> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        brightness: Brightness.dark,
         backgroundColor: AppColor.primary,
         elevation: 0,
         centerTitle: true,
-        title: Text('Search Recipe', style: TextStyle(fontFamily: 'inter', fontWeight: FontWeight.w400, fontSize: 16)),
+        title: Text('Search Food Vendor', style: TextStyle(fontFamily: 'inter', fontWeight: FontWeight.w400, fontSize: 16)),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
@@ -47,31 +50,32 @@ class SearchView extends GetView<SearchController> {
                         child: Container(
                           height: 50,
                           margin: EdgeInsets.only(right: 15),
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppColor.primarySoft),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppColor.thirdSoft),
                           child: TextField(
-                            controller: controller.searchC,
                             onChanged: (value) {
+                              controller.searchFood(value);
+                              // controller.searchResult?.forEach((element) {
+                              //   print("data ${element.name}");
+                              // });
+                              print("data ${controller.searchResult}");
                             },
-                            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),
+                            style: TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w400),
                             maxLines: 1,
                             textInputAction: TextInputAction.search,
                             decoration: InputDecoration(
                               hintText: 'What do you want to eat?',
-                              hintStyle: TextStyle(color: Colors.white.withOpacity(0.2)),
+                              hintStyle: TextStyle(color: Colors.black54.withOpacity(0.2)),
                               prefixIconConstraints: BoxConstraints(maxHeight: 20),
                               contentPadding: EdgeInsets.symmetric(horizontal: 17),
                               focusedBorder: InputBorder.none,
                               border: InputBorder.none,
-                              prefixIcon: Visibility(
-                                visible: (controller.searchC.text.isEmpty) ? true : false,
-                                child: Container(
-                                  margin: EdgeInsets.only(left: 10, right: 12),
-                                  child: SvgPicture.asset(
-                                    'assets/icons/search.svg',
-                                    width: 20,
-                                    height: 20,
-                                    color: Colors.white,
-                                  ),
+                              prefixIcon: Container(
+                                margin: EdgeInsets.only(left: 10, right: 12),
+                                child: SvgPicture.asset(
+                                  'assets/icons/search.svg',
+                                  width: 20,
+                                  height: 20,
+                                  color: Colors.black54,
                                 ),
                               ),
                             ),
@@ -121,19 +125,26 @@ class SearchView extends GetView<SearchController> {
                     style: TextStyle(color: Colors.grey, fontSize: 12),
                   ),
                 ),
-                // ListView.separated(
-                //   shrinkWrap: true,
-                //   itemCount: 3,
-                //   physics: NeverScrollableScrollPhysics(),
-                //   separatorBuilder: (context, index) {
-                //     return SizedBox(height: 16);
-                //   },
-                //   itemBuilder: (context, index) {
-                //     return RecipeTile(
-                //       data: searchResult[index],
-                //     );
-                //   },
-                // ),
+                Obx(() {
+                  if(controller.searchResult != null && controller.searchResult?.length != 0){
+                    return ListView.separated(
+                      shrinkWrap: true,
+                      itemCount: controller.searchResult!.length,
+                      physics: NeverScrollableScrollPhysics(),
+                      separatorBuilder: (context, index) {
+                        return SizedBox(height: 16);
+                      },
+                      itemBuilder: (context, index) {
+                        return FoodView(
+                          product: controller.searchResult?[index],
+                        );
+                      },
+                    );
+                  }else{
+                    return Text("no data");
+                  }
+                }
+                ),
               ],
             ),
           ),
