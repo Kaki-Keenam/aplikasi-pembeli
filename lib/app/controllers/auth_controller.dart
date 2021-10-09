@@ -231,15 +231,18 @@ class AuthController extends GetxController {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         loading.value = false;
+        Get.back();
         errorText = e.message;
         dialogs.emailNotFoundDialog();
       } else if (e.code == 'wrong-password') {
         loading.value = false;
+        Get.back();
         errorText = e.message;
         dialogs.wrongPasswordDialog();
       }
     } catch (e) {
       loading.value = false;
+      Get.back();
       errorText = e.toString();
       dialogs.errorDialog("Login error");
     }

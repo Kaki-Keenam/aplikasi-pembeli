@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
                   ),
                 ),
                 initialRoute: authC.isSkipIntro.value
-                    ? authC.isAuth.value ||
+                    ? authC.isAuth.value || authC.userAuth?.emailVerified == true ||
                             snapshot.hasData &&
                                 authC.connectC.connectionStatus !=
                                     ConnectivityResult.none

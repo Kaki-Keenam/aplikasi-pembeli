@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/controllers/auth_controller.dart';
+import 'package:kakikeenam/app/modules/components/widgets/notify_dialogs.dart';
 import 'package:kakikeenam/app/modules/welcome/controllers/welcome_controller.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
 
@@ -51,7 +52,10 @@ class LoginModal extends StatelessWidget {
                 child: ElevatedButton(
                     onPressed: () {
                       authC.loginAuth(welC.emailC.text, welC.passC.text);
-                      Navigator.of(context).pop();
+                      Get.back();
+                      if(authC.loading.isTrue){
+                        NotifyDialogs().loadingDialog();
+                      }
                     },
                     child: Text('Login', style: TextStyle(color: AppColor.secondary, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'inter')),
                     style: ElevatedButton.styleFrom(
