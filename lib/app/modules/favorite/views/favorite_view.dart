@@ -18,7 +18,7 @@ class FavoriteView extends GetView<FavoriteController> {
         backgroundColor: AppColor.primary,
         elevation: 0,
         centerTitle: true,
-        title: Text('Cari Makanan', style: TextStyle(fontFamily: 'inter', fontWeight: FontWeight.w400, fontSize: 16)),
+        title: Text('Favorite Makanan', style: TextStyle(fontFamily: 'inter', fontWeight: FontWeight.w400, fontSize: 16)),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
@@ -112,13 +112,6 @@ class FavoriteView extends GetView<FavoriteController> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  margin: EdgeInsets.only(bottom: 15),
-                  child: Text(
-                    'Hasil pencarian..',
-                    style: TextStyle(color: Colors.grey, fontSize: 12),
-                  ),
-                ),
                 Obx(() {
                   if(controller.food != null && controller.food?.length != 0){
                     return ListView.separated(
