@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/controllers/auth_controller.dart';
 import 'package:kakikeenam/app/modules/components/model_view/food_view.dart';
+import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
 import 'package:lottie/lottie.dart';
 
@@ -124,6 +125,7 @@ class FavoriteView extends GetView<FavoriteController> {
                       itemBuilder: (context, index) {
                         return FoodView(
                           product: controller.food?[index],
+                          func: ()=> Get.toNamed(Routes.DETAILITEM, arguments: controller.food?[index]),
                         );
                       },
                     );
