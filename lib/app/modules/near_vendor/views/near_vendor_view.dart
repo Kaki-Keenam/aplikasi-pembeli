@@ -6,8 +6,8 @@ import 'package:kakikeenam/app/data/database/database.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/modules/components/model_view/food_view.dart';
-import 'package:kakikeenam/app/modules/components/widgets/loading_view.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
+import 'package:lottie/lottie.dart';
 
 import '../controllers/near_vendor_controller.dart';
 
@@ -56,19 +56,17 @@ class NearVendorView extends GetView<NearVendorController> {
                             },
                           );
                         }
-                        return LoadingView();
+                        return Container();
                       },
                     );
                   }
                   return Center(
-                    child: Text(
-                      "Tidak ada pedagang disekitar anda !",
-                    ),
+                      child: Lottie.asset('assets/animation/radar.zip')
                   );
                 },
               );
             }
-            return LoadingView();
+            return Container();
           },
         ),
       )

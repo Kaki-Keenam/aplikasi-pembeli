@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
-import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/modules/components/model_view/food_view.dart';
-import 'package:kakikeenam/app/modules/components/widgets/loading_view.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
 
 import '../controllers/search_controller.dart';
@@ -18,7 +16,7 @@ class SearchView extends GetView<SearchController> {
         backgroundColor: AppColor.primary,
         elevation: 0,
         centerTitle: true,
-        title: Text('Search Food Vendor', style: TextStyle(fontFamily: 'inter', fontWeight: FontWeight.w400, fontSize: 16)),
+        title: Text('Cari Makanan', style: TextStyle(fontFamily: 'inter', fontWeight: FontWeight.w400, fontSize: 16)),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
@@ -53,17 +51,12 @@ class SearchView extends GetView<SearchController> {
                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppColor.thirdSoft),
                           child: TextField(
                             onChanged: (value) {
-                              controller.searchFood(value);
-                              // controller.searchResult?.forEach((element) {
-                              //   print("data ${element.name}");
-                              // });
-                              print("data ${controller.searchResult}");
-                            },
+                              controller.searchFood(value);                            },
                             style: TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w400),
                             maxLines: 1,
                             textInputAction: TextInputAction.search,
                             decoration: InputDecoration(
-                              hintText: 'What do you want to eat?',
+                              hintText: 'Apa yang ingin anda makan?',
                               hintStyle: TextStyle(color: Colors.black54.withOpacity(0.2)),
                               prefixIconConstraints: BoxConstraints(maxHeight: 20),
                               contentPadding: EdgeInsets.symmetric(horizontal: 17),
@@ -121,7 +114,7 @@ class SearchView extends GetView<SearchController> {
                 Container(
                   margin: EdgeInsets.only(bottom: 15),
                   child: Text(
-                    'This is the result of your search..',
+                    'Hasil pencarian..',
                     style: TextStyle(color: Colors.grey, fontSize: 12),
                   ),
                 ),
@@ -141,7 +134,19 @@ class SearchView extends GetView<SearchController> {
                       },
                     );
                   }else{
-                    return Text("no data");
+                    return ListView.separated(
+                      shrinkWrap: true,
+                      itemCount: controller.searchData!.length,
+                      physics: NeverScrollableScrollPhysics(),
+                      separatorBuilder: (context, index) {
+                        return SizedBox(height: 16);
+                      },
+                      itemBuilder: (context, index) {
+                        return FoodView(
+                          product: controller.searchData?[index],
+                        );
+                      },
+                    );
                   }
                 }
                 ),

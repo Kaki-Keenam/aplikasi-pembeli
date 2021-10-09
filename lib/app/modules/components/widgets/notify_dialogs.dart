@@ -133,6 +133,16 @@ class NotifyDialogs {
         textConfirm: "Berhasil");
   }
 
+  void logoutDialog({VoidCallback? func}) {
+    Get.defaultDialog(
+      title: "Logout Akun",
+      barrierDismissible: false,
+      content: Text("Apakah anda yakin ingin logout ?"),
+      onConfirm: func,
+      textConfirm: "Ya",
+      textCancel: "Tidak",
+    );
+  }
   void exitDialog({VoidCallback? func}) {
     Get.defaultDialog(
       title: "Keluar Aplikasi",

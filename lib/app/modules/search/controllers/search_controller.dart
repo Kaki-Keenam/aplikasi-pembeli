@@ -1,11 +1,9 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/modules/home/controllers/home_controller.dart';
 
 class SearchController extends GetxController {
-  var searchC = TextEditingController();
-
   Rxn<List<ProductModel>> fromHome = Rxn<List<ProductModel>>();
   List<ProductModel>? get searchData => fromHome.value;
 
@@ -19,18 +17,11 @@ class SearchController extends GetxController {
     super.onInit();
   }
 
-  @override
-  void onClose() {
-    searchC.dispose();
-    super.onClose();
-  }
-
   void searchFood(String data){
     if(data.length == 0){
       resultData.value = [];
     }else {
       var capitalized = data.substring(0, 1).toUpperCase() + data.substring(1);
-      print(capitalized);
       if (searchData?.length != 0) {
         resultData.value = [];
         searchData?.forEach((element) {

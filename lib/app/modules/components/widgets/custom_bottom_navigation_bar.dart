@@ -16,7 +16,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 40, right: 60, bottom: 40),
+      padding: EdgeInsets.only(left: 40, right: 40, bottom: 40),
       color: Colors.transparent,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
@@ -33,11 +33,17 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                   ? BottomNavigationBarItem(icon: SvgPicture.asset('assets/icons/home-filled.svg', color: AppColor.primary), label: '')
                   : BottomNavigationBarItem(icon: SvgPicture.asset('assets/icons/home.svg', color: Colors.grey[600]), label: ''),
               (widget.selectedIndex == 1)
-                  ? BottomNavigationBarItem(icon: SvgPicture.asset('assets/icons/discover-filled.svg', color: AppColor.primary, height: 28, width: 26), label: '')
-                  : BottomNavigationBarItem(icon: SvgPicture.asset('assets/icons/discover.svg', color: Colors.grey[600], height: 28, width: 26), label: ''),
-              (widget.selectedIndex == 2)
                   ? BottomNavigationBarItem(icon: SvgPicture.asset('assets/icons/bookmark-filled.svg', color: AppColor.primary), label: '')
                   : BottomNavigationBarItem(icon: SvgPicture.asset('assets/icons/bookmark.svg', color: Colors.grey[600]), label: ''),
+              (widget.selectedIndex == 2)
+                  ? BottomNavigationBarItem(icon: SvgPicture.asset('assets/icons/discover-filled.svg', color: AppColor.primary, height: 28, width: 26), label: '')
+                  : BottomNavigationBarItem(icon: SvgPicture.asset('assets/icons/discover.svg', color: Colors.grey[600], height: 28, width: 26), label: ''),
+              (widget.selectedIndex == 3)
+                  ? BottomNavigationBarItem(icon: SvgPicture.asset('assets/icons/time-circle-filled.svg', color: AppColor.primary), label: '')
+                  : BottomNavigationBarItem(icon: SvgPicture.asset('assets/icons/time-circle.svg', color: Colors.grey[600]), label: ''),
+              (widget.selectedIndex == 4)
+                  ? BottomNavigationBarItem(icon: SvgPicture.asset('assets/icons/setting-filled.svg', color: AppColor.primary), label: '')
+                  : BottomNavigationBarItem(icon: SvgPicture.asset('assets/icons/setting.svg', color: Colors.grey[600]), label: ''),
             ],
           ),
         ),

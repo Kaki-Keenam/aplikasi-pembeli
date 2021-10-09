@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:kakikeenam/app/controllers/auth_controller.dart';
 import 'package:kakikeenam/app/data/database/database.dart';
 import 'package:kakikeenam/app/data/models/carousels_model.dart';
@@ -12,7 +13,6 @@ import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/modules/components/model_view/food_view.dart';
 import 'package:kakikeenam/app/modules/components/widgets/custom_app_bar.dart';
-import 'package:kakikeenam/app/modules/components/widgets/loading_view.dart';
 import 'package:kakikeenam/app/modules/components/widgets/search_bar.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
@@ -191,19 +191,17 @@ class HomeView extends GetView<HomeController> {
                                       },
                                     );
                                   }
-                                  return LoadingView();
+                                  return Container();
                                 },
                               );
                             }
                             return Center(
-                              child: Text(
-                                "Tidak ada pedagang disekitar anda !",
-                              ),
+                              child: Lottie.asset('assets/animation/radar.zip')
                             );
                           },
                         );
                       }
-                      return LoadingView();
+                      return Container();
                     },
                   ),
                 ),

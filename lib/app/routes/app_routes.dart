@@ -16,7 +16,6 @@ abstract class Routes {
   static const NOTIFICATION = _Paths.NOTIFICATION;
   static const SETTINGS = _Paths.SETTINGS;
   static const PROFILE = _Paths.PROFILE;
-  static const CHANGE_PROFILE = _Paths.CHANGE_PROFILE;
   static const TRANS_HISTORY = _Paths.TRANS_HISTORY;
   static const SEARCH = _Paths.SEARCH;
   static const NEAR_VENDOR = _Paths.NEAR_VENDOR;
@@ -35,7 +34,6 @@ abstract class _Paths {
   static const NOTIFICATION = '/notification';
   static const SETTINGS = '/settings';
   static const PROFILE = '/profile';
-  static const CHANGE_PROFILE = '/change-profile';
   static const TRANS_HISTORY = '/trans-history';
   static const SEARCH = '/search';
   static const NEAR_VENDOR = '/near-vendor';

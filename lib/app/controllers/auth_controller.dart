@@ -331,7 +331,7 @@ class AuthController extends GetxController {
   }
 
   /// change profile use for update profile send to firestore
-  void changeProfile(String name) async {
+  void editName(String name) async {
     loading.value = true;
     String date = DateTime.now().toIso8601String();
     CollectionReference users = _dbStore.collection(Constants.BUYER);
@@ -343,8 +343,6 @@ class AuthController extends GetxController {
       // Update model
       user.update((user) {
         user!.name = name;
-        user.lastSignTime =
-            _auth.currentUser!.metadata.lastSignInTime!.toIso8601String();
         user.updateTime = date;
       });
       user.refresh();

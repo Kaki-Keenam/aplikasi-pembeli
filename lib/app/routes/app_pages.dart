@@ -1,7 +1,5 @@
 import 'package:get/get.dart';
 
-import 'package:kakikeenam/app/modules/change_profile/bindings/change_profile_binding.dart';
-import 'package:kakikeenam/app/modules/change_profile/views/change_profile_view.dart';
 import 'package:kakikeenam/app/modules/components/widgets/screens/page_switcher.dart';
 import 'package:kakikeenam/app/modules/detailitem/bindings/detailitem_binding.dart';
 import 'package:kakikeenam/app/modules/detailitem/views/detailitem_view.dart';
@@ -64,11 +62,6 @@ class AppPages {
       name: _Paths.PROFILE,
       page: () => ProfileView(),
       binding: ProfileBinding(),
-    ),
-    GetPage(
-      name: _Paths.CHANGE_PROFILE,
-      page: () => ChangeProfileView(),
-      binding: ChangeProfileBinding(),
     ),
     GetPage(
       name: _Paths.SEARCH,

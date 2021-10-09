@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:lottie/lottie.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/modules/components/model_view/transaction_view.dart';
 
@@ -14,7 +14,7 @@ class TransHistoryView extends GetView<TransHistoryController> {
         title: Text('Histori Transaksi'),
         centerTitle: true,
       ),
-      body: Obx(() => ListView.builder(
+      body: controller.transaction != null ? Obx(() => ListView.builder(
           itemCount: controller.transaction?.length,
           itemBuilder: (context, index) {
             return TransactionView(
@@ -22,7 +22,7 @@ class TransHistoryView extends GetView<TransHistoryController> {
             );
           },
         ),
-      ),
+      ): Center(child: Lottie.asset('assets/animation/no-data.zip')),
     );
   }
 }

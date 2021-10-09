@@ -5,7 +5,8 @@ class UserInfoTile extends StatelessWidget {
   final String label, value;
   final EdgeInsetsGeometry? margin, padding;
   final Color? valueBackground;
-  UserInfoTile({required this.label, required this.value, this.padding, this.margin, this.valueBackground});
+  final Widget? button;
+  UserInfoTile({required this.label, required this.value, this.padding, this.margin, this.valueBackground, this.button});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,13 @@ class UserInfoTile extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             padding: EdgeInsets.all(16),
             color: valueBackground ?? AppColor.primaryExtraSoft,
-            child: Text('$value', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, fontFamily: 'inter')),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('$value', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, fontFamily: 'inter')),
+                button ?? Container(),
+              ],
+            ),
           )
         ],
       ),

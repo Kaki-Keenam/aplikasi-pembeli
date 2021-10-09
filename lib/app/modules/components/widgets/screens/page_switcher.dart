@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kakikeenam/app/modules/favorite/views/favorite_view.dart';
 import 'package:kakikeenam/app/modules/home/views/home_view.dart';
 import 'package:kakikeenam/app/modules/maps_location/views/maps_location_view.dart';
+import 'package:kakikeenam/app/modules/settings/views/settings_view.dart';
 import 'package:kakikeenam/app/modules/trans_history/views/trans_history_view.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
@@ -17,7 +19,7 @@ class _PageSwitcherState extends State<PageSwitcher> {
   int _selectedIndex = 0;
 
   _onItemTapped(int index) {
-    if(index != 1){
+    if(index != 2){
       setState(() {
         _selectedIndex = index;
       });
@@ -35,8 +37,10 @@ class _PageSwitcherState extends State<PageSwitcher> {
         children: [
           [
             HomeView(),
+            FavoriteView(),
             MapsLocationView(),
             TransHistoryView(),
+            SettingsView(),
           ][_selectedIndex],
           BottomGradientWidget(),
         ],

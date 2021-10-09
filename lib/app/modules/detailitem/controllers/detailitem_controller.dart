@@ -4,7 +4,6 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/database/database.dart';
-import 'package:kakikeenam/app/data/models/favorite_model.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
@@ -81,6 +80,7 @@ class DetailItemController extends GetxController {
         "image": food?.image,
         "price": food?.price,
         "vendorId": food?.vendorId,
+        "vendorName": food?.vendorName,
         "isFavorite": true,
         "updateTime": update,
       });
@@ -106,10 +106,7 @@ class DetailItemController extends GetxController {
       final docFavorite =
       (docUser.data() as Map<String, dynamic>)[Constants.FAVORITES] as List;
 
-      List<Favorite> dataList = List<Favorite>.empty(growable: true);
-
       docFavorite.removeWhere((element) => element["productId"] == id);
-      dataList.removeWhere((element) => element.productId == id);
       await users
           .doc(_auth.currentUser!.email)
           .collection(Constants.FAVORITE)
