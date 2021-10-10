@@ -26,7 +26,9 @@ class LocationController extends GetxController {
 
   @override
   void onReady(){
-    getLocationPermission();
+    Future.delayed(Duration(seconds: 4), (){
+      getLocationPermission();
+    });
     super.onReady();
   }
 

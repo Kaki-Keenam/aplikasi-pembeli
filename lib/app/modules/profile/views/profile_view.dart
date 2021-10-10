@@ -180,7 +180,7 @@ class ProfileView extends GetView<ProfileController> {
                   margin: EdgeInsets.only(bottom: 16),
                   label: 'Terakhir Login',
                   value: '${DateFormat('EEE, d MMM yyyy HH:mm:ss').format(
-                    DateTime.parse(authC.userValue.lastSignTime ?? ""),
+                    DateTime.parse(authC.userValue.lastSignTime!),
                   )}',
                 ),
               ],
