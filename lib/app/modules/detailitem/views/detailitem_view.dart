@@ -11,6 +11,7 @@ import 'package:kakikeenam/app/modules/components/model_view/food_nearby_view.da
 import 'package:kakikeenam/app/modules/components/widgets/custom_button.dart';
 import 'package:kakikeenam/app/modules/components/widgets/loading_view.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
+import 'package:kakikeenam/app/utils/strings.dart';
 
 import '../controllers/detailitem_controller.dart';
 
@@ -122,7 +123,7 @@ class DetailItemView extends GetView<DetailItemController> {
                                       Icon(Icons.location_on_sharp),
                                       Obx(
                                         () => Text(
-                                            "${controller.getVendorModel.distance?.toStringAsFixed(0)} m dari sini"),
+                                            "${controller.getVendorModel.distance?.toStringAsFixed(0)} ${Strings.distance}"),
                                       )
                                     ],
                                   ),
@@ -197,7 +198,7 @@ class DetailItemView extends GetView<DetailItemController> {
                                           () => Text(
                                             controller
                                                     .getVendorModel.storeName ??
-                                                "Loading",
+                                                Strings.loading,
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                                 fontSize: 20,
@@ -209,7 +210,7 @@ class DetailItemView extends GetView<DetailItemController> {
                                         height: 10,
                                       ),
                                       Text(
-                                        "Posisi saat ini:",
+                                        Strings.position,
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 18),
@@ -217,17 +218,17 @@ class DetailItemView extends GetView<DetailItemController> {
                                       Obx(
                                         () => Text(
                                             controller.getVendorModel.street ??
-                                                "Loading"),
+                                                Strings.loading),
                                       ),
                                       SizedBox(
                                         height: 10,
                                       ),
                                       Obx(() => Row(
                                             children: [
-                                              Text("Status: "),
+                                              Text(Strings.status),
                                               Text(controller
                                                       .getVendorModel.status ??
-                                                  "Loading"),
+                                                  Strings.loading),
                                             ],
                                           )),
                                     ],
@@ -246,7 +247,7 @@ class DetailItemView extends GetView<DetailItemController> {
                               Flexible(
                                 flex: 4,
                                 child: CustomButton(
-                                  text: "Panggil Sekarang",
+                                  text: Strings.call_know,
                                   backgroundColor: Colors.amber[600],
                                   func: () {
                                     idleC.stateProposedTrans(food);
@@ -287,7 +288,7 @@ class DetailItemView extends GetView<DetailItemController> {
                   Padding(
                     padding: const EdgeInsets.only(left: 10, top: 30),
                     child: Text(
-                      "Makanan Lainnya",
+                     Strings.other_foods,
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                     ),
                   ),

@@ -5,6 +5,7 @@ import 'package:kakikeenam/app/controllers/auth_controller.dart';
 import 'package:kakikeenam/app/modules/components/model_view/food_view.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
+import 'package:kakikeenam/app/utils/strings.dart';
 import 'package:lottie/lottie.dart';
 
 import '../controllers/favorite_controller.dart';
@@ -19,7 +20,7 @@ class FavoriteView extends GetView<FavoriteController> {
         backgroundColor: AppColor.primary,
         elevation: 0,
         centerTitle: true,
-        title: Text('Favorite Makanan', style: TextStyle(fontFamily: 'inter', fontWeight: FontWeight.w400, fontSize: 16)),
+        title: Text(Strings.favorite_title, style: TextStyle(fontFamily: 'inter', fontWeight: FontWeight.w400, fontSize: 16)),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
@@ -58,7 +59,7 @@ class FavoriteView extends GetView<FavoriteController> {
                             maxLines: 1,
                             textInputAction: TextInputAction.search,
                             decoration: InputDecoration(
-                              hintText: 'Apa yang ingin anda makan?',
+                              hintText: Strings.fav_search,
                               hintStyle: TextStyle(color: Colors.black54.withOpacity(0.2)),
                               prefixIconConstraints: BoxConstraints(maxHeight: 20),
                               contentPadding: EdgeInsets.symmetric(horizontal: 17),
@@ -67,7 +68,7 @@ class FavoriteView extends GetView<FavoriteController> {
                               prefixIcon: Container(
                                 margin: EdgeInsets.only(left: 10, right: 12),
                                 child: SvgPicture.asset(
-                                  'assets/icons/search.svg',
+                                  Strings.search,
                                   width: 20,
                                   height: 20,
                                   color: Colors.black54,
@@ -96,7 +97,7 @@ class FavoriteView extends GetView<FavoriteController> {
                             borderRadius: BorderRadius.circular(10),
                             color: AppColor.secondary,
                           ),
-                          child: SvgPicture.asset('assets/icons/filter.svg'),
+                          child: SvgPicture.asset(Strings.filter),
                         ),
                       )
                     ],
@@ -130,7 +131,7 @@ class FavoriteView extends GetView<FavoriteController> {
                       },
                     );
                   }else{
-                    return Lottie.asset('assets/animation/no-data.zip');
+                    return Lottie.asset(Strings.no_data);
                   }
                 }
                 ),

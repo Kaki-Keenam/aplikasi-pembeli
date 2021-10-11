@@ -4,6 +4,7 @@ import 'package:kakikeenam/app/controllers/auth_controller.dart';
 import 'package:kakikeenam/app/modules/components/widgets/modal_view/login_modal_view.dart';
 import 'package:kakikeenam/app/modules/components/widgets/modal_view/register_modal_view.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
+import 'package:kakikeenam/app/utils/strings.dart';
 
 class WelcomePage extends StatelessWidget {
   final authC = Get.find<AuthController>();
@@ -16,7 +17,7 @@ class WelcomePage extends StatelessWidget {
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-                decoration: BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/welcome.jpg'), fit: BoxFit.cover)),
+                decoration: BoxDecoration(image: DecorationImage(image: AssetImage(Strings.welcome), fit: BoxFit.cover)),
               ),
               Positioned(
                 bottom: 0,
@@ -34,9 +35,9 @@ class WelcomePage extends StatelessWidget {
                         children: [
                           Padding(
                             padding: EdgeInsets.only(bottom: 16),
-                            child: Text('Kaki Keenam', style: TextStyle(fontFamily: 'inter', fontWeight: FontWeight.w700, fontSize: 32, color: Colors.white)),
+                            child: Text(Strings.app_name, style: TextStyle(fontFamily: 'inter', fontWeight: FontWeight.w700, fontSize: 32, color: Colors.white)),
                           ),
-                          Text("Help you when you're hungry", style: TextStyle(color: Colors.white)),
+                          Text(Strings.app_quote, style: TextStyle(color: Colors.white)),
                         ],
                       ),
                       Column(
@@ -72,7 +73,7 @@ class WelcomePage extends StatelessWidget {
                             width: MediaQuery.of(context).size.width,
                             height: 60,
                             child: OutlinedButton(
-                              child: Text('Log in', style: TextStyle(color: AppColor.secondary, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'inter')),
+                              child: Text(Strings.login, style: TextStyle(color: AppColor.secondary, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'inter')),
                               onPressed: () {
                                 showModalBottomSheet(
                                   context: context,
@@ -101,8 +102,8 @@ class WelcomePage extends StatelessWidget {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    SizedBox(width: 45, height: 45, child: Image.asset("assets/images/google.png")),
-                                    Text('Login dengan Google', style: TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'inter')),
+                                    SizedBox(width: 45, height: 45, child: Image.asset(Strings.google)),
+                                    Text(Strings.login_google, style: TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'inter')),
                                   ],
                                 ),
                               ),

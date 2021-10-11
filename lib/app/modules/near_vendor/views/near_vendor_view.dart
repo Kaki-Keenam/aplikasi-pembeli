@@ -7,6 +7,7 @@ import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/modules/components/model_view/food_view.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
+import 'package:kakikeenam/app/utils/strings.dart';
 import 'package:lottie/lottie.dart';
 
 import '../controllers/near_vendor_controller.dart';
@@ -16,7 +17,7 @@ class NearVendorView extends GetView<NearVendorController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pedagang Terdekat'),
+        title: Text(Strings.all_title),
         centerTitle: true,
       ),
       body: Container(
@@ -61,7 +62,7 @@ class NearVendorView extends GetView<NearVendorController> {
                     );
                   }
                   return Center(
-                      child: Lottie.asset('assets/animation/radar.zip')
+                      child: Lottie.asset(Strings.radar)
                   );
                 },
               );

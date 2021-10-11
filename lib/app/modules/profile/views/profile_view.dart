@@ -9,6 +9,7 @@ import 'package:kakikeenam/app/controllers/auth_controller.dart';
 import 'package:kakikeenam/app/modules/components/widgets/notify_dialogs.dart';
 import 'package:kakikeenam/app/modules/components/widgets/user_info_tile.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
+import 'package:kakikeenam/app/utils/strings.dart';
 
 import '../controllers/profile_controller.dart';
 
@@ -22,7 +23,7 @@ class ProfileView extends GetView<ProfileController> {
         backgroundColor: AppColor.primary,
         elevation: 0,
         centerTitle: true,
-        title: Text('My Profile',
+        title: Text(Strings.profile_title,
             style: TextStyle(
                 fontFamily: 'inter',
                 fontWeight: FontWeight.w400,
@@ -83,31 +84,31 @@ class ProfileView extends GetView<ProfileController> {
                                 child: CircularProgressIndicator(),
                               ),
                         )
-                            : Image.asset('assets/images/person.png'),
+                            : Image.asset(Strings.avatar),
                       ),
                     ),
                   ),
                   (controller.pickerImage != null) ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ElevatedButton(onPressed: (){controller.resetImage();}, child: Text('Cancel')),
+                      ElevatedButton(onPressed: (){controller.resetImage();}, child: Text(Strings.cancel)),
                       ElevatedButton(onPressed: () async {await controller.uploadImage(authC.user.value.uid).then(
                             (value) =>
                         {if (value != "") authC.updatePhoto(value)},
-                      );}, child: Text('Simpan'))
+                      );}, child: Text(Strings.save))
                     ],
                   ) : GestureDetector(
                     onTap: () => controller.selectedImage(),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Change Profile Picture',
+                        Text(Strings.change_pic,
                             style: TextStyle(
                                 fontFamily: 'inter',
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white)),
                         SizedBox(width: 8),
-                        SvgPicture.asset('assets/icons/camera.svg',
+                        SvgPicture.asset(Strings.camera,
                             color: Colors.white),
                       ],
                     ),
@@ -129,12 +130,12 @@ class ProfileView extends GetView<ProfileController> {
               children: [
                 UserInfoTile(
                   margin: EdgeInsets.only(bottom: 16),
-                  label: 'Email',
+                  label: Strings.email,
                   value: '${authC.userValue.email}',
                 ),
                 UserInfoTile(
                   margin: EdgeInsets.only(bottom: 16),
-                  label: 'Full Name',
+                  label: Strings.name,
                   value: '${authC.userValue.name}',
                   button: TextButton(onPressed: () {
                     Get.dialog(
@@ -147,7 +148,7 @@ class ProfileView extends GetView<ProfileController> {
                               padding: EdgeInsets.all(10),
                               child: Column(
                                 children: [
-                                  Center(child: Text('Ganti Nama'),),
+                                  Center(child: Text(Strings.change_name),),
                                   SizedBox(height: 10,),
                                   TextField(
                                     controller: controller.nameEditC,
@@ -159,12 +160,12 @@ class ProfileView extends GetView<ProfileController> {
                                           .spaceBetween, children: [
                                       ElevatedButton(
                                           onPressed: () => Get.back(),
-                                          child: Text("Cancel")),
+                                          child: Text(Strings.cancel)),
                                       ElevatedButton(onPressed: () {
                                         authC.editName(
                                             controller.nameEditC.text);
                                         Get.back();
-                                      }, child: Text("Simpan"))
+                                      }, child: Text(Strings.save))
                                     ],),
                                   )
                                 ],
@@ -174,14 +175,14 @@ class ProfileView extends GetView<ProfileController> {
                         )
                     );
                   },
-                    child: Text('Edit'),),
+                    child: Text(Strings.edit),),
                 ),
                 UserInfoTile(
                   margin: EdgeInsets.only(bottom: 16),
-                  label: 'Terakhir Login',
-                  value: '${DateFormat('EEE, d MMM yyyy HH:mm:ss').format(
+                  label: Strings.last_login,
+                  value: '${authC.userValue.lastSignTime != null ? DateFormat('EEE, d MMM yyyy HH:mm:ss').format(
                     DateTime.parse(authC.userValue.lastSignTime!),
-                  )}',
+                  ) : DateFormat('EEE, d MMM yyyy HH:mm:ss').format(DateTime.now())}',
                 ),
               ],
             ),

@@ -1,12 +1,10 @@
 
-
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 
 
 class HomeController extends GetxController with SingleGetTickerProviderMixin {
 
-  // var searchProduct = [].obs;
   Rxn<List<ProductModel>> searchList = Rxn<List<ProductModel>>();
 
   List<ProductModel>? get searchData => searchList.value;

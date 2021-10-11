@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/services/location_service.dart';
+import 'package:kakikeenam/app/utils/strings.dart';
 
 import '../controllers/settings_controller.dart';
 
@@ -11,7 +12,7 @@ class SettingsView extends GetView<SettingsController> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            'Settings',
+            Strings.settings,
           ),
         ),
         body: Column(
@@ -25,15 +26,15 @@ class SettingsView extends GetView<SettingsController> {
                       onTap: () {},
                       leading: Icon(Icons.language),
                       title: Text(
-                        "Ganti bahasa",
+                      Strings.change_lang,
                       ),
-                      trailing: Text("Bahasa Indonesia"),
+                      trailing: Text(Strings.indo),
                     ),
                     ListTile(
                       onTap: () {},
                       leading: Icon(Icons.location_on_rounded),
                       title: Text(
-                        "Realtime Lokasi anda",
+                        Strings.set_realtime,
                       ),
                       trailing: Obx(() => Switch(
                             value: statusC.statusStream.value,

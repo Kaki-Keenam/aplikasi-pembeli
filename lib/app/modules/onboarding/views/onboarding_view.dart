@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:kakikeenam/app/controllers/auth_controller.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
+import 'package:kakikeenam/app/utils/strings.dart';
 
 
 class OnboardingView extends StatelessWidget {
@@ -15,7 +16,7 @@ class OnboardingView extends StatelessWidget {
         title: Container(
           width: Get.width * 0.2,
           height: Get.width * 0.2,
-          child: Image.asset("assets/images/logo.png"),
+          child: Image.asset(Strings.logo),
         ),
         elevation: 0,
         centerTitle: true,
@@ -23,8 +24,8 @@ class OnboardingView extends StatelessWidget {
       body: IntroductionScreen(
         pages: [
           PageViewModel(
-            title: "Temukan pedagang disekitarmu",
-            body: "Kamu hanya perlu memanggil pedagang disekelilingmu.",
+            title: Strings.title1,
+            body: Strings.content1,
             image: Container(
               width: Get.width,
               height: Get.width,
@@ -38,7 +39,7 @@ class OnboardingView extends StatelessWidget {
               child: Container(
                 child: Center(
                   child: Image.asset(
-                    "assets/images/board1.png",
+                    Strings.board1,
                     width: Get.width * 0.5,
                   ),
                 ),
@@ -46,8 +47,8 @@ class OnboardingView extends StatelessWidget {
             ),
           ),
           PageViewModel(
-            title: "Temukan jajanan enak disekitarmu",
-            body: "Biarkan pedagang keliling menghampirimu tanpa mencarinya.",
+            title: Strings.title2,
+            body: Strings.content2,
             image: Container(
               width: Get.width,
               height: Get.width,
@@ -60,7 +61,7 @@ class OnboardingView extends StatelessWidget {
               child: Container(
                 child: Center(
                   child: Image.asset(
-                    "assets/images/board2.png",
+                    Strings.board2,
                     width: Get.width * 0.5,
                   ),
                 ),
@@ -68,8 +69,8 @@ class OnboardingView extends StatelessWidget {
             ),
           ),
           PageViewModel(
-            title: "Jangkau pedangan dengan sekali klik",
-            body: "Kamu hanya perlu memanggil pedangan lewat notifikasi.",
+            title: Strings.title3,
+            body: Strings.content3,
             image: Container(
               width: Get.width,
               height: Get.width,
@@ -82,7 +83,7 @@ class OnboardingView extends StatelessWidget {
               child: Container(
                 child: Center(
                   child: Image.asset(
-                    "assets/images/board3.png",
+                    Strings.board3,
                     width: Get.width * 0.5,
                   ),
                 ),
@@ -93,15 +94,15 @@ class OnboardingView extends StatelessWidget {
         onDone: () => Get.offAllNamed(Routes.WELCOME_PAGE),
         showSkipButton: true,
         skip: Text(
-          "Skip",
+          Strings.skip,
           style: TextStyle(color: Colors.black54),
         ),
         next: Text(
-          "Next",
+          Strings.next,
           style: TextStyle(color: Colors.black54),
         ),
-        done: const Text(
-          "Done",
+        done: Text(
+          Strings.done,
           style: TextStyle(
             fontWeight: FontWeight.w600,
           ),

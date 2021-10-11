@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/modules/components/model_view/food_view.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
+import 'package:kakikeenam/app/utils/strings.dart';
 
 import '../controllers/search_controller.dart';
 
@@ -16,7 +17,7 @@ class SearchView extends GetView<SearchController> {
         backgroundColor: AppColor.primary,
         elevation: 0,
         centerTitle: true,
-        title: Text('Cari Makanan', style: TextStyle(fontFamily: 'inter', fontWeight: FontWeight.w400, fontSize: 16)),
+        title: Text(Strings.search_title, style: TextStyle(fontFamily: 'inter', fontWeight: FontWeight.w400, fontSize: 16)),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
@@ -56,7 +57,7 @@ class SearchView extends GetView<SearchController> {
                             maxLines: 1,
                             textInputAction: TextInputAction.search,
                             decoration: InputDecoration(
-                              hintText: 'Apa yang ingin anda makan?',
+                              hintText: Strings.search_food,
                               hintStyle: TextStyle(color: Colors.black54.withOpacity(0.2)),
                               prefixIconConstraints: BoxConstraints(maxHeight: 20),
                               contentPadding: EdgeInsets.symmetric(horizontal: 17),
@@ -65,7 +66,7 @@ class SearchView extends GetView<SearchController> {
                               prefixIcon: Container(
                                 margin: EdgeInsets.only(left: 10, right: 12),
                                 child: SvgPicture.asset(
-                                  'assets/icons/search.svg',
+                                  Strings.search,
                                   width: 20,
                                   height: 20,
                                   color: Colors.black54,
@@ -94,7 +95,7 @@ class SearchView extends GetView<SearchController> {
                             borderRadius: BorderRadius.circular(10),
                             color: AppColor.secondary,
                           ),
-                          child: SvgPicture.asset('assets/icons/filter.svg'),
+                          child: SvgPicture.asset(Strings.filter),
                         ),
                       )
                     ],
@@ -114,7 +115,7 @@ class SearchView extends GetView<SearchController> {
                 Container(
                   margin: EdgeInsets.only(bottom: 15),
                   child: Text(
-                    'Hasil pencarian..',
+                    Strings.search_result,
                     style: TextStyle(color: Colors.grey, fontSize: 12),
                   ),
                 ),

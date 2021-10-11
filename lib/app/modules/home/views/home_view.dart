@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
+import 'package:kakikeenam/app/utils/strings.dart';
 import 'package:lottie/lottie.dart';
 import 'package:kakikeenam/app/controllers/auth_controller.dart';
 import 'package:kakikeenam/app/data/database/database.dart';
@@ -25,7 +26,7 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: Text('Anda Lapar?',
+        title: Text(Strings.home_title,
             style: TextStyle(fontFamily: 'inter', fontWeight: FontWeight.w700)),
         showProfilePhoto: true,
         profilePhotoOnPressed: () {
@@ -75,7 +76,7 @@ class HomeView extends GetView<HomeController> {
                                   borderRadius: BorderRadius.circular(8),
                                   image: DecorationImage(
                                       image: AssetImage(
-                                        corousels[index].image ?? "Loading",
+                                        corousels[index].image ?? Strings.loading,
                                       ),
                                       fit: BoxFit.cover),
                                 ),
@@ -122,7 +123,7 @@ class HomeView extends GetView<HomeController> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Makanan Terdekat',
+                      Strings.near_food,
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -132,7 +133,7 @@ class HomeView extends GetView<HomeController> {
                       onPressed: () {
                         Get.toNamed(Routes.NEAR_VENDOR);
                       },
-                      child: Text('see all'),
+                      child: Text(Strings.see_all),
                       style: TextButton.styleFrom(
                           primary: Colors.black,
                           textStyle: TextStyle(
@@ -196,7 +197,7 @@ class HomeView extends GetView<HomeController> {
                               );
                             }
                             return Center(
-                              child: Lottie.asset('assets/animation/radar.zip')
+                              child: Lottie.asset(Strings.radar)
                             );
                           },
                         );

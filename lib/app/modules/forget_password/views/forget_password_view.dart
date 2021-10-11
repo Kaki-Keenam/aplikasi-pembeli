@@ -5,6 +5,7 @@ import 'package:kakikeenam/app/controllers/auth_controller.dart';
 import 'package:kakikeenam/app/modules/components/widgets/custom_button.dart';
 import 'package:kakikeenam/app/modules/components/widgets/custom_text_field.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
+import 'package:kakikeenam/app/utils/strings.dart';
 
 import '../controllers/forget_password_controller.dart';
 
@@ -33,7 +34,7 @@ class ForgetPasswordView extends GetView<ForgetPasswordController> {
               child: Align(
                 alignment: Alignment.topCenter,
                 child: Text(
-                  "Lupa Password",
+                  Strings.forget_password,
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 30,
@@ -61,7 +62,7 @@ class ForgetPasswordView extends GetView<ForgetPasswordController> {
                         Align(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            "Email Anda",
+                            Strings.your_email,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 28),
                           ),
@@ -70,15 +71,15 @@ class ForgetPasswordView extends GetView<ForgetPasswordController> {
                           height: 20,
                         ),
                         NewCustomTextField(
-                          title: "Alamat Email",
+                          title: Strings.email,
                           controller: controller.emailC,
-                          hint: "Email",
+                          hint: Strings.email,
                         ),
                         SizedBox(
                           height: 20,
                         ),
                         CustomButton(
-                          text: "Ganti Password",
+                          text: Strings.change_pass,
                           backgroundColor: Colors.amber[600],
                           textColor: Colors.white,
                           func: () => authC.resetPassword(controller.emailC.text),
@@ -99,10 +100,10 @@ class ForgetPasswordView extends GetView<ForgetPasswordController> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Sudah punya akun ? '),
+                    Text(Strings.have_account),
                     TextButton(
                       onPressed: () => Get.offAllNamed(Routes.WELCOME_PAGE),
-                      child: Text('Login Sekarang'),
+                      child: Text(Strings.login_now),
                     )
                   ],
                 ),
