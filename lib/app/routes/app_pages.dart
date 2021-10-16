@@ -17,6 +17,8 @@ import 'package:kakikeenam/app/modules/profile/bindings/profile_binding.dart';
 import 'package:kakikeenam/app/modules/profile/views/profile_view.dart';
 import 'package:kakikeenam/app/modules/search/bindings/search_binding.dart';
 import 'package:kakikeenam/app/modules/search/views/search_view.dart';
+import 'package:kakikeenam/app/modules/vendor_detail/bindings/vendor_detail_binding.dart';
+import 'package:kakikeenam/app/modules/vendor_detail/views/vendor_detail_view.dart';
 import 'package:kakikeenam/app/modules/welcome/welcome_page.dart';
 
 import '../../app_binding.dart';
@@ -72,6 +74,11 @@ class AppPages {
       name: _Paths.NEAR_VENDOR,
       page: () => NearVendorView(),
       binding: NearVendorBinding(),
+    ),
+    GetPage(
+      name: _Paths.VENDOR_DETAIL,
+      page: () => VendorDetailView(),
+      binding: VendorDetailBinding(),
     ),
   ];
 }

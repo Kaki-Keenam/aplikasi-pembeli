@@ -19,6 +19,7 @@ abstract class Routes {
   static const TRANS_HISTORY = _Paths.TRANS_HISTORY;
   static const SEARCH = _Paths.SEARCH;
   static const NEAR_VENDOR = _Paths.NEAR_VENDOR;
+  static const VENDOR_DETAIL = _Paths.VENDOR_DETAIL;
 }
 
 abstract class _Paths {
@@ -37,4 +38,5 @@ abstract class _Paths {
   static const TRANS_HISTORY = '/trans-history';
   static const SEARCH = '/search';
   static const NEAR_VENDOR = '/near-vendor';
+  static const VENDOR_DETAIL = '/vendor-detail';
 }

@@ -13,8 +13,6 @@ class Database {
   GeocodingPlatform geoCoding = GeocodingPlatform.instance;
 
 
-
-
   //PRODUCT
   Stream<List<ProductModel>> streamProduct(List<VendorModel>? query) {
     List<String> queryList = List.empty(growable: true);

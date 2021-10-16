@@ -286,33 +286,44 @@ class DetailItemView extends GetView<DetailItemController> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 10, top: 30),
+                    padding: const EdgeInsets.only(left: 20, top: 30),
                     child: Text(
-                     Strings.other_foods,
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                      Strings.other_foods,
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                     ),
                   ),
-                  SizedBox(
-                    width: Get.width,
-                    height: 200,
-                    child: Obx(
-                      () => ListView.builder(
-                        itemCount: controller.foodOther?.length,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          if (food.vendorId != null) {
-                            controller.setVendorId = food.vendorId;
-                            return FoodNearbyView(
-                                product: controller.foodOther?[index],
-                                func: () {
-                                  Navigator.pushReplacementNamed(
-                                      context, Routes.DETAILITEM,
-                                      arguments:
-                                          controller.foodOther?[index]);
-                                });
-                          }
-                          return LoadingView();
-                        },
+                  Expanded(
+                    child: Container(
+                      width: Get.width,
+                      height: Get.height,
+                      child: Obx(
+                        () => Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: GridView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  SliverGridDelegateWithMaxCrossAxisExtent(
+                                      maxCrossAxisExtent: 200,
+                                      childAspectRatio: 4 / 5,
+                                      crossAxisSpacing: 20,
+                                      mainAxisSpacing: 20),
+                              itemCount: controller.foodOther?.length,
+                              itemBuilder: (BuildContext ctx, index) {
+                                if (food.vendorId != null) {
+                                  controller.setVendorId = food.vendorId;
+                                  return FoodNearbyView(
+                                      product: controller.foodOther?[index],
+                                      func: () {
+                                        Navigator.pushReplacementNamed(
+                                            context, Routes.DETAILITEM,
+                                            arguments:
+                                                controller.foodOther?[index]);
+                                      });
+                                }
+                                return LoadingView();
+                              }),
+                        ),
                       ),
                     ),
                   ),

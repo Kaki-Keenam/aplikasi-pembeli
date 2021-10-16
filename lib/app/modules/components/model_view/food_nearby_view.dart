@@ -65,42 +65,6 @@ class FoodNearbyView extends StatelessWidget {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: 2,
-                    top: 10,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      RatingBar.builder(
-                        initialRating: 3.5,
-                        minRating: 1,
-                        direction: Axis.horizontal,
-                        allowHalfRating: true,
-                        itemCount: 5,
-                        itemSize: 10,
-                        itemBuilder: (context, _) => Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                        ),
-                        onRatingUpdate: (rating) {
-                          print(rating);
-                        },
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 5),
-                        child: Text(
-                          "200 reviews",
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontFamily: "roboto",
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
               ],
             ),
           ),

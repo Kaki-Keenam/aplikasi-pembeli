@@ -282,6 +282,7 @@ class MapsLocationController extends GetxController {
           id: id[i],
           name: vendorName[i],
           markerId: markersID[i],
+          distance: _listNear[i],
           latLng: coordinate[i],
           street: street[i],
           image: vendorImage[i],

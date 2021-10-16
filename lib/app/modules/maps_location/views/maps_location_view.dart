@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kakikeenam/app/data/services/transaction/transaction_state.dart';
 import 'package:kakikeenam/app/modules/components/widgets/loading_view.dart';
-import 'package:kakikeenam/app/modules/maps_location/views/components/detail_marker.dart';
+import 'package:kakikeenam/app/modules/maps_location/views/components/item_marker.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
@@ -124,7 +124,7 @@ class MapsLocationView extends GetView<MapsLocationController> {
                   image: image,
                 );
                 return Obx(() => controller.isLoadingDismiss.value
-                    ? DetailMarker(
+                    ? ItemMarker(
                   listNear: controller.nearMarker.value.markersList,
                   onPageChanged: (index) {
                     _index = index;
