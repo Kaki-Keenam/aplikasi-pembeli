@@ -25,7 +25,7 @@ class VendorModel {
   String? email;
   String? image;
   String? status;
-  int? rating;
+  double? rating;
 
   factory VendorModel.fromDocument(DocumentSnapshot json) {
     var doc = json.data() as dynamic;
@@ -36,7 +36,7 @@ class VendorModel {
       location: doc["lastLocation"],
       image: doc["storeImage"],
       status: doc["status"],
-      rating: doc["rating"],
+      rating: doc["rating"] as double,
     );
   }
 }

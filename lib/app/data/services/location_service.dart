@@ -26,7 +26,9 @@ class LocationController extends GetxController {
 
   @override
   void onReady(){
-    getLocationPermission();
+    Future.delayed(Duration(seconds: 4), (){
+      getLocationPermission();
+    });
     super.onReady();
   }
 
@@ -108,7 +110,7 @@ class LocationController extends GetxController {
         ),
       });
     } catch (e) {
-      print(e.toString());
+      print("location service: ${e.toString()}");
     }
   }
 

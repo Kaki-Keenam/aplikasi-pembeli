@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kakikeenam/app/data/services/transaction/transaction_state.dart';
 import 'package:kakikeenam/app/modules/components/widgets/loading_view.dart';
-import 'package:kakikeenam/app/modules/maps_location/views/components/detail_marker.dart';
+import 'package:kakikeenam/app/modules/maps_location/views/components/item_marker.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
@@ -16,6 +16,7 @@ import 'components/my_location.dart';
 
 class MapsLocationView extends GetView<MapsLocationController> {
   final idleC = Get.find<Transaction_state_controller>();
+  final mapsC = Get.put(MapsLocationController());
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class MapsLocationView extends GetView<MapsLocationController> {
           GetBuilder<MapsLocationController>(
             initState: (e) {
               Future.delayed(
-                  Duration(seconds: 3), () => e.controller?.myLocation());
+                  Duration(seconds: 3), () => e.controller?.getLastLocation());
             },
             builder: (getController) {
               return Animarker(
@@ -63,7 +64,7 @@ class MapsLocationView extends GetView<MapsLocationController> {
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: () => Get.offAllNamed(Routes.DASHBOARD),
+                onTap: () => Get.offAllNamed(Routes.PAGE_SWITCHER),
                 child: Container(
                   width: 45,
                   height: 45,
@@ -123,7 +124,7 @@ class MapsLocationView extends GetView<MapsLocationController> {
                   image: image,
                 );
                 return Obx(() => controller.isLoadingDismiss.value
-                    ? DetailMarker(
+                    ? ItemMarker(
                   listNear: controller.nearMarker.value.markersList,
                   onPageChanged: (index) {
                     _index = index;

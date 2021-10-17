@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
+
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/transaction_model.dart';
 import 'package:kakikeenam/app/data/models/vendor_model.dart';
@@ -10,6 +11,7 @@ class Database {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
   GeocodingPlatform geoCoding = GeocodingPlatform.instance;
+
 
   //PRODUCT
   Stream<List<ProductModel>> streamProduct(List<VendorModel>? query) {
@@ -30,7 +32,7 @@ class Database {
         return listData;
       });
     } catch (e) {
-      print(e.toString());
+      print("streamProduct service: ${e.toString()}");
       rethrow;
     }
   }
@@ -67,7 +69,7 @@ class Database {
         return listData;
       });
     } catch (e) {
-      print(e.toString());
+      print("streamvendorid service: ${e.toString()}");
       rethrow;
     }
   }
@@ -119,7 +121,7 @@ class Database {
         return listData;
       });
     } catch (e) {
-      print(e.toString());
+      print("streamFavorite service: ${e.toString()}");
       rethrow;
     }
   }
@@ -140,8 +142,11 @@ class Database {
         return listData;
       });
     } catch (e) {
-      print(e.toString());
+      print("streamTrans service: ${e.toString()}");
       rethrow;
     }
   }
+
+  // Search Data
+
 }

@@ -35,11 +35,12 @@ class MapsLocationController extends GetxController {
   GeoPoint? lastLocationData;
 
   FirebaseFirestore _dbStore = FirebaseFirestore.instance;
+
   FirebaseAuth _auth = FirebaseAuth.instance;
   Completer<GoogleMapController> mController = Completer();
   GoogleMapController? mapController;
 
-  // Location location = Location();
+  GeolocatorPlatform locator = GeolocatorPlatform.instance;
 
   // custom marker
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
@@ -49,7 +50,7 @@ class MapsLocationController extends GetxController {
   // current location
   // Position? currentLocation;
   GeolocatorPlatform geoLocator = GeolocatorPlatform.instance;
-  Position? streamPosition;
+  Rxn<Position> streamPosition = Rxn<Position>();
 
   bool ripple = true;
 
@@ -64,21 +65,22 @@ class MapsLocationController extends GetxController {
   void onClose() async {
     var controller = await mController.future;
     controller.dispose();
-    streamPosition = null;
     ripple = false;
     super.onClose();
   }
 
   @override
   onInit() {
-    getCurrentPosition();
-    Timer.periodic(Duration(seconds: 3), (timer) {
-      restartMarkerMap();
-    });
+    streamPosition.bindStream(streamLocation());
+    restartMarkerMap();
     super.onInit();
   }
 
-  set positionStream(Position position) => this.streamPosition = position;
+  Position? get positionStream => streamPosition.value;
+
+  Stream<Position> streamLocation() {
+    return locator.getPositionStream();
+  }
 
   /// This is function for firs initial camera position
   CameraPosition initPosition = CameraPosition(
@@ -92,8 +94,8 @@ class MapsLocationController extends GetxController {
   List<double> setNearestLocation() {
     List<double> _listNear = List<double>.empty(growable: true);
     final myLocation = ILatLng.point(
-      streamPosition!.latitude,
-      streamPosition!.longitude,
+      positionStream!.latitude,
+      positionStream!.longitude,
     );
 
     for (var i = 0; i < vendorName.length; i++) {
@@ -117,8 +119,8 @@ class MapsLocationController extends GetxController {
     Set<Circle> circle = Set.from([
       Circle(
           circleId: CircleId(Constants.MY_LOCATION_ID),
-          center: streamPosition != null
-              ? LatLng(streamPosition!.latitude, streamPosition!.longitude)
+          center: positionStream != null
+              ? LatLng(positionStream!.latitude, positionStream!.longitude)
               : Constants.SOURCE_LOCATION,
           radius: Constants.CIRCLE_RADIUS,
           fillColor: Color.fromRGBO(251, 221, 50, 0.12),
@@ -212,17 +214,24 @@ class MapsLocationController extends GetxController {
   /// buyer move from their position
   void restartMarkerMap() async {
     var markerId = MarkerId(Constants.MY_LOCATION_ID);
-    var currentPosition = await geoLocator.getCurrentPosition();
-    var pinPosition =
-        LatLng(currentPosition.latitude, currentPosition.longitude);
+    var pinPosition = positionStream ??
+        Position(
+          longitude: -8.582572687412386,
+          latitude: 116.1013248977757,
+          timestamp: DateTime(3),
+          accuracy: 1.1,
+          altitude: 1.1,
+          heading: 1.1,
+          speed: 1.1,
+          speedAccuracy: 1.1,
+        );
+    var pinLocation = LatLng(pinPosition.latitude, pinPosition.longitude);
     try {
-      markers.removeWhere(
-          (_, id) => id.markerId.value == Constants.MY_LOCATION_ID);
       if (isDismissibleDialog.value) {
         markers[markerId] = RippleMarker(
           markerId: markerId,
           icon: buyerIcon ?? BitmapDescriptor.defaultMarker,
-          position: pinPosition,
+          position: pinLocation,
           ripple: ripple,
         );
         justNearestVendor();
@@ -230,7 +239,7 @@ class MapsLocationController extends GetxController {
         allVendorMarker();
       }
     } catch (e) {
-      print(e.toString());
+      print("restart ${e.toString()}");
     }
     update();
   }
@@ -273,6 +282,7 @@ class MapsLocationController extends GetxController {
           id: id[i],
           name: vendorName[i],
           markerId: markersID[i],
+          distance: _listNear[i],
           latLng: coordinate[i],
           street: street[i],
           image: vendorImage[i],
@@ -308,9 +318,6 @@ class MapsLocationController extends GetxController {
 
   /// This function to setting listener realtime location
   /// every buyer move from their position
-  Future<void> getCurrentPosition() async {
-    positionStream = await geoLocator.getCurrentPosition();
-  }
 
   /// This function will pont camera to current position.
   /// and it will get last location that can store to firestore
@@ -319,8 +326,8 @@ class MapsLocationController extends GetxController {
       final users = _dbStore.collection(Constants.BUYER);
       await users.doc(_auth.currentUser!.email).update({
         "lastLocation": GeoPoint(
-          streamPosition!.latitude,
-          streamPosition!.longitude,
+          positionStream!.latitude,
+          positionStream!.longitude,
         )
       });
       getNearVendorMarker();
@@ -342,6 +349,7 @@ class MapsLocationController extends GetxController {
         zoom: Constants.CAMERA_ZOOM_OUT,
       ),
     ));
+    restartMarkerMap();
   }
 
   void mapCreated(GoogleMapController controller) {

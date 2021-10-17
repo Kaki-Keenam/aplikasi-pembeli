@@ -136,7 +136,7 @@ class AuthController extends GetxController {
             "favorites": [],
           });
         }
-        Get.offAllNamed(Routes.DASHBOARD);
+        Get.offAllNamed(Routes.PAGE_SWITCHER);
       } else {
         dialogs.errorDialog("Login with Google");
       }
@@ -208,7 +208,7 @@ class AuthController extends GetxController {
       if (_userLogin.user!.emailVerified) {
         addToFirebase();
 
-        Get.offAllNamed(Routes.DASHBOARD);
+        Get.offAllNamed(Routes.PAGE_SWITCHER);
       } else {
         dialogs.repeatVerifyDialog(
           func: () async {
@@ -228,18 +228,22 @@ class AuthController extends GetxController {
         });
       }
       loading.value = false;
+
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         loading.value = false;
+        Get.back();
         errorText = e.message;
         dialogs.emailNotFoundDialog();
       } else if (e.code == 'wrong-password') {
         loading.value = false;
+        Get.back();
         errorText = e.message;
         dialogs.wrongPasswordDialog();
       }
     } catch (e) {
       loading.value = false;
+      Get.back();
       errorText = e.toString();
       dialogs.errorDialog("Login error");
     }
@@ -282,11 +286,11 @@ class AuthController extends GetxController {
       await _googleSignIn.disconnect();
       await _googleSignIn.signOut();
       loading.value = false;
-      Get.offAllNamed(Routes.LOGIN);
+      Get.offAllNamed(Routes.WELCOME_PAGE);
     } else {
       await _auth.signOut();
       loading.value = false;
-      Get.offAllNamed(Routes.LOGIN);
+      Get.offAllNamed(Routes.WELCOME_PAGE);
     }
   }
 
@@ -328,7 +332,7 @@ class AuthController extends GetxController {
   }
 
   /// change profile use for update profile send to firestore
-  void changeProfile(String name) async {
+  void editName(String name) async {
     loading.value = true;
     String date = DateTime.now().toIso8601String();
     CollectionReference users = _dbStore.collection(Constants.BUYER);
@@ -340,8 +344,6 @@ class AuthController extends GetxController {
       // Update model
       user.update((user) {
         user!.name = name;
-        user.lastSignTime =
-            _auth.currentUser!.metadata.lastSignInTime!.toIso8601String();
         user.updateTime = date;
       });
       user.refresh();

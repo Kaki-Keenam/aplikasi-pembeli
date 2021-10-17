@@ -10,28 +10,7 @@ class TransHistoryController extends GetxController {
 
   @override
   void onInit() {
-    stateVendorArrived();
     _transModel.bindStream(Database().streamListTrans());
     super.onInit();
-  }
-
-  @override
-  void onReady() {
-    stateVendorArrived();
-    super.onReady();
-  }
-
-  void stateVendorArrived(){
-    try{
-      transaction?.forEach((element) {
-        if(element.state == "ARRIVED"){
-          dialogs.arrivedDialog(
-            func: (){},
-          );
-        }
-      });
-    }catch(e){
-      print(e.toString());
-    }
   }
 }

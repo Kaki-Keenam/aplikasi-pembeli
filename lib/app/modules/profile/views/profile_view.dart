@@ -1,9 +1,15 @@
-import 'package:avatar_glow/avatar_glow.dart';
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kakikeenam/app/controllers/auth_controller.dart';
-import 'package:kakikeenam/app/routes/app_pages.dart';
+import 'package:kakikeenam/app/modules/components/widgets/notify_dialogs.dart';
+import 'package:kakikeenam/app/modules/components/widgets/user_info_tile.dart';
+import 'package:kakikeenam/app/utils/constants/app_colors.dart';
+import 'package:kakikeenam/app/utils/strings.dart';
 
 import '../controllers/profile_controller.dart';
 
@@ -13,136 +19,174 @@ class ProfileView extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: AppColor.primary,
         elevation: 0,
         centerTitle: true,
-        title: Text("Profile"),
+        title: Text(Strings.profile_title,
+            style: TextStyle(
+                fontFamily: 'inter',
+                fontWeight: FontWeight.w400,
+                fontSize: 16)),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              NotifyDialogs().logoutDialog(func: () {
+                authC.logout();
+                Get.back();
+              });
+            },
+            child: Icon(Icons.exit_to_app_rounded),
+            style: TextButton.styleFrom(
+                primary: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100))),
+          ),
+        ],
       ),
-      body: Column(
+      body: ListView(
+        shrinkWrap: true,
+        physics: BouncingScrollPhysics(),
         children: [
-          Container(
-            child: Column(
-              children: [
-                Obx(
-                      () =>
-                      AvatarGlow(
-                        endRadius: 110,
-                        glowColor: Colors.black,
-                        duration: Duration(seconds: 2),
-                        child: Container(
-                          margin: EdgeInsets.all(15),
-                          width: 175,
-                          height: 175,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(200),
-                            child: CachedNetworkImage(
-                              imageUrl: "${authC.userValue.photoUrl}",
-                              fit: BoxFit.fill,
-                              placeholder: (context, url) => Transform.scale(
+          // Section 1 - Profile Picture Wrapper
+          GetBuilder<ProfileController>(builder: (logic) {
+            return Container(
+              color: AppColor.primary,
+              padding: EdgeInsets.symmetric(vertical: 24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 130,
+                    height: 130,
+                    margin: EdgeInsets.only(bottom: 15),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: controller.pickerImage != null ?
+                      Image(fit: BoxFit.cover, image: FileImage(
+                        File(logic.pickerImage!.path),
+                      ),)
+                     :
+                      Obx(()=> authC.userValue.photoUrl != null
+                            ? CachedNetworkImage(
+                          imageUrl: '${authC.userValue.photoUrl}',
+                          fit: BoxFit.fill,
+                          placeholder: (context, url) =>
+                              Transform.scale(
                                 scale: 0.5,
                                 child: CircularProgressIndicator(),
                               ),
-                              errorWidget: (context, url, error) =>
-                              new Image.asset("assets/images/person.png"),
-                            ),
-                          ),
-                        ),
-                      ),
-                ),
-                Obx(
-                      () =>
-                      Text(
-                        "${authC.userValue.name}",
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                ),
-                Text(
-                  "${authC.userValue.email}",
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 20),
-          Expanded(
-            child: Container(
-              child: Column(
-                children: [
-                  ListTile(
-                    onTap: () {},
-                    leading: Icon(Icons.note_add_outlined),
-                    title: Text(
-                      "Update Realtime",
-                      style: TextStyle(
-                        fontSize: 22,
-                      ),
-                    ),
-                    trailing: Icon(Icons.arrow_right),
-                  ),
-                  ListTile(
-                    onTap: () => Get.toNamed(Routes.CHANGE_PROFILE, arguments: authC.userValue,),
-                    leading: Icon(Icons.person),
-                    title: Text(
-                      "Edit Profile",
-                      style: TextStyle(
-                        fontSize: 22,
-                      ),
-                    ),
-                    trailing: Icon(Icons.arrow_right),
-                  ),
-                  ListTile(
-                    onTap: () {
-                      Get.defaultDialog(
-                        title: "Logout",
-                        middleText: "Apakah anda yakin ingin logout?",
-                        onConfirm: () {
-                          authC.logout();
-                        },
-                        textConfirm: "Ok",
-                        textCancel: "Batal",
-                      );
-                    },
-                    leading: Icon(Icons.exit_to_app_rounded),
-                    title: Text(
-                      "Logout",
-                      style: TextStyle(
-                        fontSize: 22,
+                        )
+                            : Image.asset(Strings.avatar),
                       ),
                     ),
                   ),
+                  (controller.pickerImage != null) ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(onPressed: (){controller.resetImage();}, child: Text(Strings.cancel)),
+                      ElevatedButton(onPressed: () async {await controller.uploadImage(authC.user.value.uid).then(
+                            (value) =>
+                        {if (value != "") authC.updatePhoto(value)},
+                      );}, child: Text(Strings.save))
+                    ],
+                  ) : GestureDetector(
+                    onTap: () => controller.selectedImage(),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(Strings.change_pic,
+                            style: TextStyle(
+                                fontFamily: 'inter',
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white)),
+                        SizedBox(width: 8),
+                        SvgPicture.asset(Strings.camera,
+                            color: Colors.white),
+                      ],
+                    ),
+                  )
                 ],
               ),
-            ),
-          ),
+            );
+          }),
+          // Section 2 - User Info Wrapper
           Container(
-            margin:
-            EdgeInsets.only(bottom: context.mediaQueryPadding.bottom + 10),
+            margin: EdgeInsets.only(top: 24),
+            width: MediaQuery
+                .of(context)
+                .size
+                .width,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Kaki Keenam",
-                  style: TextStyle(
-                    color: Colors.black54,
-                  ),
+                UserInfoTile(
+                  margin: EdgeInsets.only(bottom: 16),
+                  label: Strings.email,
+                  value: '${authC.userValue.email}',
                 ),
-                Text(
-                  "v.1.0",
-                  style: TextStyle(
-                    color: Colors.black54,
-                  ),
+                UserInfoTile(
+                  margin: EdgeInsets.only(bottom: 16),
+                  label: Strings.name,
+                  value: '${authC.userValue.name}',
+                  button: TextButton(onPressed: () {
+                    Get.dialog(
+                        Center(
+                          child: Material(
+                            color: Colors.white,
+                            child: Container(
+                              height: 150,
+                              width: Get.width * 0.9,
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                children: [
+                                  Center(child: Text(Strings.change_name),),
+                                  SizedBox(height: 10,),
+                                  TextField(
+                                    controller: controller.nameEditC,
+                                  ),
+                                  SizedBox(height: 10,),
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .spaceBetween, children: [
+                                      ElevatedButton(
+                                          onPressed: () => Get.back(),
+                                          child: Text(Strings.cancel)),
+                                      ElevatedButton(onPressed: () {
+                                        authC.editName(
+                                            controller.nameEditC.text);
+                                        Get.back();
+                                      }, child: Text(Strings.save))
+                                    ],),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                    );
+                  },
+                    child: Text(Strings.edit),),
+                ),
+                UserInfoTile(
+                  margin: EdgeInsets.only(bottom: 16),
+                  label: Strings.last_login,
+                  value: '${authC.userValue.lastSignTime != null ? DateFormat('EEE, d MMM yyyy HH:mm:ss').format(
+                    DateTime.parse(authC.userValue.lastSignTime!),
+                  ) : DateFormat('EEE, d MMM yyyy HH:mm:ss').format(DateTime.now())}',
                 ),
               ],
             ),
-          ),
+          )
         ],
       ),
     );
