@@ -324,7 +324,7 @@ class MapsLocationController extends GetxController {
   void getLastLocation() async {
     try {
       final users = _dbStore.collection(Constants.BUYER);
-      await users.doc(_auth.currentUser!.email).update({
+      await users.doc(_auth.currentUser!.uid).update({
         "lastLocation": GeoPoint(
           positionStream!.latitude,
           positionStream!.longitude,

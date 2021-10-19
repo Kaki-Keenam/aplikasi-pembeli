@@ -79,7 +79,7 @@ class Database {
     try {
       return _firestore
           .collection(Constants.BUYER)
-          .doc(_auth.currentUser!.email)
+          .doc(_auth.currentUser!.uid)
           .snapshots()
           .map((DocumentSnapshot doc) => doc.get("lastLocation"));
     } catch (e) {
@@ -107,7 +107,7 @@ class Database {
     try {
       return _firestore
           .collection(Constants.BUYER)
-          .doc(_auth.currentUser!.email)
+          .doc(_auth.currentUser!.uid)
           .collection(Constants.FAVORITE)
           .doc(_auth.currentUser!.email)
           .snapshots()

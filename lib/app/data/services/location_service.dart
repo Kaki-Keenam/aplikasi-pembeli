@@ -103,7 +103,7 @@ class LocationController extends GetxController {
       CollectionReference users = _firestore.collection(Constants.BUYER);
       User _currentUser = _auth.currentUser!;
 
-      await users.doc(_currentUser.email).update({
+      await users.doc(_currentUser.uid).update({
         "lastLocation": GeoPoint(
           stream.latitude,
           stream.longitude,

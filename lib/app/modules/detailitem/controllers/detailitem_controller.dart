@@ -47,7 +47,7 @@ class DetailItemController extends GetxController {
   Future<bool> isFavorite([String? id]) async {
     CollectionReference users = _dbStore.collection(Constants.BUYER);
     final docUser = await users
-        .doc(_auth.currentUser!.email)
+        .doc(_auth.currentUser!.uid)
         .collection(Constants.FAVORITE)
         .doc(_auth.currentUser!.email)
         .get();
@@ -67,7 +67,7 @@ class DetailItemController extends GetxController {
     String update = DateTime.now().toIso8601String();
     try {
       final docUser = await users
-          .doc(_auth.currentUser!.email)
+          .doc(_auth.currentUser!.uid)
           .collection(Constants.FAVORITE)
           .doc(_auth.currentUser!.email)
           .get();
@@ -86,7 +86,7 @@ class DetailItemController extends GetxController {
       });
 
       await users
-          .doc(_auth.currentUser!.email)
+          .doc(_auth.currentUser!.uid)
           .collection(Constants.FAVORITE)
           .doc(_auth.currentUser!.email)
           .update({Constants.FAVORITES: docFavorite});
@@ -99,7 +99,7 @@ class DetailItemController extends GetxController {
     CollectionReference users = _dbStore.collection(Constants.BUYER);
     try {
       final docUser = await users
-          .doc(_auth.currentUser!.email)
+          .doc(_auth.currentUser!.uid)
           .collection(Constants.FAVORITE)
           .doc(_auth.currentUser!.email)
           .get();
@@ -108,7 +108,7 @@ class DetailItemController extends GetxController {
 
       docFavorite.removeWhere((element) => element["productId"] == id);
       await users
-          .doc(_auth.currentUser!.email)
+          .doc(_auth.currentUser!.uid)
           .collection(Constants.FAVORITE)
           .doc(_auth.currentUser!.email)
           .update({Constants.FAVORITES: docFavorite});

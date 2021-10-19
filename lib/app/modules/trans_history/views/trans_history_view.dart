@@ -10,6 +10,7 @@ class TransHistoryView extends GetView<TransHistoryController> {
 
   @override
   Widget build(BuildContext context) {
+    print(controller.transaction?.length);
     return Scaffold(
       appBar: AppBar(
         title: Text(Strings.trans_title),
