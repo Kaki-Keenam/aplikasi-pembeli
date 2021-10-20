@@ -7,6 +7,14 @@ import 'package:get/get.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 class Fcm extends GetxController{
+  Rxn<String> _streamToken = Rxn<String>();
+
+  @override
+  void onInit(){
+    _streamToken.bindStream(FirebaseMessaging.instance.onTokenRefresh);
+    super.onInit();
+  }
+
   Future<void> initFirebaseMessaging({
     required String userId,
   }) async {
@@ -39,10 +47,8 @@ class Fcm extends GetxController{
         sound: true,
       );
 
-      await FirebaseMessaging.instance.deleteToken();
-      var token = await FirebaseMessaging.instance.getToken();
-      if (token == null) return;
-      if (!kReleaseMode) debugPrint('Firebase messaging token: $token');
+      FirebaseMessaging.instance.getToken().then((value) => _streamToken.value = value);
+      if (!kReleaseMode) debugPrint('Firebase messaging token: ${_streamToken.value}');
 
       print('CHANGE TOKEN!');
       CollectionReference users =
@@ -50,7 +56,7 @@ class Fcm extends GetxController{
       users
           .doc(userId)
           .update({
-        'token': token,
+        'token': _streamToken.value,
       })
           .then((value) {})
           .catchError((error) => print("Failed to update user: $error"));
