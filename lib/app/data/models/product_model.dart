@@ -10,6 +10,7 @@ class ProductModel {
     this.productId,
     this.vendorId,
     this.name,
+    this.vendorName,
     this.image,
     this.price,
     this.isFavorite,
@@ -20,6 +21,7 @@ class ProductModel {
   String? productId;
   String? vendorId;
   String? name;
+  String? vendorName;
   String? image;
   int? price;
   bool? isFavorite;
@@ -32,6 +34,7 @@ class ProductModel {
       productId: doc["productId"],
       vendorId: doc["vendorId"],
       name: doc["name"],
+      vendorName: doc["vendorName"],
       isFavorite: doc["isFavorite"],
       image: doc["image"],
       price: doc["price"],
@@ -42,6 +45,7 @@ class ProductModel {
       productId: json["productId"],
       vendorId: json["vendorId"],
       name: json["name"],
+      vendorName: json["vendorName"],
       isFavorite: json["isFavorite"],
       image: json["image"],
       price: json["price"],

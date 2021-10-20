@@ -1,5 +1,4 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +13,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await GetStorage.init();
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    systemNavigationBarColor: Colors.black,
+    systemNavigationBarIconBrightness: Brightness.light,
+  ));
   SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
   ).then(
@@ -30,37 +33,29 @@ class MyApp extends StatelessWidget {
       future: Future.delayed(Duration(seconds: 3)),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return StreamBuilder<User?>(
-            stream: authC.streamAuthStatus,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.active) {
-                return Obx(() => GetMaterialApp(
-                      debugShowCheckedModeBanner: false,
-                      title: "Kakikeenam",
-                      theme: ThemeData(
-                        colorScheme:
-                            ColorScheme.light(primary: Color(0xFFFFB300)),
-                        primaryIconTheme: IconThemeData(color: Colors.white),
-                        primaryTextTheme: TextTheme(
-                          headline6: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      initialRoute: authC.isSkipIntro.value
-                          ? authC.isAuth.value ||
-                                  snapshot.hasData &&
-                                      authC.connectC.connectionStatus !=
-                                          ConnectivityResult.none
-                              ? Routes.DASHBOARD
-                              : Routes.LOGIN
-                          : Routes.ONBOARDING,
-                      getPages: AppPages.routes,
-                    ));
-              }
-              return SplashScreen();
-            },
-          );
+          return Obx(() => GetMaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: "Kakikeenam",
+                theme: ThemeData(
+                  colorScheme: ColorScheme.light(primary: Color(0xFFFFB300)),
+                  primaryIconTheme: IconThemeData(color: Colors.white),
+                  scaffoldBackgroundColor: Colors.white,
+                  primaryTextTheme: TextTheme(
+                    headline6: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                initialRoute: authC.isSkipIntro.value
+                    ? authC.isAuth.value || authC.userAuth?.emailVerified == true ||
+                            snapshot.hasData &&
+                                authC.connectC.connectionStatus !=
+                                    ConnectivityResult.none
+                        ? Routes.PAGE_SWITCHER
+                        : Routes.WELCOME_PAGE
+                    : Routes.ONBOARDING,
+                getPages: AppPages.routes,
+              ));
         }
         return FutureBuilder(
           future: authC.firsInitialized(),

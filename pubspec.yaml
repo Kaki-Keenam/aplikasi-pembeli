@@ -8,7 +8,7 @@ environment:
 dependencies: 
   cupertino_icons: ^1.0.2
   get: 4.3.8
-  firebase_core: 1.6.0
+  firebase_core: 1.7.0
   firebase_auth: 3.1.0
   get_storage: 2.0.3
   introduction_screen: 2.1.0
@@ -19,7 +19,6 @@ dependencies:
   card_swiper: 1.0.4
   google_sign_in: 5.1.0
   cloud_firestore: 2.5.1
-  avatar_glow: 2.0.1
   image_picker: 0.8.4
   firebase_storage: 10.0.3
   google_maps_flutter: 2.0.6
@@ -32,6 +31,9 @@ dependencies:
   connectivity_plus: 1.1.0
   geolocator: 7.6.2
   date_format: 2.0.4
+  font_awesome_flutter: any
+  lottie: 1.2.1
+  firebase_messaging: 10.0.8
   flutter: 
     sdk: flutter
 
@@ -42,6 +44,33 @@ dev_dependencies:
 flutter: 
   assets: 
     - assets/images/
-    - assets/svg/
+    - assets/icons/
+    - assets/fonts/
+    - assets/animation/
+  fonts: 
+    - family: inter
+      fonts: 
+        - asset: assets/fonts/inter/Inter-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/inter/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/inter/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/inter/Inter-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/inter/Inter-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/inter/Inter-Black.ttf
+          weight: 900
+    - family: Open Sans
+      fonts: 
+        - asset: assets/fonts/open sans/OpenSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/open sans/OpenSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/open sans/OpenSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/open sans/OpenSans-ExtraBold.ttf
+          weight: 800
   uses-material-design: true
 

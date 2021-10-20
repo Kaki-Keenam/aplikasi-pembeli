@@ -1,25 +1,25 @@
 import 'package:get/get.dart';
 
-import 'package:kakikeenam/app/modules/change_profile/bindings/change_profile_binding.dart';
-import 'package:kakikeenam/app/modules/change_profile/views/change_profile_view.dart';
-import 'package:kakikeenam/app/modules/dashboard/bindings/dashboard_binding.dart';
-import 'package:kakikeenam/app/modules/dashboard/views/dashboard_view.dart';
+import 'package:kakikeenam/app/modules/components/widgets/screens/page_switcher.dart';
 import 'package:kakikeenam/app/modules/detailitem/bindings/detailitem_binding.dart';
 import 'package:kakikeenam/app/modules/detailitem/views/detailitem_view.dart';
 import 'package:kakikeenam/app/modules/forget_password/bindings/forget_password_binding.dart';
 import 'package:kakikeenam/app/modules/forget_password/views/forget_password_view.dart';
-import 'package:kakikeenam/app/modules/login/bindings/login_binding.dart';
-import 'package:kakikeenam/app/modules/login/views/login_view.dart';
 import 'package:kakikeenam/app/modules/maps_location/bindings/maps_location_binding.dart';
 import 'package:kakikeenam/app/modules/maps_location/views/maps_location_view.dart';
+import 'package:kakikeenam/app/modules/near_vendor/bindings/near_vendor_binding.dart';
+import 'package:kakikeenam/app/modules/near_vendor/views/near_vendor_view.dart';
 import 'package:kakikeenam/app/modules/notification/bindings/notification_binding.dart';
 import 'package:kakikeenam/app/modules/notification/views/notification_view.dart';
 import 'package:kakikeenam/app/modules/onboarding/bindings/onboarding_binding.dart';
 import 'package:kakikeenam/app/modules/onboarding/views/onboarding_view.dart';
 import 'package:kakikeenam/app/modules/profile/bindings/profile_binding.dart';
 import 'package:kakikeenam/app/modules/profile/views/profile_view.dart';
-import 'package:kakikeenam/app/modules/register/bindings/register_binding.dart';
-import 'package:kakikeenam/app/modules/register/views/register_view.dart';
+import 'package:kakikeenam/app/modules/search/bindings/search_binding.dart';
+import 'package:kakikeenam/app/modules/search/views/search_view.dart';
+import 'package:kakikeenam/app/modules/vendor_detail/bindings/vendor_detail_binding.dart';
+import 'package:kakikeenam/app/modules/vendor_detail/views/vendor_detail_view.dart';
+import 'package:kakikeenam/app/modules/welcome/welcome_page.dart';
 
 import '../../app_binding.dart';
 
@@ -42,24 +42,14 @@ class AppPages {
       binding: DetailitemBinding(),
     ),
     GetPage(
-      name: _Paths.LOGIN,
-      page: () => LoginView(),
-      binding: LoginBinding(),
-    ),
-    GetPage(
-      name: _Paths.REGISTER,
-      page: () => RegisterView(),
-      binding: RegisterBinding(),
-    ),
-    GetPage(
       name: _Paths.FORGET_PASSWORD,
       page: () => ForgetPasswordView(),
       binding: ForgetPasswordBinding(),
     ),
-    GetPage(name: _Paths.DASHBOARD, page: () => DashboardView(), bindings: [
+    GetPage(name: _Paths.PAGE_SWITCHER, page: () => PageSwitcher(), bindings: [
       AppBinding(),
-      DashboardBinding(),
     ]),
+    GetPage(name: _Paths.WELCOME_PAGE, page: () => WelcomePage()),
     GetPage(
       name: _Paths.MAPS_LOCATION,
       page: () => MapsLocationView(),
@@ -76,9 +66,19 @@ class AppPages {
       binding: ProfileBinding(),
     ),
     GetPage(
-      name: _Paths.CHANGE_PROFILE,
-      page: () => ChangeProfileView(),
-      binding: ChangeProfileBinding(),
+      name: _Paths.SEARCH,
+      page: () => SearchView(),
+      binding: SearchBinding(),
+    ),
+    GetPage(
+      name: _Paths.NEAR_VENDOR,
+      page: () => NearVendorView(),
+      binding: NearVendorBinding(),
+    ),
+    GetPage(
+      name: _Paths.VENDOR_DETAIL,
+      page: () => VendorDetailView(),
+      binding: VendorDetailBinding(),
     ),
   ];
 }

@@ -7,6 +7,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakikeenam/app/controllers/helper_controller.dart';
 import 'package:kakikeenam/app/data/models/user_model.dart';
+import 'package:kakikeenam/app/data/services/fcm.dart';
 import 'package:kakikeenam/app/modules/components/widgets/notify_dialogs.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
@@ -27,6 +28,15 @@ class AuthController extends GetxController {
   String? errorText;
   var user = UserModel().obs;
   UserModel get userValue => user.value;
+
+  Rxn<User> _firebaseUser = Rxn<User>();
+  User? get userAuth => _firebaseUser.value;
+
+  @override
+  void onInit() {
+    _firebaseUser.bindStream(_auth.authStateChanges());
+    super.onInit();
+  }
 
   /// This function for initialized auto login and skip intro
   /// after buyer login at first time.
@@ -69,9 +79,11 @@ class AuthController extends GetxController {
             .then((value) => userCredential = value);
 
         addToFirebase();
+        Fcm().initFirebaseMessaging(userId: userValue.uid!);
         return true;
       } else if (_auth.currentUser!.emailVerified == true) {
         addToFirebase();
+        Fcm().initFirebaseMessaging(userId: userValue.uid!);
         return true;
       }
       return false;
@@ -117,8 +129,9 @@ class AuthController extends GetxController {
         // maka tidak menampilkan onboarding
 
         addToFirebase();
+        Fcm().initFirebaseMessaging(userId: userValue.uid!);
         final dataFav = await users
-            .doc(_auth.currentUser!.email)
+            .doc(_auth.currentUser!.uid)
             .collection(Constants.FAVORITE)
             .doc(_auth.currentUser!.email);
         final cekFav = await dataFav.get();
@@ -127,7 +140,7 @@ class AuthController extends GetxController {
             "favorites": [],
           });
         }
-        Get.offAllNamed(Routes.DASHBOARD);
+        Get.offAllNamed(Routes.PAGE_SWITCHER);
       } else {
         dialogs.errorDialog("Login with Google");
       }
@@ -137,7 +150,6 @@ class AuthController extends GetxController {
   }
 
   // login dengan auth
-  Stream<User?> get streamAuthStatus => _auth.authStateChanges();
 
   Future<void> registerAuth(
       String email, String password, String name,) async {
@@ -199,8 +211,8 @@ class AuthController extends GetxController {
 
       if (_userLogin.user!.emailVerified) {
         addToFirebase();
-
-        Get.offAllNamed(Routes.DASHBOARD);
+        Fcm().initFirebaseMessaging(userId: userValue.uid!);
+        Get.offAllNamed(Routes.PAGE_SWITCHER);
       } else {
         dialogs.repeatVerifyDialog(
           func: () async {
@@ -210,7 +222,7 @@ class AuthController extends GetxController {
         );
       }
       final dataFav = await users
-          .doc(_auth.currentUser!.email)
+          .doc(_auth.currentUser!.uid)
           .collection(Constants.FAVORITE)
           .doc(_auth.currentUser!.email);
       final cekFav = await dataFav.get();
@@ -220,18 +232,22 @@ class AuthController extends GetxController {
         });
       }
       loading.value = false;
+
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         loading.value = false;
+        Get.back();
         errorText = e.message;
         dialogs.emailNotFoundDialog();
       } else if (e.code == 'wrong-password') {
         loading.value = false;
+        Get.back();
         errorText = e.message;
         dialogs.wrongPasswordDialog();
       }
     } catch (e) {
       loading.value = false;
+      Get.back();
       errorText = e.toString();
       dialogs.errorDialog("Login error");
     }
@@ -274,11 +290,11 @@ class AuthController extends GetxController {
       await _googleSignIn.disconnect();
       await _googleSignIn.signOut();
       loading.value = false;
-      Get.offAllNamed(Routes.LOGIN);
+      Get.offAllNamed(Routes.WELCOME_PAGE);
     } else {
       await _auth.signOut();
       loading.value = false;
-      Get.offAllNamed(Routes.LOGIN);
+      Get.offAllNamed(Routes.WELCOME_PAGE);
     }
   }
 
@@ -287,29 +303,27 @@ class AuthController extends GetxController {
       CollectionReference users = _dbStore.collection(Constants.BUYER);
       User _currentUser = _auth.currentUser!;
 
-      String token = await _currentUser.getIdToken();
-
-      final cekUser = await users.doc(_currentUser.email).get();
+      final cekUser = await users.doc(_currentUser.uid).get();
       if (cekUser.data() == null) {
-        await users.doc(_currentUser.email).set({
+        await users.doc(_currentUser.uid).set({
           "uid": _currentUser.uid,
           "name": _currentUser.displayName ?? name,
           "email": _currentUser.email,
           "photoUrl": _currentUser.photoURL,
-          "token": token,
+          "token": null,
           "creationTime": _currentUser.metadata.creationTime!.toIso8601String(),
           "lastSignTime":
               _currentUser.metadata.lastSignInTime!.toIso8601String(),
           "updateTime": DateTime.now().toIso8601String(),
         });
       } else {
-        await users.doc(_currentUser.email).update({
+        await users.doc(_currentUser.uid).update({
           "lastSignTime":
               _currentUser.metadata.lastSignInTime!.toIso8601String(),
         });
       }
 
-      final currUser = await users.doc(_currentUser.email).get();
+      final currUser = await users.doc(_currentUser.uid).get();
       final currUserData = currUser.data() as Map<String, dynamic>;
 
       user(UserModel.fromDocument(currUserData));
@@ -320,20 +334,18 @@ class AuthController extends GetxController {
   }
 
   /// change profile use for update profile send to firestore
-  void changeProfile(String name) async {
+  void editName(String name) async {
     loading.value = true;
     String date = DateTime.now().toIso8601String();
     CollectionReference users = _dbStore.collection(Constants.BUYER);
     try {
-      await users.doc(_auth.currentUser!.email).update({
+      await users.doc(_auth.currentUser!.uid).update({
         "name": name,
         "updateTime": date,
       });
       // Update model
       user.update((user) {
         user!.name = name;
-        user.lastSignTime =
-            _auth.currentUser!.metadata.lastSignInTime!.toIso8601String();
         user.updateTime = date;
       });
       user.refresh();
@@ -351,7 +363,7 @@ class AuthController extends GetxController {
     String date = DateTime.now().toIso8601String();
     CollectionReference users = _dbStore.collection(Constants.BUYER);
     try {
-      await users.doc(_auth.currentUser!.email).update({
+      await users.doc(_auth.currentUser!.uid).update({
         "photoUrl": url,
         "updateTime": date,
       });

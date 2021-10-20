@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 class NotifyDialogs {
   void verifyDialog() {
@@ -61,15 +62,24 @@ class NotifyDialogs {
     );
   }
 
-  void loginSuccess() {
-    Get.snackbar(
-      "Berhasil",
-      "Login Berhasil",
-      backgroundColor: Colors.green,
-      snackPosition: SnackPosition.BOTTOM,
-      showProgressIndicator: true,
-      colorText: Colors.white,
-      duration: Duration(seconds: 2),
+  void loadingDialog() {
+    Get.dialog(
+      Center(
+        child: Material(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          child: Container(
+            height: 150,
+            width: 150,
+            child: Lottie.asset(
+                'assets/animation/loading.zip',
+                width: 140,
+                height: 140,
+                fit: BoxFit.fill
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -105,22 +115,42 @@ class NotifyDialogs {
 
   void proposedDialog({VoidCallback? func}) {
     Get.defaultDialog(
-      title: "Menunggu Konfirmasi",
-      barrierDismissible: false,
-      content: CircularProgressIndicator(),
-      onCancel: func,
-      onConfirm: () => Get.back(),
-      textConfirm: "Hide"
-    );
+        title: "Menunggu Konfirmasi",
+        barrierDismissible: false,
+        content: CircularProgressIndicator(),
+        onCancel: func,
+        onConfirm: () => Get.back(),
+        textConfirm: "Hide");
   }
 
   void arrivedDialog({VoidCallback? func}) {
     Get.defaultDialog(
         title: "Pedagang sudah samapai",
         barrierDismissible: false,
-        content: Text("Silahkan melakukan transaksi ! \nJika sudah klik transaksi berhasil"),
+        content: Text(
+            "Silahkan melakukan transaksi ! \nJika sudah klik transaksi berhasil"),
         onConfirm: func,
-        textConfirm: "Berhasil"
+        textConfirm: "Berhasil");
+  }
+
+  void logoutDialog({VoidCallback? func}) {
+    Get.defaultDialog(
+      title: "Logout Akun",
+      barrierDismissible: false,
+      content: Text("Apakah anda yakin ingin logout ?"),
+      onConfirm: func,
+      textConfirm: "Ya",
+      textCancel: "Tidak",
+    );
+  }
+  void exitDialog({VoidCallback? func}) {
+    Get.defaultDialog(
+      title: "Keluar Aplikasi",
+      barrierDismissible: false,
+      content: Text("Apakah anda yakin ingin keluar ?"),
+      onConfirm: func,
+      textConfirm: "Ya",
+      textCancel: "Tidak",
     );
   }
 }

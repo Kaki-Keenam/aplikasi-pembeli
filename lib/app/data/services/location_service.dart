@@ -26,7 +26,9 @@ class LocationController extends GetxController {
 
   @override
   void onReady(){
-    getLocationPermission();
+    Future.delayed(Duration(seconds: 4), (){
+      getLocationPermission();
+    });
     super.onReady();
   }
 
@@ -101,14 +103,14 @@ class LocationController extends GetxController {
       CollectionReference users = _firestore.collection(Constants.BUYER);
       User _currentUser = _auth.currentUser!;
 
-      await users.doc(_currentUser.email).update({
+      await users.doc(_currentUser.uid).update({
         "lastLocation": GeoPoint(
           stream.latitude,
           stream.longitude,
         ),
       });
     } catch (e) {
-      print(e.toString());
+      print("location service: ${e.toString()}");
     }
   }
 
