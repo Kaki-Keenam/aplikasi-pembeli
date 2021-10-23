@@ -3,11 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 class Fcm extends GetxController{
   Rxn<String> _streamToken = Rxn<String>();
+
+  late AndroidNotificationChannel channel;
 
   @override
   void onInit(){
@@ -59,7 +62,7 @@ class Fcm extends GetxController{
         'token': _streamToken.value,
       })
           .then((value) {})
-          .catchError((error) => print("Failed to update user: $error"));
+          .catchError((error) {print("Failed update $error");});
     } catch (ex) {
       print(ex);
     }

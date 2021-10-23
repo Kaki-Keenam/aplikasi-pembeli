@@ -7,7 +7,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakikeenam/app/controllers/helper_controller.dart';
 import 'package:kakikeenam/app/data/models/user_model.dart';
-import 'package:kakikeenam/app/data/services/fcm.dart';
+import 'package:kakikeenam/app/data/services/messaging/fcm.dart';
 import 'package:kakikeenam/app/modules/components/widgets/notify_dialogs.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
@@ -79,11 +79,9 @@ class AuthController extends GetxController {
             .then((value) => userCredential = value);
 
         addToFirebase();
-        Fcm().initFirebaseMessaging(userId: userValue.uid!);
         return true;
       } else if (_auth.currentUser!.emailVerified == true) {
         addToFirebase();
-        Fcm().initFirebaseMessaging(userId: userValue.uid!);
         return true;
       }
       return false;
@@ -129,7 +127,6 @@ class AuthController extends GetxController {
         // maka tidak menampilkan onboarding
 
         addToFirebase();
-        Fcm().initFirebaseMessaging(userId: userValue.uid!);
         final dataFav = await users
             .doc(_auth.currentUser!.uid)
             .collection(Constants.FAVORITE)
@@ -211,7 +208,6 @@ class AuthController extends GetxController {
 
       if (_userLogin.user!.emailVerified) {
         addToFirebase();
-        Fcm().initFirebaseMessaging(userId: userValue.uid!);
         Get.offAllNamed(Routes.PAGE_SWITCHER);
       } else {
         dialogs.repeatVerifyDialog(
@@ -325,7 +321,7 @@ class AuthController extends GetxController {
 
       final currUser = await users.doc(_currentUser.uid).get();
       final currUserData = currUser.data() as Map<String, dynamic>;
-
+      Get.put(Fcm()).initFirebaseMessaging(userId: _currentUser.uid);
       user(UserModel.fromDocument(currUserData));
       user.refresh();
     } catch (e) {
