@@ -12,6 +12,7 @@ class ProductModel {
     this.name,
     this.vendorName,
     this.image,
+    this.distance,
     this.price,
     this.isFavorite,
     this.creationTime,
@@ -23,6 +24,7 @@ class ProductModel {
   String? name;
   String? vendorName;
   String? image;
+  double? distance;
   int? price;
   bool? isFavorite;
   String? creationTime;

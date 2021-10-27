@@ -23,7 +23,7 @@ class Transaction_state_controller extends GetxController {
       CollectionReference vendor = _dbStore.collection(Constants.VENDOR);
       CollectionReference buyer = _dbStore.collection(Constants.BUYER);
       DocumentSnapshot buyerLoc =
-          await buyer.doc(_auth.currentUser!.email).get();
+          await buyer.doc(_auth.currentUser!.uid).get();
       String transId = await trans.doc().id;
       DocumentSnapshot vendors = await vendor.doc(food?.vendorId).get();
 
@@ -49,9 +49,9 @@ class Transaction_state_controller extends GetxController {
         "state": "PROPOSED",
         "vendorId": food?.vendorId,
       });
-      dialogs.proposedDialog(func: () {
-        stateCancelConfirm(transId);
-      });
+      // dialogs.proposedDialog(func: () {
+      //   stateCancelConfirm(transId);
+      // });
     } catch (e) {
       print("transState service: ${e.toString()}");
     }
