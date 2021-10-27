@@ -95,7 +95,7 @@ class FoodView extends StatelessWidget {
                                 size: 17,
                               ),
                               Text(
-                                "Distance: 10 km",
+                                "Distance: ${product?.distance ?? 1} m",
                                 style: TextStyle(
                                   color: Colors.black26,
                                   fontSize: 15,

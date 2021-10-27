@@ -129,7 +129,7 @@ class AuthController extends GetxController {
         // maka tidak menampilkan onboarding
 
         addToFirebase();
-        Fcm().initFirebaseMessaging(userId: userValue.uid!);
+
         final dataFav = await users
             .doc(_auth.currentUser!.uid)
             .collection(Constants.FAVORITE)
@@ -141,6 +141,7 @@ class AuthController extends GetxController {
           });
         }
         Get.offAllNamed(Routes.PAGE_SWITCHER);
+        Fcm().initFirebaseMessaging(userId: userValue.uid!);
       } else {
         dialogs.errorDialog("Login with Google");
       }

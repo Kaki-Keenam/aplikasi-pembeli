@@ -166,17 +166,19 @@ class HomeView extends GetView<HomeController> {
                           stream: Database().streamVendorId(buyer.data),
                           builder: (context, vendor) {
                             if (vendor.hasData && vendor.data!.isNotEmpty) {
-                              return StreamBuilder<List<ProductModel>>(
+                              return StreamBuilder<List<ProductModel>?>(
                                 stream: Database().streamProduct(vendor.data),
                                 builder: (context, product) {
                                   if (product.hasData &&
                                       vendor.data!.isNotEmpty) {
                                     controller.searchList.value = product.data;
+
                                     return ListView.separated(
                                       shrinkWrap: true,
                                       physics: NeverScrollableScrollPhysics(),
                                       itemCount: product.data?.length ?? 3,
                                       itemBuilder: (context, index) {
+                                        print("${product.data?[index].distance}");
                                         return FoodView(
                                           product: product.data?[index],
                                           func: () => Get.toNamed(

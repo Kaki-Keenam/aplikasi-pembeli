@@ -1,6 +1,6 @@
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -12,12 +12,11 @@ class Fcm extends GetxController{
   }) async {
     try {
       print('INIT FIREBASE MESSAGING');
-      // https://github.com/FirebaseExtended/flutterfire/issues/1684
-      // TODO: looks like onmessage is fired twice for each message
-      // need to look into it
+
       FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
         print('ON MESSAGE');
         if (!kReleaseMode) print('onMessage: ${message.data['body']}');
+
         Get.defaultDialog(
           title: 'Pesanan dikirim',
           textConfirm: 'Ok',
@@ -30,7 +29,6 @@ class Fcm extends GetxController{
         if (!kReleaseMode) print('onLaunch: $message');
         handleMessage(message.data);
       });
-      FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
 
       await FirebaseMessaging.instance
           .setForegroundNotificationPresentationOptions(
@@ -53,16 +51,10 @@ class Fcm extends GetxController{
         'token': token,
       })
           .then((value) {})
-          .catchError((error) => print("Failed to update user: $error"));
+          .catchError((error) { print("Failed to update user: $error");});
     } catch (ex) {
       print(ex);
     }
-  }
-
-  Future<void> onBackgroundMessage(RemoteMessage message) async {
-    await Firebase.initializeApp();
-    handleMessage(message.data);
-    return;
   }
 
   void handleMessage(Map<String, dynamic> message) {

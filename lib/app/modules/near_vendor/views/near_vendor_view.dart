@@ -32,7 +32,7 @@ class NearVendorView extends GetView<NearVendorController> {
                 stream: Database().streamVendorId(buyer.data),
                 builder: (context, vendor) {
                   if (vendor.hasData && vendor.data!.isNotEmpty) {
-                    return StreamBuilder<List<ProductModel>>(
+                    return StreamBuilder<List<ProductModel>?>(
                       stream: Database().streamProduct(vendor.data),
                       builder: (context, product) {
                         if (product.hasData &&
