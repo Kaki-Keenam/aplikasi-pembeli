@@ -12,6 +12,7 @@ class Database {
   FirebaseAuth _auth = FirebaseAuth.instance;
   GeocodingPlatform geoCoding = GeocodingPlatform.instance;
 
+  // Vendor & buyer -> product 
 
   //PRODUCT
   Stream<List<ProductModel>> streamProduct(List<VendorModel>? query) {
@@ -32,7 +33,7 @@ class Database {
         return listData;
       });
     } catch (e) {
-      print("streamProduct service: ${e.toString()}");
+      print(e.toString());
       rethrow;
     }
   }
@@ -63,7 +64,8 @@ class Database {
         query.docs.forEach((element) {
           var data = element.data() as dynamic;
           listData.add(VendorModel(
-            uid: data["uid"],
+            uid: data['uid'],
+            location: data['lastLocation']
           ));
         });
         return listData;

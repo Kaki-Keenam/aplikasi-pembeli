@@ -34,7 +34,6 @@ dependencies:
   font_awesome_flutter: any
   lottie: 1.2.1
   firebase_messaging: 10.0.8
-  flutter_local_notifications: 9.0.0
   flutter: 
     sdk: flutter
 

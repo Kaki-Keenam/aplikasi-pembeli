@@ -138,6 +138,7 @@ class AuthController extends GetxController {
           });
         }
         Get.offAllNamed(Routes.PAGE_SWITCHER);
+        Fcm().initFirebaseMessaging(userId: userValue.uid!);
       } else {
         dialogs.errorDialog("Login with Google");
       }
