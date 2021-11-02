@@ -46,7 +46,7 @@ class AppPages {
       page: () => ForgetPasswordView(),
       binding: ForgetPasswordBinding(),
     ),
-    GetPage(name: _Paths.PAGE_SWITCHER, page: () => PageSwitcher(),),
+    GetPage(name: _Paths.PAGE_SWITCHER, page: () => PageSwitcher(), binding: DependencyInjection()),
     GetPage(name: _Paths.WELCOME_PAGE, page: () => WelcomePage()),
     GetPage(
       name: _Paths.MAPS_LOCATION,

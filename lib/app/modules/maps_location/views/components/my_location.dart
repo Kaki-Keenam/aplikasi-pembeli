@@ -16,17 +16,13 @@ class MyLocation extends StatelessWidget {
   Widget build(BuildContext context) {
     return isDismissible
         ? Container()
-        : Positioned(
-            bottom: Get.height * 0.32,
-            right: 20,
-            child: FloatingActionButton(
-              backgroundColor: Colors.white,
-              onPressed: func,
-              child: Icon(
-                Icons.location_searching_rounded,
-                color: Colors.black45,
-              ),
-            ),
-          );
+        : FloatingActionButton(
+          backgroundColor: Colors.white,
+          onPressed: func,
+          child: Icon(
+            Icons.location_searching_rounded,
+            color: Colors.black45,
+          ),
+        );
   }
 }

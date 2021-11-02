@@ -51,6 +51,8 @@ class MapsLocationController extends GetxController {
   // Position? currentLocation;
   GeolocatorPlatform geoLocator = GeolocatorPlatform.instance;
   Rxn<Position> streamPosition = Rxn<Position>();
+  final GeolocatorPlatform geolocatorAndroid = GeolocatorPlatform.instance;
+  StreamSubscription<Position>? _positionStreamSubscription;
 
   bool ripple = true;
 
@@ -70,13 +72,11 @@ class MapsLocationController extends GetxController {
   }
 
   @override
-  onInit() {
+  void onInit() {
     streamPosition.bindStream(streamLocation());
     restartMarkerMap();
     super.onInit();
   }
-
-  Position? get positionStream => streamPosition.value;
 
   Stream<Position> streamLocation() {
     return locator.getPositionStream();
@@ -94,8 +94,8 @@ class MapsLocationController extends GetxController {
   List<double> setNearestLocation() {
     List<double> _listNear = List<double>.empty(growable: true);
     final myLocation = ILatLng.point(
-      positionStream!.latitude,
-      positionStream!.longitude,
+      streamPosition.value!.latitude,
+      streamPosition.value!.longitude,
     );
 
     for (var i = 0; i < vendorName.length; i++) {
@@ -119,8 +119,8 @@ class MapsLocationController extends GetxController {
     Set<Circle> circle = Set.from([
       Circle(
           circleId: CircleId(Constants.MY_LOCATION_ID),
-          center: positionStream != null
-              ? LatLng(positionStream!.latitude, positionStream!.longitude)
+          center: streamPosition.value != null
+              ? LatLng(streamPosition.value!.latitude, streamPosition.value!.longitude)
               : Constants.SOURCE_LOCATION,
           radius: Constants.CIRCLE_RADIUS,
           fillColor: Color.fromRGBO(251, 221, 50, 0.12),
@@ -214,7 +214,7 @@ class MapsLocationController extends GetxController {
   /// buyer move from their position
   void restartMarkerMap() async {
     var markerId = MarkerId(Constants.MY_LOCATION_ID);
-    var pinPosition = positionStream ??
+    var pinPosition = streamPosition.value ??
         Position(
           longitude: -8.582572687412386,
           latitude: 116.1013248977757,
@@ -226,7 +226,7 @@ class MapsLocationController extends GetxController {
           speedAccuracy: 1.1,
         );
     var pinLocation = LatLng(pinPosition.latitude, pinPosition.longitude);
-    try {
+
       if (isDismissibleDialog.value) {
         markers[markerId] = RippleMarker(
           markerId: markerId,
@@ -238,16 +238,14 @@ class MapsLocationController extends GetxController {
       } else {
         allVendorMarker();
       }
-    } catch (e) {
-      print("restart ${e.toString()}");
-    }
+
     update();
   }
 
   void allVendorMarker() {
-    var _markerList = allMarker.value.markersList!;
+    var _markerList = allMarker.value.markersList;
 
-    if (isDismissibleMarker.value) {
+    if (isDismissibleMarker.value && _markerList != null) {
       for (var i = 0; i < _markerList.length; i++) {
         markers[_markerList[i].markerId!] = Marker(
           markerId: _markerList[i].markerId!,
@@ -256,20 +254,24 @@ class MapsLocationController extends GetxController {
         );
       }
     } else {
-      _markerList.removeRange(0, _markerList.length);
+      _markerList?.removeRange(0, _markerList.length);
     }
   }
 
   void justNearestVendor() {
-    var _markerList = nearMarker.value.markersList!;
-    for (var i = 0; i < _markerList.length; i++) {
-      markers[_markerList[i].markerId!] = Marker(
-        markerId: _markerList[i].markerId!,
-        icon: vendorIcon!,
-        position: _markerList[i].latLng!,
-      );
+    var _markerList = nearMarker.value.markersList;
+    print('markerlist ${_markerList}');
+    if(_markerList != null){
+      for (var i = 0; i < _markerList.length; i++) {
+        markers[_markerList[i].markerId!] = Marker(
+          markerId: _markerList[i].markerId!,
+          icon: vendorIcon!,
+          position: _markerList[i].latLng!,
+        );
+      }
     }
   }
+
 
   /// This function is for show all nearest marker
   /// around 1 km distance
@@ -311,6 +313,7 @@ class MapsLocationController extends GetxController {
         marker?.markersList = markersList;
       });
       allMarker.refresh();
+      print('marker ${markersList}');
     } catch (e) {
       print(e.toString());
     }
@@ -324,10 +327,11 @@ class MapsLocationController extends GetxController {
   void getLastLocation() async {
     try {
       final users = _dbStore.collection(Constants.BUYER);
+      var currentPosition = await geoLocator.getCurrentPosition();
       await users.doc(_auth.currentUser!.uid).update({
         "lastLocation": GeoPoint(
-          positionStream!.latitude,
-          positionStream!.longitude,
+          currentPosition.latitude,
+          currentPosition.longitude,
         )
       });
       getNearVendorMarker();

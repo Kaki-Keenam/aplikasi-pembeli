@@ -182,7 +182,16 @@ class DetailItemView extends GetView<DetailItemController> {
                                                       CircularProgressIndicator(),
                                                 ),
                                               )
-                                            : CircularProgressIndicator();
+                                            : Container(
+                                          height: Get.height * 0.18,
+                                          width: Get.width * 0.35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(10),
+                                              bottomLeft: Radius.circular(10)
+                                            )
+                                          ),
+                                        );
                                       }),
                                     ),
                                   ),
@@ -227,7 +236,7 @@ class DetailItemView extends GetView<DetailItemController> {
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 10,
+                                        height: 5,
                                       ),
                                       Obx(() => Row(
                                             children: [
@@ -309,8 +318,8 @@ class DetailItemView extends GetView<DetailItemController> {
                                 SliverGridDelegateWithMaxCrossAxisExtent(
                                     maxCrossAxisExtent: 200,
                                     childAspectRatio: 3 / 4,
-                                    crossAxisSpacing: 20,
-                                    mainAxisSpacing: 20),
+                                    crossAxisSpacing: 30,
+                                    mainAxisSpacing: 30),
                             itemCount: controller.foodOther?.length,
                             itemBuilder: (BuildContext ctx, index) {
                               if (food.vendorId != null) {
