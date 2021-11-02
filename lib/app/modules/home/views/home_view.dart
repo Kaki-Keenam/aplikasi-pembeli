@@ -164,7 +164,6 @@ class HomeView extends GetView<HomeController> {
                                       physics: NeverScrollableScrollPhysics(),
                                       itemCount: product.data?.length ?? 3,
                                       itemBuilder: (context, index) {
-                                        print("${product.data?[index].distance}");
                                         return FoodView(
                                           product: product.data?[index],
                                           func: () => Get.toNamed(

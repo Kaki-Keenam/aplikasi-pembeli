@@ -16,10 +16,18 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 40, right: 40, bottom: 40),
-      color: Colors.transparent,
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.thirdSoft,
+            offset: Offset(0, 1),
+            blurRadius: 10,
+            spreadRadius: 1
+          )
+        ]
+      ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(10),
         child: SizedBox(
           height: 70,
           child: BottomNavigationBar(

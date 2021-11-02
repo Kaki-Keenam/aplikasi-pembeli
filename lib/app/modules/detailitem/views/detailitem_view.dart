@@ -157,31 +157,34 @@ class DetailItemView extends GetView<DetailItemController> {
                             ),
                             child: Container(
                               width: Get.width,
-                              height: Get.height * 0.2,
+                              height: Get.height * 0.18,
                               child: Row(
                                 children: [
                                   Container(
-                                    height: Get.height * 0.2,
-                                    width: Get.width * 0.3,
+                                    height: Get.height * 0.18,
+                                    width: Get.width * 0.35,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
-                                    child: Obx(() {
-                                      return controller.getVendorModel.image !=
-                                              null
-                                          ? CachedNetworkImage(
-                                              imageUrl:
-                                                  "${controller.getVendorModel.image}",
-                                              fit: BoxFit.fill,
-                                              placeholder: (context, url) =>
-                                                  Transform.scale(
-                                                scale: 0.5,
-                                                child:
-                                                    CircularProgressIndicator(),
-                                              ),
-                                            )
-                                          : Icon(Icons.error);
-                                    }),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), topLeft: Radius.circular(10)),
+                                      child: Obx(() {
+                                        return controller.getVendorModel.image !=
+                                                null
+                                            ? CachedNetworkImage(
+                                                imageUrl:
+                                                    "${controller.getVendorModel.image}",
+                                                fit: BoxFit.fill,
+                                                placeholder: (context, url) =>
+                                                    Transform.scale(
+                                                  scale: 0.5,
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                ),
+                                              )
+                                            : CircularProgressIndicator();
+                                      }),
+                                    ),
                                   ),
                                   SizedBox(
                                     width: 10,
@@ -193,7 +196,7 @@ class DetailItemView extends GetView<DetailItemController> {
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Container(
-                                        width: Get.width * 0.5,
+                                        width: Get.width * 0.45,
                                         child: Obx(
                                           () => Text(
                                             controller
@@ -216,9 +219,12 @@ class DetailItemView extends GetView<DetailItemController> {
                                             fontSize: 18),
                                       ),
                                       Obx(
-                                        () => Text(
-                                            controller.getVendorModel.street ??
-                                                Strings.loading),
+                                        () => Container(
+                                          width: Get.width * 0.45,
+                                          child: Text(
+                                              controller.getVendorModel.street ??
+                                                  Strings.loading, overflow: TextOverflow.ellipsis,),
+                                        ),
                                       ),
                                       SizedBox(
                                         height: 10,
@@ -294,36 +300,32 @@ class DetailItemView extends GetView<DetailItemController> {
                     ),
                   ),
                   Expanded(
-                    child: Container(
-                      width: Get.width,
-                      height: Get.height,
-                      child: Obx(
-                        () => Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: GridView.builder(
-                              physics: NeverScrollableScrollPhysics(),
-                              gridDelegate:
-                                  SliverGridDelegateWithMaxCrossAxisExtent(
-                                      maxCrossAxisExtent: 200,
-                                      childAspectRatio: 4 / 5,
-                                      crossAxisSpacing: 20,
-                                      mainAxisSpacing: 20),
-                              itemCount: controller.foodOther?.length,
-                              itemBuilder: (BuildContext ctx, index) {
-                                if (food.vendorId != null) {
-                                  controller.setVendorId = food.vendorId;
-                                  return FoodNearbyView(
-                                      product: controller.foodOther?[index],
-                                      func: () {
-                                        Navigator.pushReplacementNamed(
-                                            context, Routes.DETAILITEM,
-                                            arguments:
-                                                controller.foodOther?[index]);
-                                      });
-                                }
-                                return LoadingView();
-                              }),
-                        ),
+                    child: Obx(
+                      () => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: GridView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                SliverGridDelegateWithMaxCrossAxisExtent(
+                                    maxCrossAxisExtent: 200,
+                                    childAspectRatio: 3 / 4,
+                                    crossAxisSpacing: 20,
+                                    mainAxisSpacing: 20),
+                            itemCount: controller.foodOther?.length,
+                            itemBuilder: (BuildContext ctx, index) {
+                              if (food.vendorId != null) {
+                                controller.setVendorId = food.vendorId;
+                                return FoodNearbyView(
+                                    product: controller.foodOther?[index],
+                                    func: () {
+                                      Navigator.pushReplacementNamed(
+                                          context, Routes.DETAILITEM,
+                                          arguments:
+                                              controller.foodOther?[index]);
+                                    });
+                              }
+                              return LoadingView();
+                            }),
                       ),
                     ),
                   ),

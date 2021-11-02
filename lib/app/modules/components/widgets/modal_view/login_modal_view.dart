@@ -37,12 +37,12 @@ class LoginModal extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(bottom: 24),
                 child: Text(
-                  'Login',
+                  'Masuk',
                   style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.w700, fontFamily: 'inter'),
                 ),
               ),
               // Form
-              NewCustomTextField(controller: welC.emailC, title: 'Email', hint: 'youremail@email.com',),
+              NewCustomTextField(controller: welC.emailC, title: 'Email', hint: 'emailanda@email.com',),
               NewCustomTextField(controller: welC.passC, title: 'Password', hint: '**********', obsecureText: true, margin: EdgeInsets.only(top: 16),),
               // Log in Button
               Container(
@@ -57,7 +57,7 @@ class LoginModal extends StatelessWidget {
                         NotifyDialogs().loadingDialog();
                       }
                     },
-                    child: Text('Login', style: TextStyle(color: AppColor.secondary, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'inter')),
+                    child: Text('Masuk', style: TextStyle(color: AppColor.secondary, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'inter')),
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       primary: AppColor.primarySoft,
@@ -72,7 +72,7 @@ class LoginModal extends StatelessWidget {
                 ),
                 child: RichText(
                   text: TextSpan(
-                    text: 'Forgot your password? ',
+                    text: 'Lupa password? ',
                     style: TextStyle(color: Colors.grey),
                     children: [
                       TextSpan(

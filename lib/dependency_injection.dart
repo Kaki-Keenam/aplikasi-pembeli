@@ -9,14 +9,15 @@ import 'package:kakikeenam/app/modules/settings/controllers/settings_controller.
 import 'app/modules/trans_history/controllers/trans_history_controller.dart';
 
 
-class AppBinding extends Bindings {
+class DependencyInjection extends Bindings {
   @override
-  void dependencies() async {
+  void dependencies() {
     Get.put(LocationController(), permanent: true);
     Get.put(Transaction_state_controller(), permanent: true);
 
     Get.lazyPut<TransHistoryController>(
-          () => TransHistoryController(),
+            () => TransHistoryController(),
+        fenix: true
     );
     Get.lazyPut<HomeController>(
           () => HomeController(),

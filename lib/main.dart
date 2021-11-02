@@ -1,4 +1,4 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:kakikeenam/app/controllers/auth_controller.dart';
+import 'package:kakikeenam/dependency_injection.dart';
 
 import 'app/modules/components/widgets/splash_screen.dart';
 import 'app/routes/app_pages.dart';
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           return Obx(() => GetMaterialApp(
                 debugShowCheckedModeBanner: false,
+                initialBinding: DependencyInjection(),
                 title: "Kakikeenam",
                 theme: ThemeData(
                   colorScheme: ColorScheme.light(primary: Color(0xFFFFB300)),

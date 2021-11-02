@@ -17,14 +17,14 @@ class WelcomePage extends StatelessWidget {
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-                decoration: BoxDecoration(image: DecorationImage(image: AssetImage(Strings.welcome), fit: BoxFit.cover)),
+                decoration: BoxDecoration(color: Colors.white),
               ),
               Positioned(
                 bottom: 0,
                 child: Container(
                   padding: EdgeInsets.only(left: 16, right: 16, bottom: 32),
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 60 / 100,
+                  height: MediaQuery.of(context).size.height * 85 / 100,
                   decoration: BoxDecoration(gradient: AppColor.linearBlackBottom),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -33,11 +33,13 @@ class WelcomePage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 16),
-                            child: Text(Strings.app_name, style: TextStyle(fontFamily: 'inter', fontWeight: FontWeight.w700, fontSize: 32, color: Colors.white)),
+                          Container(
+                            width: 180,
+                            height: 180,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(image: AssetImage('assets/images/logo.png')),
+                            ),
                           ),
-                          Text(Strings.app_quote, style: TextStyle(color: Colors.white)),
                         ],
                       ),
                       Column(
@@ -49,7 +51,7 @@ class WelcomePage extends StatelessWidget {
                             width: MediaQuery.of(context).size.width,
                             height: 60,
                             child: ElevatedButton(
-                              child: Text('Get Started', style: TextStyle(color: AppColor.secondary, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'inter')),
+                              child: Text('Daftar', style: TextStyle(color: AppColor.secondary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'inter')),
                               onPressed: () {
                                 showModalBottomSheet(
                                   context: context,
@@ -67,13 +69,13 @@ class WelcomePage extends StatelessWidget {
                               ),
                             ),
                           ),
-                          SizedBox(height: 16),
+                          SizedBox(height: 20),
                           // Log in Button
                           SizedBox(
                             width: MediaQuery.of(context).size.width,
                             height: 60,
                             child: OutlinedButton(
-                              child: Text(Strings.login, style: TextStyle(color: AppColor.secondary, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'inter')),
+                              child: Text(Strings.login, style: TextStyle(color: AppColor.secondary, fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'inter')),
                               onPressed: () {
                                 showModalBottomSheet(
                                   context: context,
@@ -92,7 +94,7 @@ class WelcomePage extends StatelessWidget {
                               ),
                             ),
                           ),
-                          SizedBox(height: 16),
+                          SizedBox(height: 20),
                           SizedBox(
                             width: MediaQuery.of(context).size.width,
                             height: 60,

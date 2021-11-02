@@ -26,15 +26,15 @@ class OnboardingView extends StatelessWidget {
           PageViewModel(
             title: Strings.title1,
             body: Strings.content1,
+            decoration: PageDecoration(
+              titleTextStyle: TextStyle(fontFamily: 'inter', fontSize: 20, fontWeight: FontWeight.bold),
+              bodyTextStyle: TextStyle(fontFamily: 'inter', fontSize: 16),
+            ),
             image: Container(
               width: Get.width,
               height: Get.width,
               decoration: BoxDecoration(
                 color: Colors.amber[600],
-                borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(20),
-                  bottomLeft: Radius.circular(20),
-                ),
               ),
               child: Container(
                 child: Center(
@@ -49,15 +49,16 @@ class OnboardingView extends StatelessWidget {
           PageViewModel(
             title: Strings.title2,
             body: Strings.content2,
+            decoration: PageDecoration(
+              titleTextStyle: TextStyle(fontFamily: 'inter', fontSize: 20, fontWeight: FontWeight.bold),
+              bodyTextStyle: TextStyle(fontFamily: 'inter', fontSize: 16),
+            ),
             image: Container(
               width: Get.width,
               height: Get.width,
               decoration: BoxDecoration(
                   color: Colors.amber[600],
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(20),
-                    bottomLeft: Radius.circular(20),
-                  )),
+                 ),
               child: Container(
                 child: Center(
                   child: Image.asset(
@@ -71,14 +72,16 @@ class OnboardingView extends StatelessWidget {
           PageViewModel(
             title: Strings.title3,
             body: Strings.content3,
+            decoration: PageDecoration(
+              titleTextStyle: TextStyle(fontFamily: 'inter', fontSize: 20, fontWeight: FontWeight.bold),
+              bodyTextStyle: TextStyle(fontFamily: 'inter', fontSize: 16),
+            ),
             image: Container(
               width: Get.width,
               height: Get.width,
               decoration: BoxDecoration(
                   color: Colors.amber[600],
                   borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(20),
-                    bottomLeft: Radius.circular(20),
                   )),
               child: Container(
                 child: Center(

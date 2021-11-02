@@ -21,7 +21,7 @@ import 'package:kakikeenam/app/modules/vendor_detail/bindings/vendor_detail_bind
 import 'package:kakikeenam/app/modules/vendor_detail/views/vendor_detail_view.dart';
 import 'package:kakikeenam/app/modules/welcome/welcome_page.dart';
 
-import '../../app_binding.dart';
+import '../../dependency_injection.dart';
 
 part 'app_routes.dart';
 
@@ -46,9 +46,7 @@ class AppPages {
       page: () => ForgetPasswordView(),
       binding: ForgetPasswordBinding(),
     ),
-    GetPage(name: _Paths.PAGE_SWITCHER, page: () => PageSwitcher(), bindings: [
-      AppBinding(),
-    ]),
+    GetPage(name: _Paths.PAGE_SWITCHER, page: () => PageSwitcher(),),
     GetPage(name: _Paths.WELCOME_PAGE, page: () => WelcomePage()),
     GetPage(
       name: _Paths.MAPS_LOCATION,

@@ -1,5 +1,4 @@
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -7,15 +6,6 @@ import 'package:get/get.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 class Fcm extends GetxController{
-  Rxn<String> _streamToken = Rxn<String>();
-
-
-
-  @override
-  void onInit(){
-    _streamToken.bindStream(FirebaseMessaging.instance.onTokenRefresh);
-    super.onInit();
-  }
 
   Future<void> initFirebaseMessaging({
     required String userId,
@@ -46,9 +36,10 @@ class Fcm extends GetxController{
         badge: true,
         sound: true,
       );
-
-      FirebaseMessaging.instance.getToken().then((value) => _streamToken.value = value);
-      if (!kReleaseMode) debugPrint('Firebase messaging token: ${_streamToken.value}');
+      await FirebaseMessaging.instance.deleteToken();
+      var token = await FirebaseMessaging.instance.getToken();
+      if (token == null) return;
+      if (!kReleaseMode) debugPrint('Firebase messaging token: $token');
 
       print('CHANGE TOKEN!');
       CollectionReference users =
@@ -56,7 +47,7 @@ class Fcm extends GetxController{
       users
           .doc(userId)
           .update({
-        'token': _streamToken.value,
+        'token': token,
       })
           .then((value) {})
           .catchError((error) { print("Failed to update user: $error");});

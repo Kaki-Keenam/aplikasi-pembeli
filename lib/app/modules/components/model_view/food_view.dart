@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
@@ -70,7 +69,7 @@ class FoodView extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 30),
                         Text(
                           "${NumberFormat.currency(
                             name: "id",
@@ -83,28 +82,6 @@ class FoodView extends StatelessWidget {
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        SizedBox(height: 10),
-                        SizedBox(
-                          width: 135,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              FaIcon(
-                                FontAwesomeIcons.mapMarkerAlt,
-                                color: Color(0xff416C6E),
-                                size: 17,
-                              ),
-                              Text(
-                                "Distance: ${product?.distance ?? 1} m",
-                                style: TextStyle(
-                                  color: Colors.black26,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
                       ],
                     ),
                   ),
