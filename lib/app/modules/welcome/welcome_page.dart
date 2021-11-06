@@ -17,7 +17,7 @@ class WelcomePage extends StatelessWidget {
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-                decoration: BoxDecoration(color: Colors.white),
+                decoration: BoxDecoration(color: Colors.amber[600]),
               ),
               Positioned(
                 bottom: 0,
@@ -34,8 +34,8 @@ class WelcomePage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Container(
-                            width: 180,
-                            height: 180,
+                            width: 190,
+                            height: 190,
                             decoration: BoxDecoration(
                               image: DecorationImage(image: AssetImage('assets/images/logo.png')),
                             ),

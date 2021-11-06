@@ -260,7 +260,6 @@ class MapsLocationController extends GetxController {
 
   void justNearestVendor() {
     var _markerList = nearMarker.value.markersList;
-    print('markerlist ${_markerList}');
     if(_markerList != null){
       for (var i = 0; i < _markerList.length; i++) {
         markers[_markerList[i].markerId!] = Marker(
@@ -313,7 +312,6 @@ class MapsLocationController extends GetxController {
         marker?.markersList = markersList;
       });
       allMarker.refresh();
-      print('marker ${markersList}');
     } catch (e) {
       print(e.toString());
     }
