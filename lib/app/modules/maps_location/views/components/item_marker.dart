@@ -86,6 +86,7 @@ class ItemMarker extends StatelessWidget {
                                       style: TextStyle(
                                         fontFamily: "inter",
                                         fontSize: 17,
+                                        fontWeight: FontWeight.bold,
                                         color: Color(0xff000000),
                                       ),
                                     ),
@@ -97,7 +98,7 @@ class ItemMarker extends StatelessWidget {
                                         maxLines: 1,
                                         style: TextStyle(
                                           fontFamily: "inter",
-                                          fontSize: 10,
+                                          fontSize: 15,
                                           color: Color(0xff000000),
                                         ),
                                       ),
@@ -106,13 +107,13 @@ class ItemMarker extends StatelessWidget {
                                       height: 10,
                                     ),
                                     Container(
-                                      width: Get.width * 0.4,
+                                      width: Get.width * 0.5,
                                       child: Text(
                                         listNear?[i].street ?? Strings.loading,
-                                        overflow: TextOverflow.ellipsis,
+                                        overflow: TextOverflow.clip,
                                         maxLines: 1,
                                         style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 15,
                                           color: Color(0xff000000),
                                         ),
                                       ),

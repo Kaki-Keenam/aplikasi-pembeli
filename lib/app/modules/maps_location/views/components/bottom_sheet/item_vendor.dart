@@ -13,15 +13,12 @@ class ItemVendor extends StatelessWidget {
     return isDismissible
         ? Container()
         : Positioned(
-            bottom: 0,
+            bottom: 20,
             child: Container(
-              height: Get.height * 0.3,
+              height: Get.height * 0.15,
               width: Get.width,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
+                  borderRadius: BorderRadius.circular(20.0),
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
@@ -71,52 +68,6 @@ class ItemVendor extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),
-                  Divider(
-                    height: 2,
-                    thickness: 1,
-                  ),
-                  Container(
-                    width: Get.width,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        focusColor: Colors.amber,
-                        onTap: func,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 20,
-                            horizontal: 20,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 60,
-                                height: 60,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image:
-                                        AssetImage("assets/images/vendor.png"),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                "Kaki Lima Tetap",
-                                style: TextStyle(fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Divider(
-                    height: 2,
-                    thickness: 1,
                   ),
                 ],
               ),

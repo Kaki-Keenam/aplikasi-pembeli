@@ -67,27 +67,14 @@ class TransactionView extends StatelessWidget {
                           height: 10,
                         ),
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            RatingBar.builder(
-                              initialRating: 3.5,
-                              minRating: 1,
-                              direction: Axis.horizontal,
-                              allowHalfRating: true,
-                              itemCount: 5,
-                              itemSize: 10,
-                              itemBuilder: (context, _) => Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              ),
-                              onRatingUpdate: (rating) {
-                                print(rating);
-                              },
-                            ),
+                           Icon(Icons.star, size: 20, color: Colors.orange,),
                             Padding(
                               padding: EdgeInsets.only(left: 5),
                               child: Text(
-                                " Reviews",
+                                "${trans?.rating} Reviews",
                                 style: TextStyle(
                                     fontSize: 10, fontFamily: "roboto"),
                               ),

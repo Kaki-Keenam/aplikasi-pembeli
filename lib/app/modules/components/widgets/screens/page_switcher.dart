@@ -54,7 +54,7 @@ class BottomGradientWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: 0,
+      bottom: -40,
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: 150,

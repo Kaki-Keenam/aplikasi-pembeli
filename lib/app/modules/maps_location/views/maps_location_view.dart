@@ -90,11 +90,15 @@ class MapsLocationView extends GetView<MapsLocationController> {
             ),
           ),
           Obx(
-                () => MyLocation(
-                isDismissible: controller.isDismissibleDialog.value,
-                func: () {
-                  controller.myLocation();
-                }),
+                () => Positioned(
+                  bottom: Get.height * 0.22,
+                  right: 20,
+                  child: MyLocation(
+                  isDismissible: controller.isDismissibleDialog.value,
+                  func: () {
+                    controller.myLocation();
+                  }),
+                ),
           ),
           Obx(
                 () => ItemVendor(

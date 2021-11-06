@@ -37,15 +37,15 @@ class RegisterModal extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(bottom: 24),
                 child: Text(
-                  'Get Started',
+                  'Daftar',
                   style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.w700, fontFamily: 'inter'),
                 ),
               ),
               // Form
-              NewCustomTextField(controller: welC.emailC, title: 'Email', hint: 'youremail@email.com'),
-              NewCustomTextField(controller: welC.nameC, title: 'Full Name', hint: 'Your Full Name', margin: EdgeInsets.only(top: 16)),
+              NewCustomTextField(controller: welC.emailC, title: 'Email', hint: 'emailanda@email.com'),
+              NewCustomTextField(controller: welC.nameC, title: 'Nama Lengkap', hint: 'Nama Lengkap Anda', margin: EdgeInsets.only(top: 16)),
               NewCustomTextField(controller: welC.passC, title: 'Password', hint: '**********', obsecureText: true, margin: EdgeInsets.only(top: 16)),
-              NewCustomTextField(title: 'Retype Password', hint: '**********', obsecureText: true, margin: EdgeInsets.only(top: 16)),
+              NewCustomTextField(title: 'Konfirmasi Password', hint: '**********', obsecureText: true, margin: EdgeInsets.only(top: 16)),
               // Register Button
               Container(
                 margin: EdgeInsets.only(top: 32, bottom: 6),
@@ -56,7 +56,7 @@ class RegisterModal extends StatelessWidget {
                       authC.registerAuth(welC.emailC.text, welC.passC.text, welC.nameC.text);
                       Navigator.of(context).pop();
                     },
-                    child: Text('Register', style: TextStyle(color: AppColor.secondary, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'inter')),
+                    child: Text('Daftar', style: TextStyle(color: AppColor.secondary, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'inter')),
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       primary: AppColor.primarySoft,
@@ -82,7 +82,7 @@ class RegisterModal extends StatelessWidget {
                 ),
                 child: RichText(
                   text: TextSpan(
-                    text: 'Have an account? ',
+                    text: 'Sudah punya akun? ',
                     style: TextStyle(color: Colors.grey),
                     children: [
                       TextSpan(
