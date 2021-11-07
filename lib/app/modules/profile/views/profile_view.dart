@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:kakikeenam/app/controllers/auth_controller.dart';
 import 'package:kakikeenam/app/modules/components/widgets/notify_dialogs.dart';
 import 'package:kakikeenam/app/modules/components/widgets/user_info_tile.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
@@ -14,7 +13,6 @@ import 'package:kakikeenam/app/utils/strings.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
-  final authC = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +36,7 @@ class ProfileView extends GetView<ProfileController> {
           TextButton(
             onPressed: () {
               NotifyDialogs().logoutDialog(func: () {
-                authC.logout();
+                controller.logOut();
                 Get.back();
               });
             },
@@ -74,9 +72,9 @@ class ProfileView extends GetView<ProfileController> {
                         File(logic.pickerImage!.path),
                       ),)
                      :
-                      Obx(()=> authC.userValue.photoUrl != null
+                      Obx(()=> controller.user.photoUrl != null
                             ? CachedNetworkImage(
-                          imageUrl: '${authC.userValue.photoUrl}',
+                          imageUrl: '${controller.user.photoUrl}',
                           fit: BoxFit.fill,
                           placeholder: (context, url) =>
                               Transform.scale(
@@ -92,9 +90,9 @@ class ProfileView extends GetView<ProfileController> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton(onPressed: (){controller.resetImage();}, child: Text(Strings.cancel)),
-                      ElevatedButton(onPressed: () async {await controller.uploadImage(authC.user.value.uid).then(
+                      ElevatedButton(onPressed: () async {await controller.uploadImage(controller.user.uid).then(
                             (value) =>
-                        {if (value != "") authC.updatePhoto(value)},
+                        {if (value != "") controller.updatePhoto(value)},
                       );}, child: Text(Strings.save))
                     ],
                   ) : GestureDetector(
@@ -131,12 +129,12 @@ class ProfileView extends GetView<ProfileController> {
                 UserInfoTile(
                   margin: EdgeInsets.only(bottom: 16),
                   label: Strings.email,
-                  value: '${authC.userValue.email}',
+                  value: '${controller.user.email}',
                 ),
                 UserInfoTile(
                   margin: EdgeInsets.only(bottom: 16),
                   label: Strings.name,
-                  value: '${authC.userValue.name}',
+                  value: '${controller.user.name}',
                   button: TextButton(onPressed: () {
                     Get.dialog(
                         Center(
@@ -162,7 +160,7 @@ class ProfileView extends GetView<ProfileController> {
                                           onPressed: () => Get.back(),
                                           child: Text(Strings.cancel)),
                                       ElevatedButton(onPressed: () {
-                                        authC.editName(
+                                        controller.editName(
                                             controller.nameEditC.text);
                                         Get.back();
                                       }, child: Text(Strings.save))
@@ -180,8 +178,8 @@ class ProfileView extends GetView<ProfileController> {
                 UserInfoTile(
                   margin: EdgeInsets.only(bottom: 16),
                   label: Strings.last_login,
-                  value: '${authC.userValue.lastSignTime != null ? DateFormat('EEE, d MMM yyyy HH:mm:ss').format(
-                    DateTime.parse(authC.userValue.lastSignTime!),
+                  value: '${controller.user.lastSignTime != null ? DateFormat('EEE, d MMM yyyy HH:mm:ss').format(
+                    DateTime.parse(controller.user.lastSignTime!),
                   ) : DateFormat('EEE, d MMM yyyy HH:mm:ss').format(DateTime.now())}',
                 ),
               ],

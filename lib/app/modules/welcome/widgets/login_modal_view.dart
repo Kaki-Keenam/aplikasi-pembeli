@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kakikeenam/app/controllers/auth_controller.dart';
+import 'package:kakikeenam/app/modules/components/widgets/custom_text_field.dart';
 import 'package:kakikeenam/app/modules/components/widgets/notify_dialogs.dart';
 import 'package:kakikeenam/app/modules/welcome/controllers/welcome_controller.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
 
-import '../custom_text_field.dart';
 
-class LoginModal extends StatelessWidget {
-  final welC = Get.put(WelcomeController());
-  final authC = Get.find<AuthController>();
+class LoginModal extends GetView<WelcomeController> {
   @override
   Widget build(BuildContext context) {
     return Wrap(
@@ -42,8 +39,8 @@ class LoginModal extends StatelessWidget {
                 ),
               ),
               // Form
-              NewCustomTextField(controller: welC.emailC, title: 'Email', hint: 'emailanda@email.com',),
-              NewCustomTextField(controller: welC.passC, title: 'Password', hint: '**********', obsecureText: true, margin: EdgeInsets.only(top: 16),),
+              NewCustomTextField(controller: controller.emailC, title: 'Email', hint: 'emailanda@email.com',),
+              NewCustomTextField(controller: controller.passC, title: 'Password', hint: '**********', obsecureText: true, margin: EdgeInsets.only(top: 16),),
               // Log in Button
               Container(
                 margin: EdgeInsets.only(top: 32, bottom: 6),
@@ -51,9 +48,9 @@ class LoginModal extends StatelessWidget {
                 height: 60,
                 child: ElevatedButton(
                     onPressed: () {
-                      authC.loginAuth(welC.emailC.text, welC.passC.text);
+                      controller.loginAuth();
                       Get.back();
-                      if(authC.loading.isTrue){
+                      if(controller.isLoading.isTrue){
                         NotifyDialogs().loadingDialog();
                       }
                     },

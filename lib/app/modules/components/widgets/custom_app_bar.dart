@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kakikeenam/app/controllers/auth_controller.dart';
+import 'package:kakikeenam/app/modules/home/controllers/home_controller.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBar extends GetView<HomeController> implements PreferredSizeWidget {
   final Widget title;
   final bool showProfilePhoto;
   final VoidCallback? profilePhotoOnPressed;
@@ -16,7 +16,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authC = Get.find<AuthController>();
     return AppBar(
       backgroundColor: AppColor.primary,
       title: title,
@@ -34,8 +33,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 height: 45,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Obx(() => authC.user.value.photoUrl != null ? CachedNetworkImage(
-                      imageUrl: '${authC.user.value.photoUrl}',
+                  child: Obx(() => controller.user.photoUrl != null ? CachedNetworkImage(
+                      imageUrl: '${controller.user.photoUrl}',
                       fit: BoxFit.fill,
                       placeholder: (context, url) => Transform.scale(
                         scale: 0.5,

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kakikeenam/app/controllers/auth_controller.dart';
-import 'package:kakikeenam/app/modules/components/widgets/modal_view/login_modal_view.dart';
-import 'package:kakikeenam/app/modules/components/widgets/modal_view/register_modal_view.dart';
+import 'package:kakikeenam/app/modules/welcome/controllers/welcome_controller.dart';
+import 'package:kakikeenam/app/modules/welcome/widgets/login_modal_view.dart';
+import 'package:kakikeenam/app/modules/welcome/widgets/register_modal_view.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
 import 'package:kakikeenam/app/utils/strings.dart';
 
-class WelcomePage extends StatelessWidget {
-  final authC = Get.find<AuthController>();
+class WelcomePage extends GetView<WelcomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,7 +109,7 @@ class WelcomePage extends StatelessWidget {
                                 ),
                               ),
                               onPressed: () {
-                                authC.loginWithGoogle();
+                                controller.loginGoogle();
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

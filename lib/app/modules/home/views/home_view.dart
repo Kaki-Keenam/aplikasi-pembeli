@@ -1,17 +1,12 @@
 import 'package:card_swiper/card_swiper.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/utils/strings.dart';
-import 'package:lottie/lottie.dart';
-import 'package:kakikeenam/app/controllers/auth_controller.dart';
-import 'package:kakikeenam/app/data/database/database.dart';
 import 'package:kakikeenam/app/data/models/carousels_model.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
-import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/modules/components/model_view/food_view.dart';
 import 'package:kakikeenam/app/modules/components/widgets/custom_app_bar.dart';
 import 'package:kakikeenam/app/modules/components/widgets/search_bar.dart';
@@ -21,7 +16,6 @@ import 'package:kakikeenam/app/utils/constants/app_colors.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
-  final authC = Get.find<AuthController>();
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -144,54 +138,34 @@ class HomeView extends GetView<HomeController> {
                 Container(
                   height: Get.height * 0.67,
                   width: double.infinity,
-                  child: StreamBuilder<GeoPoint>(
-                    stream: Database().streamBuyerLoc(),
-                    builder: (context, buyer) {
-                      if (buyer.hasData) {
-                        return StreamBuilder<List<VendorModel>?>(
-                          stream: Database().streamVendorId(buyer.data),
-                          builder: (context, vendor) {
-                            if (vendor.hasData && vendor.data!.isNotEmpty) {
-                              return StreamBuilder<List<ProductModel>?>(
-                                stream: Database().streamProduct(vendor.data),
-                                builder: (context, product) {
-                                  if (product.hasData &&
-                                      vendor.data!.isNotEmpty) {
-                                    controller.searchList.value = product.data;
-
-                                    return ListView.separated(
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemCount: product.data?.length ?? 3,
-                                      itemBuilder: (context, index) {
-                                        return FoodView(
-                                          product: product.data?[index],
-                                          func: () => Get.toNamed(
-                                              Routes.DETAILITEM,
-                                              arguments: product.data?[index]),
-                                        );
-                                      },
-                                      separatorBuilder:
-                                          (BuildContext context, int index) {
-                                        return SizedBox(
-                                          height: 16,
-                                        );
-                                      },
-                                    );
-                                  }
-                                  return Container();
-                                },
-                              );
-                            }
-                            return Center(
-                              child: Lottie.asset(Strings.radar)
+                  child: StreamBuilder<List<ProductModel>?>(
+                    stream: controller.streamProduct(controller.vendorID),
+                    builder: (context, product) {
+                      if (product.hasData ) {
+                        controller.searchList.value = product.data;
+                        return ListView.separated(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: product.data?.length ?? 3,
+                          itemBuilder: (context, index) {
+                            return FoodView(
+                              product: product.data?[index],
+                              func: () => Get.toNamed(
+                                  Routes.DETAILITEM,
+                                  arguments: product.data?[index]),
+                            );
+                          },
+                          separatorBuilder:
+                              (BuildContext context, int index) {
+                            return SizedBox(
+                              height: 16,
                             );
                           },
                         );
                       }
                       return Container();
                     },
-                  ),
+                  )
                 ),
               ],
             ),

@@ -4,14 +4,23 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kakikeenam/app/data/models/user_model.dart';
+import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 
 class ProfileController extends GetxController {
-  final nameEditC = TextEditingController();
-  var loading = false.obs;
+  final TextEditingController nameEditC = TextEditingController();
+
+  final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
+
+  RxBool loading = false.obs;
   ImagePicker imagePicker = ImagePicker();
   FirebaseStorage _storage = FirebaseStorage.instance;
 
   XFile? pickerImage;
+
+  var _user = UserModel().obs;
+
+  UserModel get user => this._user.value;
 
   Future<void> selectedImage() async {
     try{
@@ -47,9 +56,48 @@ class ProfileController extends GetxController {
     }
   }
 
+  void logOut(){
+    try{
+      _repositoryRemote.logout();
+    }catch(e){
+      print("Logout: ${e.toString()}");
+    }
+  }
+
+  void editName(String name){
+    try{
+      _repositoryRemote.editName(name);
+    }catch (e){
+      print("editName: ${e.toString()}");
+    }
+  }
+
+  void updatePhoto(String url){
+    try{
+      _repositoryRemote.updatePhoto(url);
+    }catch (e){
+      print("updatePhoto: ${e.toString()}");
+    }
+  }
+
   @override
   void onClose() {
     nameEditC.dispose();
     super.onClose();
+  }
+
+  @override
+  void onInit() {
+    initUser();
+    super.onInit();
+  }
+
+  initUser() async {
+    try{
+      var _userData = await _repositoryRemote.userModel;
+      _user(_userData);
+    }catch(e){
+      print('user: ${e.toString()}');
+    }
   }
 }

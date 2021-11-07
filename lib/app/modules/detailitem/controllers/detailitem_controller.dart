@@ -3,12 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:kakikeenam/app/data/database/database.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/vendor_model.dart';
+import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 class DetailItemController extends GetxController {
+  final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
   FirebaseFirestore _dbStore = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
   RxBool isFav = false.obs;
@@ -26,13 +27,13 @@ class DetailItemController extends GetxController {
 
   @override
   void onReady() {
-    _foodModel.bindStream(Database().getStreamProduct(vendorId.value));
+    _foodModel.bindStream(_repositoryRemote.getProduct(vendorId.value));
     getVendor();
     super.onReady();
   }
   @override
   void onInit() {
-    _buyerLocation.bindStream(Database().streamBuyerLoc());
+    _buyerLocation.bindStream(_repositoryRemote.buyerLoc());
     super.onInit();
   }
 

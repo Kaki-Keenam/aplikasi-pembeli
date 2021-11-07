@@ -17,6 +17,8 @@ import 'package:kakikeenam/app/modules/profile/bindings/profile_binding.dart';
 import 'package:kakikeenam/app/modules/profile/views/profile_view.dart';
 import 'package:kakikeenam/app/modules/search/bindings/search_binding.dart';
 import 'package:kakikeenam/app/modules/search/views/search_view.dart';
+import 'package:kakikeenam/app/modules/splash/bindings/splash_binding.dart';
+import 'package:kakikeenam/app/modules/splash/views/splash_view.dart';
 import 'package:kakikeenam/app/modules/vendor_detail/bindings/vendor_detail_binding.dart';
 import 'package:kakikeenam/app/modules/vendor_detail/views/vendor_detail_view.dart';
 import 'package:kakikeenam/app/modules/welcome/welcome_page.dart';
@@ -46,7 +48,10 @@ class AppPages {
       page: () => ForgetPasswordView(),
       binding: ForgetPasswordBinding(),
     ),
-    GetPage(name: _Paths.PAGE_SWITCHER, page: () => PageSwitcher(), binding: DependencyInjection()),
+    GetPage(
+        name: _Paths.PAGE_SWITCHER,
+        page: () => PageSwitcher(),
+        binding: DependencyInjection()),
     GetPage(name: _Paths.WELCOME_PAGE, page: () => WelcomePage()),
     GetPage(
       name: _Paths.MAPS_LOCATION,
@@ -77,6 +82,11 @@ class AppPages {
       name: _Paths.VENDOR_DETAIL,
       page: () => VendorDetailView(),
       binding: VendorDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.SPLASH,
+      page: () => SplashView(),
+      binding: SplashBinding(),
     ),
   ];
 }

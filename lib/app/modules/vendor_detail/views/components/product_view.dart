@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kakikeenam/app/data/database/database.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/modules/components/model_view/food_nearby_view.dart';
+import 'package:kakikeenam/app/modules/vendor_detail/controllers/vendor_detail_controller.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:lottie/lottie.dart';
-class ProductView extends StatelessWidget {
+class ProductView extends GetView<VendorDetailController> {
   final String? vendorId;
   const ProductView({Key? key, this.vendorId}) : super(key: key);
 
@@ -14,7 +14,7 @@ class ProductView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: StreamBuilder<List<ProductModel>>(
-        stream: Database().getStreamProduct(vendorId!),
+        stream: controller.getProduct(vendorId!),
         builder: (context, snapshot) {
           if(snapshot.hasData){
             return GridView.builder(

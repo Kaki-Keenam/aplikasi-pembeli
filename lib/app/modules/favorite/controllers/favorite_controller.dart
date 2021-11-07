@@ -1,11 +1,12 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:kakikeenam/app/data/database/database.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
+import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 
 class FavoriteController extends GetxController {
   var searchFav = TextEditingController();
+  final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
   var fav = ProductModel().obs;
 
   Rxn<List<ProductModel>> foodModel = Rxn<List<ProductModel>>();
@@ -13,7 +14,7 @@ class FavoriteController extends GetxController {
 
   @override
   void onReady() {
-    foodModel.bindStream(Database().streamListFavorite());
+    foodModel.bindStream(_repositoryRemote.streamListFavorite());
     super.onReady();
   }
 

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
 
-class SplashScreen extends StatelessWidget {
+import '../controllers/splash_controller.dart';
+
+class SplashView extends GetView<SplashController> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,18 +15,18 @@ class SplashScreen extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/images/splash.png"),
-                  fit: BoxFit.cover
-                )
+                  image: DecorationImage(
+                      image: AssetImage("assets/images/splash.png"),
+                      fit: BoxFit.cover
+                  )
               ),
             ),
             Center(
                 child: Container(
-              width: Get.width * 0.45,
-              height: Get.width * 0.45,
-              child: Image.asset("assets/images/logo.png"),
-            )),
+                  width: Get.width * 0.45,
+                  height: Get.width * 0.45,
+                  child: Image.asset("assets/images/logo.png"),
+                )),
           ],
         ),
       ),
