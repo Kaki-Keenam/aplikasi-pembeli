@@ -11,20 +11,28 @@ class TransactionModel {
     this.buyerId,
     this.transactionId,
     this.vendorId,
-    this.image,
+    this.storeImage,
     this.orderDate,
     this.storeName,
+    this.buyerLoc,
+    this.buyerName,
     this.rating,
     this.state,
+    this.totalPrice,
+    this.quantity,
     this.product,
   });
   String? buyerId;
   String? transactionId;
   String? vendorId;
-  String? image;
+  String? storeImage;
   String? storeName;
   String? orderDate;
-  int? rating;
+  GeoPoint? buyerLoc;
+  String? buyerName;
+  int? totalPrice;
+  int? quantity;
+  double? rating;
   String? state;
   List<ProductModel>? product;
 
@@ -32,9 +40,13 @@ class TransactionModel {
      var doc = json.data() as dynamic;
     return TransactionModel(
         buyerId: doc["buyerId"],
+        buyerLoc: doc["buyerLoc"],
+        buyerName: doc["buyerName"],
+        totalPrice: doc["totalPrice"],
+        quantity: doc["quantity"],
         transactionId: doc["transactionId"],
         vendorId: doc["vendorId"],
-        image: doc["storeImage"],
+        storeImage: doc["storeImage"],
         storeName: doc["storeName"],
         orderDate: doc["orderDate"],
         rating: doc["rating"],

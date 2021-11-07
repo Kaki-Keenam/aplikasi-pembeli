@@ -40,8 +40,8 @@ class TransactionView extends StatelessWidget {
                   height: 120,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
-                    child: trans?.image != null ? CachedNetworkImage(
-                      imageUrl: "${trans?.image}",
+                    child: trans?.storeImage != null ? CachedNetworkImage(
+                      imageUrl: "${trans?.storeImage}",
                       fit: BoxFit.fill,
                       placeholder: (context, url) => Transform.scale(
                         scale: 0.5,

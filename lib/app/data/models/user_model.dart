@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 UserModel userModelFromJson(String str) => UserModel.fromDocument(json.decode(str));
 
 String userModelToJson(UserModel data) => json.encode(data.toJson());
@@ -10,6 +12,7 @@ class UserModel {
     this.name,
     this.email,
     this.photoUrl,
+    this.lastLocation,
     this.creationTime,
     this.lastSignTime,
     this.updateTime,
@@ -20,6 +23,7 @@ class UserModel {
   String? email;
   String? photoUrl;
   String? creationTime;
+  GeoPoint? lastLocation;
   String? lastSignTime;
   String? updateTime;
 
@@ -28,6 +32,7 @@ class UserModel {
     name: json["name"],
     email: json["email"],
     photoUrl: json["photoUrl"],
+    lastLocation: json["lastLocation"],
     creationTime: json["creationTime"],
     lastSignTime: json["lastSignTime"],
     updateTime: json["updateTime"],

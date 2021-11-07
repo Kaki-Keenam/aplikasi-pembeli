@@ -13,8 +13,6 @@ import 'package:kakikeenam/app/utils/constants/constants.dart';
 class RepositoryRemote{
   final AuthRemote _authRemote = Get.find<AuthRemote>();
   final DbRemote _dbRemote = Get.find<DbRemote>();
-  FirebaseFirestore _db = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
 
   Future<UserModel> get userModel => _dbRemote.getUserModel();
@@ -87,12 +85,7 @@ class RepositoryRemote{
 
       GeoPoint lesserGeoPoint = GeoPoint(lowerLat, lowerLong);
       GeoPoint greaterGeoPoint = GeoPoint(greaterLat, greaterLong);
-      return _db
-          .collection(Constants.VENDOR)
-          .where(Constants.LAST_LOCATION,
-          isGreaterThanOrEqualTo: lesserGeoPoint)
-          .where(Constants.LAST_LOCATION, isLessThanOrEqualTo: greaterGeoPoint)
-          .snapshots()
+      return _dbRemote.vendorId(lesserGeoPoint, greaterGeoPoint)
           .map((QuerySnapshot query) {
         List<VendorModel> listData = List.empty(growable: true);
         query.docs.forEach((element) {
@@ -109,52 +102,26 @@ class RepositoryRemote{
     }
   }
 
-  Stream<List<ProductModel>> getProduct(String vendorId){
-    try{
-      return _dbRemote.getStreamData(vendorId).map((QuerySnapshot query) {
-        List<ProductModel> listData = List.empty(growable: true);
-        query.docs.forEach((element) {
-          listData.add(ProductModel.fromDocument(element));
-        });
-        return listData;
-      });
-    }catch(e){
-      print('vendorId: ${e.toString()}');
-      rethrow;
-    }
+  Stream<QuerySnapshot> getProduct(String vendorId){
+    return _dbRemote.getStreamData(vendorId);
   }
 
-  Stream<List<ProductModel>> streamListFavorite(){
-    try{
-      return _dbRemote.streamFavorite().map((DocumentSnapshot doc) {
-        var fav = doc.data() as dynamic;
-        var data = fav["favorites"];
-        List<ProductModel> listData = List.empty(growable: true);
-        data.forEach((element) {
-          listData.add(ProductModel.fromMap(element));
-        });
-        return listData;
-      });
-    }catch(e){
-      print('favorite: ${e.toString()}');
-      rethrow;
-    }
+  Stream<DocumentSnapshot> streamListFavorite(){
+    return _dbRemote.streamFavorite();
   }
 
-  Stream<List<TransactionModel>> streamListTrans(){
-    try{
-      return _dbRemote.streamTrans()
-          .map((QuerySnapshot query) {
-        List<TransactionModel> listData = List.empty(growable: true);
-        query.docs.forEach((element) {
-          listData.add(TransactionModel.fromDocument(element));
-        });
-        return listData;
-      });
-    }catch(e){
-      print('trans: ${e.toString()}');
-      rethrow;
-    }
+  Stream<QuerySnapshot> streamListTrans(){
+    return _dbRemote.streamTrans();
+  }
+
+  void setTrans(TransactionModel trans, ProductModel product){
+    _dbRemote.createTrans(trans, product);
+  }
+
+  Future<VendorModel> getVendor(String vendorId) async{
+    var vendor = await _dbRemote.getVendor(vendorId);
+    var vendorModel = VendorModel.fromDocument(vendor);
+    return vendorModel;
   }
 
 }

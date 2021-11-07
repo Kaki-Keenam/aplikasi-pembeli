@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
@@ -14,8 +15,25 @@ class FavoriteController extends GetxController {
 
   @override
   void onReady() {
-    foodModel.bindStream(_repositoryRemote.streamListFavorite());
+    foodModel.bindStream(getFavorite());
     super.onReady();
+  }
+
+  Stream<List<ProductModel>> getFavorite(){
+    try{
+      return _repositoryRemote.streamListFavorite().map((DocumentSnapshot doc) {
+        var fav = doc.data() as dynamic;
+        var data = fav["favorites"];
+        List<ProductModel> listData = List.empty(growable: true);
+        data.forEach((element) {
+          listData.add(ProductModel.fromMap(element));
+        });
+        return listData;
+      });
+    }catch(e){
+      print('favorite: ${e.toString()}');
+      rethrow;
+    }
   }
 
   @override

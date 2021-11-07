@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:kakikeenam/app/data/models/product_model.dart';
+import 'package:kakikeenam/app/data/models/transaction_model.dart';
 import 'package:kakikeenam/app/data/models/user_model.dart';
+import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 import 'package:kakikeenam/app/utils/utils.dart';
 
@@ -55,6 +58,20 @@ class DbRemote{
     }
   }
 
+  Stream<QuerySnapshot> vendorId(GeoPoint lesserGeoPoint, GeoPoint greaterGeoPoint){
+    try{
+      return _db
+          .collection(Constants.VENDOR)
+          .where(Constants.LAST_LOCATION,
+          isGreaterThanOrEqualTo: lesserGeoPoint)
+          .where(Constants.LAST_LOCATION, isLessThanOrEqualTo: greaterGeoPoint)
+          .snapshots();
+    }catch(e){
+      print('vendor location: ${e.toString()}');
+      rethrow;
+    }
+  }
+
   Stream<QuerySnapshot> getStreamData(String vendorId){
     try{
       return _db.collection(Constants.PRODUCTS)
@@ -91,6 +108,40 @@ class DbRemote{
       print('trans: ${e.toString()}');
       rethrow;
     }
+  }
+
+  void createTrans(TransactionModel trans, ProductModel product) async {
+    try{
+      var setTrans = _db.collection(Constants.TRANSACTION);
+      String transId = await setTrans.doc().id;
+
+      setTrans.doc(transId).set({
+        "buyerId": _auth.currentUser!.uid,
+        "buyerLoc": trans.buyerLoc,
+        "buyerName": trans.buyerName,
+        "products": [
+          {
+            "productId": product.productId,
+            "image": product.image,
+            "name": product.name,
+            "price": product.price,
+          }
+        ],
+        "transactionId": transId,
+        "storeImage": trans.storeImage,
+        "storeName": trans.storeName,
+        "orderDate": trans.orderDate,
+        "rating": trans.rating,
+        "state": trans.state,
+        "vendorId": trans.vendorId,
+      });
+    }catch(e){
+      print('create trans: ${e.toString()}');
+    }
+  }
+
+  Future<DocumentSnapshot> getVendor(String vendorId) async {
+    return _db.collection(Constants.VENDOR).doc(vendorId).get();
   }
 
 }

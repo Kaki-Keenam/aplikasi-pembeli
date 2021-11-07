@@ -9,7 +9,7 @@ class VendorModel {
     this.uid,
     this.storeName,
     this.email,
-    this.image,
+    this.storeImage,
     this.street,
     this.distance,
     this.location,
@@ -23,7 +23,7 @@ class VendorModel {
   GeoPoint? location;
   double? distance;
   String? email;
-  String? image;
+  String? storeImage;
   String? status;
   double? rating;
 
@@ -34,7 +34,7 @@ class VendorModel {
       storeName: doc["storeName"],
       email: doc["email"],
       location: doc["lastLocation"],
-      image: doc["storeImage"],
+      storeImage: doc["storeImage"],
       status: doc["status"],
       rating: doc["rating"] as double,
     );

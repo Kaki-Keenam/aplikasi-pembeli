@@ -51,8 +51,6 @@ class MapsLocationController extends GetxController {
   // Position? currentLocation;
   GeolocatorPlatform geoLocator = GeolocatorPlatform.instance;
   Rxn<Position> streamPosition = Rxn<Position>();
-  final GeolocatorPlatform geolocatorAndroid = GeolocatorPlatform.instance;
-  StreamSubscription<Position>? _positionStreamSubscription;
 
   bool ripple = true;
 

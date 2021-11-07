@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animarker/flutter_map_marker_animation.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:kakikeenam/app/data/services/transaction/transaction_state.dart';
 import 'package:kakikeenam/app/modules/components/widgets/loading_view.dart';
 import 'package:kakikeenam/app/modules/maps_location/views/components/item_marker.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
@@ -15,7 +14,6 @@ import 'components/bottom_sheet/item_vendor.dart';
 import 'components/my_location.dart';
 
 class MapsLocationView extends GetView<MapsLocationController> {
-  final idleC = Get.find<Transaction_state_controller>();
   final mapsC = Get.put(MapsLocationController());
 
   @override

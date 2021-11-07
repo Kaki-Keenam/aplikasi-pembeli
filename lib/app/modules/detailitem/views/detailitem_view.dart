@@ -5,8 +5,6 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
-import 'package:kakikeenam/app/controllers/auth_controller.dart';
-import 'package:kakikeenam/app/data/services/transaction/transaction_state.dart';
 import 'package:kakikeenam/app/modules/components/model_view/food_nearby_view.dart';
 import 'package:kakikeenam/app/modules/components/widgets/custom_button.dart';
 import 'package:kakikeenam/app/modules/components/widgets/loading_view.dart';
@@ -16,8 +14,6 @@ import 'package:kakikeenam/app/utils/strings.dart';
 import '../controllers/detailitem_controller.dart';
 
 class DetailItemView extends GetView<DetailItemController> {
-  final authC = Get.find<AuthController>();
-  final idleC = Get.find<Transaction_state_controller>();
   final food = Get.arguments;
 
   @override
@@ -169,11 +165,11 @@ class DetailItemView extends GetView<DetailItemController> {
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), topLeft: Radius.circular(10)),
                                       child: Obx(() {
-                                        return controller.getVendorModel.image !=
+                                        return controller.getVendorModel.storeImage !=
                                                 null
                                             ? CachedNetworkImage(
                                                 imageUrl:
-                                                    "${controller.getVendorModel.image}",
+                                                    "${controller.getVendorModel.storeImage}",
                                                 fit: BoxFit.fill,
                                                 placeholder: (context, url) =>
                                                     Transform.scale(
@@ -265,7 +261,7 @@ class DetailItemView extends GetView<DetailItemController> {
                                   text: Strings.call_know,
                                   backgroundColor: Colors.amber[600],
                                   func: () {
-                                    idleC.stateProposedTrans(food);
+                                    controller.setTrans(food);
                                   },
                                 ),
                               ),
