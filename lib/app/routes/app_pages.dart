@@ -21,16 +21,16 @@ import 'package:kakikeenam/app/modules/splash/bindings/splash_binding.dart';
 import 'package:kakikeenam/app/modules/splash/views/splash_view.dart';
 import 'package:kakikeenam/app/modules/vendor_detail/bindings/vendor_detail_binding.dart';
 import 'package:kakikeenam/app/modules/vendor_detail/views/vendor_detail_view.dart';
+import 'package:kakikeenam/app/modules/welcome/bindings/welcome_binding.dart';
 import 'package:kakikeenam/app/modules/welcome/welcome_page.dart';
 
-import '../../dependency_injection.dart';
 
 part 'app_routes.dart';
 
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.HOME;
+  static const INITIAL = Routes.SPLASH;
 
   static final routes = [
     GetPage(
@@ -50,9 +50,10 @@ class AppPages {
     ),
     GetPage(
         name: _Paths.PAGE_SWITCHER,
-        page: () => PageSwitcher(),
-        binding: DependencyInjection()),
-    GetPage(name: _Paths.WELCOME_PAGE, page: () => WelcomePage()),
+        page: () => PageSwitcher(),),
+    GetPage(name: _Paths.WELCOME_PAGE,
+        page: () => WelcomePage(),
+        binding: WelcomeBinding()),
     GetPage(
       name: _Paths.MAPS_LOCATION,
       page: () => MapsLocationView(),

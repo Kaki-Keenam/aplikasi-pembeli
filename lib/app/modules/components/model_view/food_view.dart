@@ -1,21 +1,29 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
+import 'package:kakikeenam/app/data/models/vendor_model.dart';
 
 class FoodView extends StatelessWidget {
   const FoodView({
     Key? key,
     this.func,
-    this.product,
+    this.product, this.vendor, this.buyerLoc, this.subscribed = false,
   }) : super(key: key);
 
   final ProductModel? product;
+  final VendorModel? vendor;
+  final GeoPoint? buyerLoc;
   final VoidCallback? func;
+  final bool subscribed;
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       height: 150,
       width: double.infinity,
@@ -69,7 +77,7 @@ class FoodView extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        SizedBox(height: 30),
+                        SizedBox(height: 10),
                         Text(
                           "${NumberFormat.currency(
                             name: "id",
@@ -82,6 +90,41 @@ class FoodView extends StatelessWidget {
                             fontWeight: FontWeight.w400,
                           ),
                         ),
+                        SizedBox(height: 8),
+                        subscribed == false ? SizedBox(
+                          width: 135,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              FaIcon(
+                                FontAwesomeIcons.mapMarkerAlt,
+                                color: Color(0xff416C6E),
+                                size: 17,
+                              ),
+                              SizedBox(width: 10,),
+                              buyerLoc != null && vendor != null ? Text(
+                                "Jarak: ${Geolocator.distanceBetween(
+                                    buyerLoc!.latitude,
+                                    buyerLoc!.longitude,
+                                    vendor!.location!.latitude,
+                                    vendor!.location!.longitude).toStringAsFixed(0)} m",
+                                style: TextStyle(
+                                  color: Colors.black26,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ): Container(),
+                            ],
+                          ),
+                        ): Container(
+                          width: 100,
+                          height: 25,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.grey
+                          ),
+                          child: Center(child: Text("Langganan", style: TextStyle(color: Colors.black45, fontWeight: FontWeight.w800),)),
+                        )
                       ],
                     ),
                   ),

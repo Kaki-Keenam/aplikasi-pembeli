@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
@@ -49,7 +50,7 @@ class TransactionModel {
         storeImage: doc["storeImage"],
         storeName: doc["storeName"],
         orderDate: doc["orderDate"],
-        rating: doc["rating"],
+        rating: doc["rating"].toDouble(),
         state: doc["state"],
      );
    }

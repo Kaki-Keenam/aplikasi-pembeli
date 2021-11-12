@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:kakikeenam/app/modules/splash/bindings/splash_binding.dart';
 import 'package:kakikeenam/dependency_injection.dart';
 
 import 'app/routes/app_pages.dart';
@@ -16,6 +17,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  DependencyInjection.init();
   await GetStorage.init();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -39,8 +41,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return  GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialBinding: DependencyInjection(),
       title: "Kakikeenam",
+      initialBinding: SplashBinding(),
       theme: ThemeData(
         colorScheme: ColorScheme.light(primary: Color(0xFFFFB300)),
         primaryIconTheme: IconThemeData(color: Colors.white),
@@ -51,7 +53,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: Routes.SPLASH,
+      initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
     );
   }

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../controllers/splash_controller.dart';
 
 class SplashView extends GetView<SplashController> {
+  final splash = Get.put(SplashController());
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

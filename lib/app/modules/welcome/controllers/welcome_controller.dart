@@ -1,13 +1,15 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/repository/repository_remote.dart';
+import 'package:kakikeenam/app/data/services/helper_controller.dart';
 
 class WelcomeController extends GetxController{
   TextEditingController emailC = TextEditingController();
   TextEditingController passC = TextEditingController();
   TextEditingController nameC = TextEditingController();
 
-  final RepositoryRemote _repositoryRemote = Get.put(RepositoryRemote(), permanent: true);
+  final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
 
   RxBool isLoading = false.obs;
 

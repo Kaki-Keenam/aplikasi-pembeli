@@ -1,24 +1,23 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/user_model.dart';
 import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/data/repository/repository_remote.dart';
+import 'package:kakikeenam/app/data/services/helper_controller.dart';
+import 'package:kakikeenam/app/data/services/location_service.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 
 class HomeController extends GetxController {
   final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
-  FirebaseFirestore _db = FirebaseFirestore.instance;
+  final LocationController locationService = Get.find<LocationController>();
+  final HelperController helper = Get.put(HelperController(), permanent: true);
   Rxn<List<ProductModel>> searchList = Rxn<List<ProductModel>>();
 
   List<ProductModel>? get searchData => searchList.value;
 
-  Rxn<List<VendorModel>> _vendor = Rxn<List<VendorModel>>();
-
-  List<VendorModel>? get vendorID => this._vendor.value;
 
   var currentIndex = 0.obs;
   List<T> map<T>(List list, Function handler) {
@@ -36,7 +35,6 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     initUser();
-    _vendor.bindStream(vendorId());
     super.onInit();
   }
 
@@ -49,38 +47,59 @@ class HomeController extends GetxController {
     }
   }
 
-  Stream<List<ProductModel>> streamProduct(List<VendorModel>? query) {
-    List<String> queryList = List.empty(growable: true);
-    query?.forEach((element) {
-      queryList.add(element.uid ?? "");
+  Stream<GeoPoint> getBuyerLoc(){
+    return _repositoryRemote.buyerLoc().map((event) {
+      var location = event.get('lastLocation');
+      return location;
     });
-    try {
-      return _db
-          .collection(Constants.PRODUCTS)
-          .where(Constants.VENDOR_ID_QUERY, whereIn: queryList)
-          .snapshots()
-          .map((QuerySnapshot query) {
-        List<ProductModel> listData = List.empty(growable: true);
-        query.docs.forEach((element) {
-          listData.add(ProductModel.fromDocument(element));
+  }
+
+  Stream<List<VendorModel>> getVendorId(GeoPoint? location){
+    try{
+      double lowerLat =
+          location!.latitude - (Constants.LAT * Constants.DISTANCE_MILE);
+      double lowerLong =
+          location.longitude - (Constants.LONG * Constants.DISTANCE_MILE);
+
+      double greaterLat =
+          location.latitude + (Constants.LAT * Constants.DISTANCE_MILE);
+      double greaterLong =
+          location.longitude + (Constants.LONG * Constants.DISTANCE_MILE);
+
+      GeoPoint lesserGeoPoint = GeoPoint(lowerLat, lowerLong);
+      GeoPoint greaterGeoPoint = GeoPoint(greaterLat, greaterLong);
+      return _repositoryRemote.vendorId(lesserGeoPoint, greaterGeoPoint).map((event) {
+        List<VendorModel> listData = List.empty(growable: true);
+        event.docs.forEach((element) {
+          var data = element.data() as dynamic;
+          listData.add(VendorModel(
+            uid: data['uid'],
+          ));
         });
         return listData;
       });
-    } catch (e) {
-      print(e.toString());
+    }catch(e){
+      print('vendorId: ${e.toString()}');
       rethrow;
     }
   }
 
-  Stream<List<VendorModel>?> vendorId(){
-    return _repositoryRemote.getStreamVendorId().map((vendor) {
-      if(ConnectionState == ConnectionState.active){
-        vendor.map((event) {
-          return event;
-        });
-      }
-       return null;
+  Stream<List<ProductModel>> getNearProduct(List<VendorModel>? query) {
+    List<String> queryList = List.empty(growable: true);
+    query?.forEach((element) {
+      queryList.add(element.uid ?? "");
     });
+    return _repositoryRemote.nearProduct(queryList).map((QuerySnapshot query) {
+      List<ProductModel> listData = List.empty(growable: true);
+      query.docs.forEach((element) {
+        listData.add(ProductModel.fromDocument(element));
+      });
+      return listData;
+    });
+  }
+
+  Future<VendorModel> getVendor(String? vendorId) {
+    return _repositoryRemote.getVendor(vendorId!);
   }
 
 }

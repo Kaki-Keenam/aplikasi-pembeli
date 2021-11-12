@@ -37,9 +37,18 @@ class DetailItemController extends GetxController {
 
   @override
   void onInit() {
-    _buyerLocation.bindStream(_repositoryRemote.buyerLoc());
+    _buyerLocation.bindStream(getBuyerLoc());
     super.onInit();
   }
+
+  Stream<GeoPoint> getBuyerLoc(){
+    return _repositoryRemote.buyerLoc().map((event) {
+      var location = event.get('lastLocation');
+      return location;
+    });
+  }
+
+
 
   Stream<List<ProductModel>> getProduct() {
     try {

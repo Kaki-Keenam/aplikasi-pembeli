@@ -1,6 +1,5 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/transaction_model.dart';
@@ -8,21 +7,19 @@ import 'package:kakikeenam/app/data/models/user_model.dart';
 import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/data/provider/auth_remote.dart';
 import 'package:kakikeenam/app/data/provider/db_remote.dart';
-import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 class RepositoryRemote{
   final AuthRemote _authRemote = Get.find<AuthRemote>();
   final DbRemote _dbRemote = Get.find<DbRemote>();
 
 
+  Future<bool> get skipIntro => _authRemote.skipIntro();
+  Future<bool> get autoLogin => _authRemote.autoLogin();
+
   Future<UserModel> get userModel => _dbRemote.getUserModel();
 
   Future<void> addToFirebase([String name = "User"]) {
     return _authRemote.addToFirebase(name);
-  }
-
-  Future<bool> autoLogin() {
-    return _authRemote.autoLogin();
   }
 
   Future<void> loginAuth(String email, String password) {
@@ -45,10 +42,6 @@ class RepositoryRemote{
     return _authRemote.resetPassword(email);
   }
 
-  Future<bool> skipIntro() {
-    return _authRemote.skipIntro();
-  }
-
   void editName(String name) {
     _dbRemote.editName(name);
   }
@@ -57,49 +50,16 @@ class RepositoryRemote{
     _dbRemote.updatePhoto(url);
   }
 
-  Stream<Stream<List<VendorModel>>> getStreamVendorId(){
-    return _dbRemote.streamBuyerLoc().map((loc) {
-      var location = loc.get('lastLocation');
-      return streamVendorId(location);
-    });
+  Stream<DocumentSnapshot> buyerLoc(){
+    return _dbRemote.streamBuyerLoc();
   }
 
-  Stream<GeoPoint> buyerLoc(){
-    return _dbRemote.streamBuyerLoc().map((DocumentSnapshot doc){
-      var location = doc.get('lastLocation');
-      return location;
-    });
+  Stream<QuerySnapshot> vendorId(GeoPoint lesserGeoPoint, GeoPoint greaterGeoPoint){
+    return _dbRemote.vendorId(lesserGeoPoint, greaterGeoPoint);
   }
 
-  Stream<List<VendorModel>> streamVendorId(GeoPoint location) {
-    try {
-      double lowerLat =
-          location.latitude - (Constants.LAT * Constants.DISTANCE_MILE);
-      double lowerLong =
-          location.longitude - (Constants.LONG * Constants.DISTANCE_MILE);
-
-      double greaterLat =
-          location.latitude + (Constants.LAT * Constants.DISTANCE_MILE);
-      double greaterLong =
-          location.longitude + (Constants.LONG * Constants.DISTANCE_MILE);
-
-      GeoPoint lesserGeoPoint = GeoPoint(lowerLat, lowerLong);
-      GeoPoint greaterGeoPoint = GeoPoint(greaterLat, greaterLong);
-      return _dbRemote.vendorId(lesserGeoPoint, greaterGeoPoint)
-          .map((QuerySnapshot query) {
-        List<VendorModel> listData = List.empty(growable: true);
-        query.docs.forEach((element) {
-          var data = element.data() as dynamic;
-          listData.add(VendorModel(
-              uid: data['uid'],
-          ));
-        });
-        return listData;
-      });
-    } catch (e) {
-      print("vendor service: ${e.toString()}");
-      rethrow;
-    }
+  Stream<QuerySnapshot> nearProduct(List<String> queryList){
+    return _dbRemote.streamProduct(queryList);
   }
 
   Stream<QuerySnapshot> getProduct(String vendorId){

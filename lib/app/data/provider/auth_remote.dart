@@ -89,7 +89,7 @@ class AuthRemote {
         }
 
       } else {
-        Dialog.errorDialog("Login with Google");
+        Dialogs.errorDialog("Login with Google");
       }
     } catch (e) {
       print(e);
@@ -108,19 +108,19 @@ class AuthRemote {
       addToFirebase(name);
       await _userSignup.user!.sendEmailVerification();
 
-      Dialog.verifyDialog();
+      Dialogs.verifyDialog();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('Password terlalu lemah');
       } else if (e.code == 'email-already-in-use') {
-        Dialog.errorEmailDialog(
+        Dialogs.errorEmailDialog(
             func: () {
               Get.back();
             }
         );
       }
     } catch (e) {
-      Dialog.errorDialog("Registrasi error");
+      Dialogs.errorDialog("Registrasi error");
     }
   }
 
@@ -138,7 +138,7 @@ class AuthRemote {
         // addToFirebase();
         Get.offAllNamed(Routes.PAGE_SWITCHER);
       } else {
-        Dialog.repeatVerifyDialog(
+        Dialogs.repeatVerifyDialog(
             func: () async {
               await _userLogin.user!.sendEmailVerification();
               Get.back();
@@ -159,14 +159,14 @@ class AuthRemote {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         Get.back();
-        Dialog.emailNotFoundDialog();
+        Dialogs.emailNotFoundDialog();
       } else if (e.code == 'wrong-password') {
         Get.back();
-        Dialog.wrongPasswordDialog();
+        Dialogs.wrongPasswordDialog();
       }
     } catch (e) {
       Get.back();
-      Dialog.errorDialog("Login error");
+      Dialogs.errorDialog("Login error");
     }
   }
 
@@ -174,10 +174,10 @@ class AuthRemote {
     if (email != "" && GetUtils.isEmail(email)) {
       try {
         await _auth.sendPasswordResetEmail(email: email);
-        Dialog.resetPasswordDialog();
+        Dialogs.resetPasswordDialog();
       } on FirebaseAuthException catch (e) {
         if (e.code != "") {
-          Dialog.errorDialog("Reset Password");
+          Dialogs.errorDialog("Reset Password");
         }
       }
     }
@@ -185,9 +185,9 @@ class AuthRemote {
 
   Future<void> logout() async {
     final _isSign = await _googleSignIn.isSignedIn();
+    print('issign: $_isSign');
     if (_isSign) {
-      await _googleSignIn.disconnect();
-      await _googleSignIn.signOut();
+      await _auth.signOut();
     } else {
       await _auth.signOut();
     }

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:kakikeenam/app/controllers/auth_controller.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/strings.dart';
 
 
 class OnboardingView extends StatelessWidget {
-  final authC = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {

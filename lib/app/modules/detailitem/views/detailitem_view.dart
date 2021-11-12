@@ -14,7 +14,7 @@ import 'package:kakikeenam/app/utils/strings.dart';
 import '../controllers/detailitem_controller.dart';
 
 class DetailItemView extends GetView<DetailItemController> {
-  final food = Get.arguments;
+  final food = Get.arguments as List;
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +26,16 @@ class DetailItemView extends GetView<DetailItemController> {
             Container(
               height: Get.height * 0.5,
               width: Get.width,
-              child: food?.image != null
+              child: food[0]?.image != null
                   ? CachedNetworkImage(
-                      imageUrl: "${food!.image}",
-                      fit: BoxFit.fill,
-                      placeholder: (context, url) => Transform.scale(
-                        scale: 0.5,
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
+                imageUrl: "${food[0]?.image}",
+                fit: BoxFit.fill,
+                placeholder: (context, url) =>
+                    Transform.scale(
+                      scale: 0.5,
+                      child: CircularProgressIndicator(),
+                    ),
+              )
                   : Icon(Icons.error),
             ),
             AppBar(
@@ -64,7 +65,7 @@ class DetailItemView extends GetView<DetailItemController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "${food.name}",
+                            "${food[0]?.name}",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -90,10 +91,11 @@ class DetailItemView extends GetView<DetailItemController> {
                                     allowHalfRating: true,
                                     itemCount: 5,
                                     itemSize: 20,
-                                    itemBuilder: (context, _) => Icon(
-                                      Icons.star,
-                                      color: Colors.amber,
-                                    ),
+                                    itemBuilder: (context, _) =>
+                                        Icon(
+                                          Icons.star,
+                                          color: Colors.amber,
+                                        ),
                                     onRatingUpdate: (rating) {
                                       print(rating);
                                     },
@@ -118,8 +120,11 @@ class DetailItemView extends GetView<DetailItemController> {
                                     children: [
                                       Icon(Icons.location_on_sharp),
                                       Obx(
-                                        () => Text(
-                                            "${controller.getVendorModel.distance?.toStringAsFixed(0)} ${Strings.distance}"),
+                                            () =>
+                                            Text(
+                                                "${controller.getVendorModel
+                                                    .distance?.toStringAsFixed(
+                                                    0)} ${Strings.distance}"),
                                       )
                                     ],
                                   ),
@@ -163,32 +168,33 @@ class DetailItemView extends GetView<DetailItemController> {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: ClipRRect(
-                                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), topLeft: Radius.circular(10)),
-                                      child: Obx(() {
-                                        return controller.getVendorModel.storeImage !=
-                                                null
+                                        borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(10),
+                                            topLeft: Radius.circular(10)),
+                                        child: food[1].storeImage !=
+                                            null
                                             ? CachedNetworkImage(
-                                                imageUrl:
-                                                    "${controller.getVendorModel.storeImage}",
-                                                fit: BoxFit.fill,
-                                                placeholder: (context, url) =>
-                                                    Transform.scale(
-                                                  scale: 0.5,
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                ),
-                                              )
+                                          imageUrl:
+                                          "${food[1].storeImage}",
+                                          fit: BoxFit.fill,
+                                          placeholder: (context, url) =>
+                                              Transform.scale(
+                                                scale: 0.5,
+                                                child:
+                                                CircularProgressIndicator(),
+                                              ),
+                                        )
                                             : Container(
                                           height: Get.height * 0.18,
                                           width: Get.width * 0.35,
                                           decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(10),
-                                              bottomLeft: Radius.circular(10)
-                                            )
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(10),
+                                                  bottomLeft: Radius.circular(
+                                                      10)
+                                              )
                                           ),
-                                        );
-                                      }),
+                                        )
                                     ),
                                   ),
                                   SizedBox(
@@ -196,22 +202,18 @@ class DetailItemView extends GetView<DetailItemController> {
                                   ),
                                   Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                    CrossAxisAlignment.start,
                                     children: [
+                                      SizedBox(height: 10,),
                                       Container(
                                         width: Get.width * 0.45,
-                                        child: Obx(
-                                          () => Text(
-                                            controller
-                                                    .getVendorModel.storeName ??
-                                                Strings.loading,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold),
-                                          ),
+                                        child: Text(
+                                          food[1].storeName ??
+                                              Strings.loading,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                       ),
                                       SizedBox(
@@ -223,25 +225,26 @@ class DetailItemView extends GetView<DetailItemController> {
                                             fontWeight: FontWeight.bold,
                                             fontSize: 18),
                                       ),
-                                      Obx(
-                                        () => Container(
-                                          width: Get.width * 0.45,
-                                          child: Text(
-                                              controller.getVendorModel.street ??
-                                                  Strings.loading, overflow: TextOverflow.ellipsis,),
-                                        ),
+                                      SizedBox(height: 10,),
+                                      Container(
+                                        width: Get.width * 0.45,
+                                        child: Obx(() {
+                                          return Text(
+                                            controller.getVendorModel.street ??
+                                                Strings.loading,
+                                            overflow: TextOverflow.ellipsis,);
+                                        }),
                                       ),
                                       SizedBox(
-                                        height: 5,
+                                        height: 10,
                                       ),
-                                      Obx(() => Row(
-                                            children: [
-                                              Text(Strings.status),
-                                              Text(controller
-                                                      .getVendorModel.status ??
-                                                  Strings.loading),
-                                            ],
-                                          )),
+                                      Row(
+                                        children: [
+                                          Text(Strings.status),
+                                          Text(food[1].status ??
+                                              Strings.loading),
+                                        ],
+                                      )
                                     ],
                                   ),
                                 ],
@@ -261,7 +264,7 @@ class DetailItemView extends GetView<DetailItemController> {
                                   text: Strings.call_know,
                                   backgroundColor: Colors.amber[600],
                                   func: () {
-                                    controller.setTrans(food);
+                                    controller.setTrans(food[0]);
                                   },
                                 ),
                               ),
@@ -301,37 +304,38 @@ class DetailItemView extends GetView<DetailItemController> {
                     child: Text(
                       Strings.other_foods,
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                      TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                     ),
                   ),
                   Expanded(
                     child: Obx(
-                      () => Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: GridView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            gridDelegate:
+                          () =>
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: GridView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                gridDelegate:
                                 SliverGridDelegateWithMaxCrossAxisExtent(
                                     maxCrossAxisExtent: 200,
                                     childAspectRatio: 3 / 4,
                                     crossAxisSpacing: 30,
                                     mainAxisSpacing: 30),
-                            itemCount: controller.foodOther?.length,
-                            itemBuilder: (BuildContext ctx, index) {
-                              if (food.vendorId != null) {
-                                controller.setVendorId = food.vendorId;
-                                return FoodNearbyView(
-                                    product: controller.foodOther?[index],
-                                    func: () {
-                                      Navigator.pushReplacementNamed(
-                                          context, Routes.DETAILITEM,
-                                          arguments:
+                                itemCount: controller.foodOther?.length,
+                                itemBuilder: (BuildContext ctx, index) {
+                                  if (food[0].vendorId != null) {
+                                    controller.setVendorId = food[0].vendorId;
+                                    return FoodNearbyView(
+                                        product: controller.foodOther?[index],
+                                        func: () {
+                                          Navigator.pushReplacementNamed(
+                                              context, Routes.DETAILITEM,
+                                              arguments:
                                               controller.foodOther?[index]);
-                                    });
-                              }
-                              return LoadingView();
-                            }),
-                      ),
+                                        });
+                                  }
+                                  return LoadingView();
+                                }),
+                          ),
                     ),
                   ),
                 ],
@@ -342,30 +346,32 @@ class DetailItemView extends GetView<DetailItemController> {
               top: Get.height * 0.4,
               child: GetBuilder<DetailItemController>(
                 initState: (_) {
-                  controller.initFav(food.productId.toString());
+                  controller.initFav(food[0].productId.toString());
                 },
                 builder: (control) {
                   return Obx(
-                    () => FloatingActionButton(
-                      onPressed: () {
-                        var toggle = controller.isFav.toggle();
-                        if (toggle.value) {
-                          control.addFavorite(food: food);
-                        } else {
-                          control.removeFavorite(food.productId.toString());
-                        }
-                      },
-                      backgroundColor: Colors.amber[600],
-                      child: control.isFav.value
-                          ? Icon(
-                              Icons.favorite,
-                              color: Colors.red,
-                            )
-                          : Icon(
-                              Icons.favorite_border,
-                              color: Colors.white,
-                            ),
-                    ),
+                        () =>
+                        FloatingActionButton(
+                          onPressed: () {
+                            var toggle = controller.isFav.toggle();
+                            if (toggle.value) {
+                              control.addFavorite(food: food[0]);
+                            } else {
+                              control.removeFavorite(
+                                  food[0].productId.toString());
+                            }
+                          },
+                          backgroundColor: Colors.amber[600],
+                          child: control.isFav.value
+                              ? Icon(
+                            Icons.favorite,
+                            color: Colors.red,
+                          )
+                              : Icon(
+                            Icons.favorite_border,
+                            color: Colors.white,
+                          ),
+                        ),
                   );
                 },
               ),

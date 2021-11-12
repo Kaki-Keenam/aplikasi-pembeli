@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:kakikeenam/app/modules/components/widgets/notify_dialogs.dart';
 import 'package:kakikeenam/app/modules/components/widgets/user_info_tile.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
 import 'package:kakikeenam/app/utils/strings.dart';
@@ -35,10 +34,17 @@ class ProfileView extends GetView<ProfileController> {
         actions: [
           TextButton(
             onPressed: () {
-              NotifyDialogs().logoutDialog(func: () {
-                controller.logOut();
-                Get.back();
-              });
+              Get.defaultDialog(
+                title: "Logout Akun",
+                barrierDismissible: false,
+                content: Text("Apakah anda yakin ingin logout ?"),
+                onConfirm: (){
+                  controller.logOut();
+                  Get.back();
+                },
+                textConfirm: "Ya",
+                textCancel: "Tidak",
+              );
             },
             child: Icon(Icons.exit_to_app_rounded),
             style: TextButton.styleFrom(
@@ -71,29 +77,34 @@ class ProfileView extends GetView<ProfileController> {
                       Image(fit: BoxFit.cover, image: FileImage(
                         File(logic.pickerImage!.path),
                       ),)
-                     :
-                      Obx(()=> controller.user.photoUrl != null
-                            ? CachedNetworkImage(
-                          imageUrl: '${controller.user.photoUrl}',
-                          fit: BoxFit.fill,
-                          placeholder: (context, url) =>
-                              Transform.scale(
-                                scale: 0.5,
-                                child: CircularProgressIndicator(),
-                              ),
-                        )
-                            : Image.asset(Strings.avatar),
+                          :
+                      Obx(() =>
+                      controller.user.photoUrl != null
+                          ? CachedNetworkImage(
+                        imageUrl: '${controller.user.photoUrl}',
+                        fit: BoxFit.fill,
+                        placeholder: (context, url) =>
+                            Transform.scale(
+                              scale: 0.5,
+                              child: CircularProgressIndicator(),
+                            ),
+                      )
+                          : Image.asset(Strings.avatar),
                       ),
                     ),
                   ),
                   (controller.pickerImage != null) ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ElevatedButton(onPressed: (){controller.resetImage();}, child: Text(Strings.cancel)),
-                      ElevatedButton(onPressed: () async {await controller.uploadImage(controller.user.uid).then(
-                            (value) =>
-                        {if (value != "") controller.updatePhoto(value)},
-                      );}, child: Text(Strings.save))
+                      ElevatedButton(onPressed: () {
+                        controller.resetImage();
+                      }, child: Text(Strings.cancel)),
+                      ElevatedButton(onPressed: () async {
+                        await controller.uploadImage(controller.user.uid).then(
+                              (value) =>
+                          {if (value != "") controller.updatePhoto(value)},
+                        );
+                      }, child: Text(Strings.save))
                     ],
                   ) : GestureDetector(
                     onTap: () => controller.selectedImage(),
@@ -126,61 +137,67 @@ class ProfileView extends GetView<ProfileController> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                UserInfoTile(
-                  margin: EdgeInsets.only(bottom: 16),
-                  label: Strings.email,
-                  value: '${controller.user.email}',
-                ),
-                UserInfoTile(
-                  margin: EdgeInsets.only(bottom: 16),
-                  label: Strings.name,
-                  value: '${controller.user.name}',
-                  button: TextButton(onPressed: () {
-                    Get.dialog(
-                        Center(
-                          child: Material(
-                            color: Colors.white,
-                            child: Container(
-                              height: 150,
-                              width: Get.width * 0.9,
-                              padding: EdgeInsets.all(10),
-                              child: Column(
-                                children: [
-                                  Center(child: Text(Strings.change_name),),
-                                  SizedBox(height: 10,),
-                                  TextField(
-                                    controller: controller.nameEditC,
-                                  ),
-                                  SizedBox(height: 10,),
-                                  Expanded(
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment
-                                          .spaceBetween, children: [
-                                      ElevatedButton(
-                                          onPressed: () => Get.back(),
-                                          child: Text(Strings.cancel)),
-                                      ElevatedButton(onPressed: () {
-                                        controller.editName(
-                                            controller.nameEditC.text);
-                                        Get.back();
-                                      }, child: Text(Strings.save))
-                                    ],),
-                                  )
-                                ],
+                Obx(() {
+                  return UserInfoTile(
+                    margin: EdgeInsets.only(bottom: 16),
+                    label: Strings.email,
+                    value: '${controller.user.email}',
+                  );
+                }),
+                Obx(() {
+                  return UserInfoTile(
+                    margin: EdgeInsets.only(bottom: 16),
+                    label: Strings.name,
+                    value: '${controller.user.name}',
+                    button: TextButton(onPressed: () {
+                      Get.dialog(
+                          Center(
+                            child: Material(
+                              color: Colors.white,
+                              child: Container(
+                                height: 150,
+                                width: Get.width * 0.9,
+                                padding: EdgeInsets.all(10),
+                                child: Column(
+                                  children: [
+                                    Center(child: Text(Strings.change_name),),
+                                    SizedBox(height: 10,),
+                                    TextField(
+                                      controller: controller.nameEditC,
+                                    ),
+                                    SizedBox(height: 10,),
+                                    Expanded(
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment
+                                            .spaceBetween, children: [
+                                        ElevatedButton(
+                                            onPressed: () => Get.back(),
+                                            child: Text(Strings.cancel)),
+                                        ElevatedButton(onPressed: () {
+                                          controller.editName(
+                                              controller.nameEditC.text);
+                                          Get.back();
+                                        }, child: Text(Strings.save))
+                                      ],),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                    );
-                  },
-                    child: Text(Strings.edit),),
-                ),
+                          )
+                      );
+                    },
+                      child: Text(Strings.edit),),
+                  );
+                }),
                 UserInfoTile(
                   margin: EdgeInsets.only(bottom: 16),
                   label: Strings.last_login,
-                  value: '${controller.user.lastSignTime != null ? DateFormat('EEE, d MMM yyyy HH:mm:ss').format(
+                  value: '${controller.user.lastSignTime != null ? DateFormat(
+                      'EEE, d MMM yyyy HH:mm:ss').format(
                     DateTime.parse(controller.user.lastSignTime!),
-                  ) : DateFormat('EEE, d MMM yyyy HH:mm:ss').format(DateTime.now())}',
+                  ) : DateFormat('EEE, d MMM yyyy HH:mm:ss').format(
+                      DateTime.now())}',
                 ),
               ],
             ),

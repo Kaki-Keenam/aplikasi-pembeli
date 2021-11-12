@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class HelperController extends GetxController {
-  String? title;
 
   ConnectivityResult connectionStatus = ConnectivityResult.none;
   final Connectivity _connectivity = Connectivity();
@@ -16,9 +15,9 @@ class HelperController extends GetxController {
   @override
   void onInit() {
     initConnectivity();
-
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+
     super.onInit();
   }
 
@@ -47,7 +46,16 @@ class HelperController extends GetxController {
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
-      connectionStatus = result;
+    switch (result) {
+      case ConnectivityResult.wifi:
+      case ConnectivityResult.mobile:
+      case ConnectivityResult.none:
+        connectionStatus = result;
+        break;
+      default:
+        connectionStatus = ConnectivityResult.none;
+        break;
+    }
       update();
   }
 }

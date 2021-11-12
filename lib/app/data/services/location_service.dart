@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 class LocationController extends GetxController {
@@ -13,11 +12,6 @@ class LocationController extends GetxController {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // StreamSubscription<ServiceStatus>? _serviceStatusStreamSubscription;
-
-  Rxn<List<VendorModel>> _vendorModel = Rxn<List<VendorModel>>();
-
-  List<VendorModel>? get vendors => _vendorModel.value;
 
   Rxn<Position>? streamPosition;
   var statusStream = false.obs;
@@ -116,7 +110,7 @@ class LocationController extends GetxController {
 
   @override
   void onClose() {
-    _positionStreamSubscription!.cancel();
+    _positionStreamSubscription?.cancel();
     super.onClose();
   }
 }

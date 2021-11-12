@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:kakikeenam/app/controllers/auth_controller.dart';
 import 'package:kakikeenam/app/modules/components/model_view/food_view.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
@@ -11,7 +10,7 @@ import 'package:lottie/lottie.dart';
 import '../controllers/favorite_controller.dart';
 
 class FavoriteView extends GetView<FavoriteController> {
-  final authC = Get.find<AuthController>();
+  // final authC = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +20,6 @@ class FavoriteView extends GetView<FavoriteController> {
         elevation: 0,
         centerTitle: true,
         title: Text(Strings.favorite_title, style: TextStyle(fontFamily: 'inter', fontWeight: FontWeight.w400, fontSize: 16)),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
       ),
       body: ListView(
         shrinkWrap: true,
@@ -125,6 +118,7 @@ class FavoriteView extends GetView<FavoriteController> {
                       },
                       itemBuilder: (context, index) {
                         return FoodView(
+                          subscribed: true,
                           product: controller.food?[index],
                           func: ()=> Get.toNamed(Routes.DETAILITEM, arguments: controller.food?[index]),
                         );

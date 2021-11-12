@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
-class Fcm extends GetxController{
+class Fcm{
 
   Future<void> initFirebaseMessaging({
     required String userId,

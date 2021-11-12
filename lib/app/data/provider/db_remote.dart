@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/transaction_model.dart';
 import 'package:kakikeenam/app/data/models/user_model.dart';
-import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 import 'package:kakikeenam/app/utils/utils.dart';
 
@@ -25,9 +24,9 @@ class DbRemote{
         "name": name,
         "updateTime": date,
       });
-      Dialog.editSuccess();
+      Dialogs.editSuccess();
     } catch (e) {
-      Dialog.errorDialog(e.toString());
+      Dialogs.errorDialog(e.toString());
     }
   }
 
@@ -41,7 +40,7 @@ class DbRemote{
         "updateTime": date,
       });
     } catch (e) {
-      Dialog.errorDialog(e.toString());
+      Dialogs.errorDialog(e.toString());
     }
   }
 
@@ -58,6 +57,7 @@ class DbRemote{
     }
   }
 
+
   Stream<QuerySnapshot> vendorId(GeoPoint lesserGeoPoint, GeoPoint greaterGeoPoint){
     try{
       return _db
@@ -70,6 +70,13 @@ class DbRemote{
       print('vendor location: ${e.toString()}');
       rethrow;
     }
+  }
+
+  Stream<QuerySnapshot> streamProduct(List<String> queryList){
+    return _db
+        .collection(Constants.PRODUCTS)
+        .where(Constants.VENDOR_ID_QUERY, whereIn: queryList)
+        .snapshots();
   }
 
   Stream<QuerySnapshot> getStreamData(String vendorId){

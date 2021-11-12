@@ -14,7 +14,9 @@ class VendorModel {
     this.distance,
     this.location,
     this.status,
+    this.district,
     this.rating,
+
   });
 
   String? uid;
@@ -23,6 +25,7 @@ class VendorModel {
   GeoPoint? location;
   double? distance;
   String? email;
+  String? district;
   String? storeImage;
   String? status;
   double? rating;
@@ -33,10 +36,11 @@ class VendorModel {
       uid: doc["uid"],
       storeName: doc["storeName"],
       email: doc["email"],
+      district: doc["district"],
       location: doc["lastLocation"],
       storeImage: doc["storeImage"],
       status: doc["status"],
-      rating: doc["rating"] as double,
+      rating: doc["rating"].toDouble(),
     );
   }
 }

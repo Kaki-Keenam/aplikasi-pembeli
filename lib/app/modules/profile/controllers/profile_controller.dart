@@ -56,9 +56,9 @@ class ProfileController extends GetxController {
     }
   }
 
-  void logOut(){
+  void logOut() {
     try{
-      _repositoryRemote.logout();
+       _repositoryRemote.logout();
     }catch(e){
       print("Logout: ${e.toString()}");
     }

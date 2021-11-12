@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:kakikeenam/app/controllers/auth_controller.dart';
 import 'package:kakikeenam/app/modules/components/widgets/custom_button.dart';
 import 'package:kakikeenam/app/modules/components/widgets/custom_text_field.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
@@ -10,7 +9,6 @@ import 'package:kakikeenam/app/utils/strings.dart';
 import '../controllers/forget_password_controller.dart';
 
 class ForgetPasswordView extends GetView<ForgetPasswordController> {
-  final authC = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,7 +80,7 @@ class ForgetPasswordView extends GetView<ForgetPasswordController> {
                           text: Strings.change_pass,
                           backgroundColor: Colors.amber[600],
                           textColor: Colors.white,
-                          func: () => authC.resetPassword(controller.emailC.text),
+                          // func: () => authC.resetPassword(controller.emailC.text),
                         ),
                       ],
                     ),
