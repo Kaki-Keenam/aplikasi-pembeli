@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:kakikeenam/app/data/models/banner_model.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/user_model.dart';
 import 'package:kakikeenam/app/data/models/vendor_model.dart';
@@ -100,6 +101,16 @@ class HomeController extends GetxController {
 
   Future<VendorModel> getVendor(String? vendorId) {
     return _repositoryRemote.getVendor(vendorId!);
+  }
+
+  Future<BannerModel> getBanner(){
+    return _repositoryRemote.getBanner().then((banner) {
+      List<Result> listData = List.empty(growable: true);
+      banner.docs.forEach((data) {
+        listData.add(Result.fromJson(data.data() as Map<String, dynamic>));
+      });
+      return BannerModel(result: listData);
+    });
   }
 
 }

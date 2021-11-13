@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:kakikeenam/app/data/models/markers_model.dart';
+import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/modules/components/model_view/food_nearby_view.dart';
 import 'package:kakikeenam/app/modules/components/widgets/custom_button.dart';
 import 'package:kakikeenam/app/modules/components/widgets/loading_view.dart';
@@ -18,6 +21,7 @@ class DetailItemView extends GetView<DetailItemController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.setVendorLocation = food[1].location;
     return Scaffold(
       backgroundColor: Colors.amber,
       body: SingleChildScrollView(
@@ -28,14 +32,13 @@ class DetailItemView extends GetView<DetailItemController> {
               width: Get.width,
               child: food[0]?.image != null
                   ? CachedNetworkImage(
-                imageUrl: "${food[0]?.image}",
-                fit: BoxFit.fill,
-                placeholder: (context, url) =>
-                    Transform.scale(
-                      scale: 0.5,
-                      child: CircularProgressIndicator(),
-                    ),
-              )
+                      imageUrl: "${food[0]?.image}",
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Transform.scale(
+                        scale: 0.5,
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
                   : Icon(Icons.error),
             ),
             AppBar(
@@ -91,11 +94,10 @@ class DetailItemView extends GetView<DetailItemController> {
                                     allowHalfRating: true,
                                     itemCount: 5,
                                     itemSize: 20,
-                                    itemBuilder: (context, _) =>
-                                        Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                        ),
+                                    itemBuilder: (context, _) => Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
+                                    ),
                                     onRatingUpdate: (rating) {
                                       print(rating);
                                     },
@@ -119,13 +121,8 @@ class DetailItemView extends GetView<DetailItemController> {
                                   Row(
                                     children: [
                                       Icon(Icons.location_on_sharp),
-                                      Obx(
-                                            () =>
-                                            Text(
-                                                "${controller.getVendorModel
-                                                    .distance?.toStringAsFixed(
-                                                    0)} ${Strings.distance}"),
-                                      )
+                                      Text(
+                                          "${Geolocator.distanceBetween(food[2]!.latitude, food[2]!.longitude, food[1]!.location!.latitude, food[1]!.location!.longitude).toStringAsFixed(0)} meter"),
                                     ],
                                   ),
                                   SizedBox(
@@ -156,98 +153,107 @@ class DetailItemView extends GetView<DetailItemController> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Container(
-                              width: Get.width,
-                              height: Get.height * 0.18,
-                              child: Row(
-                                children: [
-                                  Container(
-                                    height: Get.height * 0.18,
-                                    width: Get.width * 0.35,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
+                            child: InkWell(
+                              onTap: () => Get.toNamed(Routes.VENDOR_DETAIL, arguments: Markers(id: food[1].uid, image: food[1].storeImage, name: food[1].storeName,)),
+                              child: Container(
+                                width: Get.width,
+                                height: Get.height * 0.18,
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      height: Get.height * 0.18,
+                                      width: Get.width * 0.35,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: ClipRRect(
+                                          borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(10),
+                                              topLeft: Radius.circular(10)),
+                                          child: food[1].storeImage != null
+                                              ? CachedNetworkImage(
+                                                  imageUrl:
+                                                      "${food[1].storeImage}",
+                                                  fit: BoxFit.fill,
+                                                  placeholder: (context, url) =>
+                                                      Transform.scale(
+                                                    scale: 0.5,
+                                                    child:
+                                                        CircularProgressIndicator(),
+                                                  ),
+                                                )
+                                              : Container(
+                                                  height: Get.height * 0.18,
+                                                  width: Get.width * 0.35,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                              topLeft: Radius
+                                                                  .circular(10),
+                                                              bottomLeft:
+                                                                  Radius.circular(
+                                                                      10))),
+                                                )),
                                     ),
-                                    child: ClipRRect(
-                                        borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(10),
-                                            topLeft: Radius.circular(10)),
-                                        child: food[1].storeImage !=
-                                            null
-                                            ? CachedNetworkImage(
-                                          imageUrl:
-                                          "${food[1].storeImage}",
-                                          fit: BoxFit.fill,
-                                          placeholder: (context, url) =>
-                                              Transform.scale(
-                                                scale: 0.5,
-                                                child:
-                                                CircularProgressIndicator(),
-                                              ),
-                                        )
-                                            : Container(
-                                          height: Get.height * 0.18,
-                                          width: Get.width * 0.35,
-                                          decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(10),
-                                                  bottomLeft: Radius.circular(
-                                                      10)
-                                              )
-                                          ),
-                                        )
+                                    SizedBox(
+                                      width: 10,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(height: 10,),
-                                      Container(
-                                        width: Get.width * 0.45,
-                                        child: Text(
-                                          food[1].storeName ??
-                                              Strings.loading,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          height: 10,
                                         ),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        Strings.position,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18),
-                                      ),
-                                      SizedBox(height: 10,),
-                                      Container(
-                                        width: Get.width * 0.45,
-                                        child: Obx(() {
-                                          return Text(
-                                            controller.getVendorModel.street ??
-                                                Strings.loading,
-                                            overflow: TextOverflow.ellipsis,);
-                                        }),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(Strings.status),
-                                          Text(food[1].status ??
-                                              Strings.loading),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ],
+                                        Container(
+                                          width: Get.width * 0.45,
+                                          child: Text(
+                                            food[1].storeName ?? Strings.loading,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                          Strings.position,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Container(
+                                            width: Get.width * 0.45,
+                                            child: FutureBuilder<String>(
+                                                future: controller.getStreet(),
+                                                builder: (context, street) {
+                                                  return Text(
+                                                    street.data ??
+                                                        Strings.loading,
+                                                    overflow: TextOverflow.fade,
+                                                    maxLines: 1,
+                                                    softWrap: false,
+                                                  );
+                                                })),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(Strings.status),
+                                            Text(food[1].status ??
+                                                Strings.loading),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -304,38 +310,41 @@ class DetailItemView extends GetView<DetailItemController> {
                     child: Text(
                       Strings.other_foods,
                       style:
-                      TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                     ),
                   ),
                   Expanded(
-                    child: Obx(
-                          () =>
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: GridView.builder(
-                                physics: NeverScrollableScrollPhysics(),
-                                gridDelegate:
-                                SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 200,
-                                    childAspectRatio: 3 / 4,
-                                    crossAxisSpacing: 30,
-                                    mainAxisSpacing: 30),
-                                itemCount: controller.foodOther?.length,
-                                itemBuilder: (BuildContext ctx, index) {
-                                  if (food[0].vendorId != null) {
-                                    controller.setVendorId = food[0].vendorId;
-                                    return FoodNearbyView(
-                                        product: controller.foodOther?[index],
-                                        func: () {
-                                          Navigator.pushReplacementNamed(
-                                              context, Routes.DETAILITEM,
-                                              arguments:
-                                              controller.foodOther?[index]);
-                                        });
-                                  }
-                                  return LoadingView();
-                                }),
-                          ),
+                    child: Container(
+                      width: double.infinity,
+                      height: Get.height,
+                      child: StreamBuilder<List<ProductModel>>(
+                          stream: controller.getProduct(food[1].uid),
+                          builder: (context, product) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              child: GridView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  gridDelegate:
+                                      SliverGridDelegateWithMaxCrossAxisExtent(
+                                          maxCrossAxisExtent: 200,
+                                          childAspectRatio: 3 / 4,
+                                          crossAxisSpacing: 30,
+                                          mainAxisSpacing: 30),
+                                  itemCount: product.data?.length,
+                                  itemBuilder: (BuildContext ctx, index) {
+                                    if (product.data != null) {
+                                      return FoodNearbyView(
+                                          product: product.data?[index],
+                                          func: () {
+                                            print("detail clicked");
+                                            Get.offNamed(Routes.DETAILITEM,
+                                                arguments: product.data?[index]);
+                                          });
+                                    }
+                                    return LoadingView();
+                                  }),
+                            );
+                          }),
                     ),
                   ),
                 ],
@@ -350,28 +359,26 @@ class DetailItemView extends GetView<DetailItemController> {
                 },
                 builder: (control) {
                   return Obx(
-                        () =>
-                        FloatingActionButton(
-                          onPressed: () {
-                            var toggle = controller.isFav.toggle();
-                            if (toggle.value) {
-                              control.addFavorite(food: food[0]);
-                            } else {
-                              control.removeFavorite(
-                                  food[0].productId.toString());
-                            }
-                          },
-                          backgroundColor: Colors.amber[600],
-                          child: control.isFav.value
-                              ? Icon(
-                            Icons.favorite,
-                            color: Colors.red,
-                          )
-                              : Icon(
-                            Icons.favorite_border,
-                            color: Colors.white,
-                          ),
-                        ),
+                    () => FloatingActionButton(
+                      onPressed: () {
+                        var toggle = controller.isFav.toggle();
+                        if (toggle.value) {
+                          control.addFavorite(food: food[0]);
+                        } else {
+                          control.removeFavorite(food[0].productId.toString());
+                        }
+                      },
+                      backgroundColor: Colors.amber[600],
+                      child: control.isFav.value
+                          ? Icon(
+                              Icons.favorite,
+                              color: Colors.red,
+                            )
+                          : Icon(
+                              Icons.favorite_border,
+                              color: Colors.white,
+                            ),
+                    ),
                   );
                 },
               ),

@@ -84,4 +84,8 @@ class RepositoryRemote{
     return vendorModel;
   }
 
+  Future<QuerySnapshot> getBanner() async {
+    return _dbRemote.getBanner();
+  }
+
 }

@@ -15,13 +15,9 @@ class DetailItemController extends GetxController {
   FirebaseFirestore _dbStore = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
   RxBool isFav = false.obs;
-  var vendorId = "".obs;
-  var _vendor = VendorModel().obs;
-  Rxn<GeoPoint> _buyerLocation = Rxn<GeoPoint>();
+  Rxn<GeoPoint> _vendorLocation = Rxn<GeoPoint>();
 
-  VendorModel get getVendorModel => _vendor.value;
-
-  GeoPoint? get getBuyerLocation => _buyerLocation.value;
+  GeoPoint? get vendorLocation => this._vendorLocation.value;
 
   Rxn<List<ProductModel>> _foodModel = Rxn<List<ProductModel>>();
 
@@ -30,30 +26,19 @@ class DetailItemController extends GetxController {
 
   @override
   void onReady() {
-    _foodModel.bindStream(getProduct());
-    getVendor();
     super.onReady();
   }
 
   @override
   void onInit() {
-    _buyerLocation.bindStream(getBuyerLoc());
     super.onInit();
   }
 
-  Stream<GeoPoint> getBuyerLoc(){
-    return _repositoryRemote.buyerLoc().map((event) {
-      var location = event.get('lastLocation');
-      return location;
-    });
-  }
 
-
-
-  Stream<List<ProductModel>> getProduct() {
+  Stream<List<ProductModel>> getProduct(String vendorId) {
     try {
       return _repositoryRemote
-          .getProduct(vendorId.value)
+          .getProduct(vendorId)
           .map((QuerySnapshot query) {
         List<ProductModel> listData = List.empty(growable: true);
         query.docs.forEach((element) {
@@ -73,7 +58,7 @@ class DetailItemController extends GetxController {
   }
 
   /// other products
-  set setVendorId(String _vendorId) => this.vendorId.value = _vendorId;
+  set setVendorLocation(GeoPoint _location) => this._vendorLocation.value = _location;
 
   Future<bool> isFavorite([String? id]) async {
     CollectionReference users = _dbStore.collection(Constants.BUYER);
@@ -149,29 +134,11 @@ class DetailItemController extends GetxController {
     update();
   }
 
-  void getVendor() async {
-    CollectionReference ven = _dbStore.collection(Constants.VENDOR);
-    DocumentSnapshot data = await ven.doc(vendorId.value).get();
-    var lastLocation = data.get("lastLocation") ??
-        GeoPoint(-8.58189186561154, 116.10003256768428);
+  Future<String> getStreet()async{
     List<Placemark> street = await geoCoding.placemarkFromCoordinates(
-        lastLocation.latitude, lastLocation.longitude);
+        _vendorLocation.value!.latitude, _vendorLocation.value!.longitude);
     String streetValue = "${street.first.street} ${street.first.subLocality}";
-    double distance = Geolocator.distanceBetween(
-        getBuyerLocation!.latitude,
-        getBuyerLocation!.longitude,
-        lastLocation.latitude,
-        lastLocation.longitude);
-    _vendor.update((ven) {
-      ven?.storeImage = data.get("storeImage");
-      ven?.storeName = data.get("storeName");
-      ven?.uid = data.get("uid");
-      ven?.email = data.get("email");
-      ven?.status = data.get("status");
-      ven?.rating = data.get("rating");
-      ven?.street = streetValue;
-      ven?.distance = distance;
-    });
+    return streetValue;
   }
 
   void setTrans(ProductModel? product) async {

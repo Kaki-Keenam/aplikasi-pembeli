@@ -38,6 +38,7 @@ abstract class Constants {
   static const String VENDOR = "vendors";
   static const String PRODUCTS = "products";
   static const String TRANSACTION = "transaction";
+  static const String BANNER = "banner";
 
   //save shared preference
   static const String SKIP_INTRO = "skipIntro";
@@ -56,7 +57,7 @@ abstract class Constants {
   static const String PROFILE = "assets/images/person.png";
 
   // Radius Filter
-  static double DISTANCE_MILE = 0.13;
+  static double DISTANCE_MILE = 0.085;
   static double LAT = 0.0144927536231884;
   static double LONG = 0.0181818181818182;
   static double MARKER_RADIUS = 1040.0;

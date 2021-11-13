@@ -5,14 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/vendor_model.dart';
-import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 import 'package:kakikeenam/app/modules/components/model_view/food_view.dart';
-import 'package:kakikeenam/app/modules/home/controllers/home_controller.dart';
+import 'package:kakikeenam/app/modules/near_vendor/controllers/near_vendor_controller.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/strings.dart';
 import 'package:lottie/lottie.dart';
 
-class NearVendorView extends GetView<HomeController> {
+class NearVendorView extends GetView<NearVendorController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

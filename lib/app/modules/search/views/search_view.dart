@@ -1,10 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
+import 'package:kakikeenam/app/data/models/product_model.dart';
+import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/modules/components/model_view/food_view.dart';
+import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
 import 'package:kakikeenam/app/utils/strings.dart';
+import 'package:lottie/lottie.dart';
 
 import '../controllers/search_controller.dart';
 
@@ -21,7 +26,7 @@ class SearchView extends GetView<SearchController> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
-            Navigator.of(context).pop();
+            Get.back();
           },
         ),
       ),
@@ -121,31 +126,94 @@ class SearchView extends GetView<SearchController> {
                 ),
                 Obx(() {
                   if(controller.searchResult != null && controller.searchResult?.length != 0){
-                    return ListView.separated(
-                      shrinkWrap: true,
-                      itemCount: controller.searchResult!.length,
-                      physics: NeverScrollableScrollPhysics(),
-                      separatorBuilder: (context, index) {
-                        return SizedBox(height: 16);
-                      },
-                      itemBuilder: (context, index) {
-                        return FoodView(
-                          product: controller.searchResult?[index],
-                        );
-                      },
+                    return StreamBuilder<GeoPoint>(
+                      stream: controller.getBuyerLoc(),
+                      builder: (context, buyer) {
+                        if(buyer.hasData){
+                          return ListView.separated(
+                            shrinkWrap: true,
+                            itemCount: controller.searchResult!.length,
+                            physics: NeverScrollableScrollPhysics(),
+                            separatorBuilder: (context, index) {
+                              return SizedBox(height: 16);
+                            },
+                            itemBuilder: (context, index) {
+                              return FutureBuilder<VendorModel>(
+                                  future: controller.getVendor(controller.searchResult?[index].vendorId),
+                                  builder: (context, vendor) {
+                                    return FoodView(
+                                      buyerLoc: buyer.data,
+                                      vendor: vendor.data,
+                                      product: controller.searchResult?[index],
+                                      func: () => Get.toNamed(
+                                        Routes.DETAILITEM,
+                                        arguments: [
+                                          controller.searchResult?[index],
+                                          vendor.data,
+                                          buyer.data
+                                        ]),
+                                    );
+                                  }
+                              );
+                            },
+                          );
+                        }
+                        return Container();
+                      }
                     );
                   }else{
-                    return ListView.separated(
-                      shrinkWrap: true,
-                      itemCount: controller.searchData!.length,
-                      physics: NeverScrollableScrollPhysics(),
-                      separatorBuilder: (context, index) {
-                        return SizedBox(height: 16);
-                      },
-                      itemBuilder: (context, index) {
-                        return FoodView(
-                          product: controller.searchData?[index],
-                        );
+                    return StreamBuilder<GeoPoint>(
+                      stream: controller.getBuyerLoc(),
+                      builder: (context, buyer) {
+                        if (buyer.hasData) {
+                          return StreamBuilder<List<VendorModel>?>(
+                            stream: controller.getVendorId(buyer.data),
+                            builder: (context, vendor) {
+                              if (vendor.hasData && vendor.data!.isNotEmpty) {
+                                return StreamBuilder<List<ProductModel>?>(
+                                  stream: controller.getNearProduct(vendor.data),
+                                  builder: (context, product) {
+                                    if (product.hasData) {
+                                      return ListView.separated(
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        itemCount: product.data?.length ?? 3,
+                                        itemBuilder: (context, index) {
+                                          return FutureBuilder<VendorModel>(
+                                              future: controller.getVendor(
+                                                  product.data?[index].vendorId),
+                                              builder: (context, vendor) {
+                                                return FoodView(
+                                                  buyerLoc: buyer.data,
+                                                  vendor: vendor.data,
+                                                  product: product.data?[index],
+                                                  func: () => Get.toNamed(
+                                                      Routes.DETAILITEM,
+                                                      arguments: [
+                                                        product.data?[index],
+                                                        vendor.data,
+                                                        buyer.data
+                                                      ]),
+                                                );
+                                              });
+                                        },
+                                        separatorBuilder:
+                                            (BuildContext context, int index) {
+                                          return SizedBox(
+                                            height: 16,
+                                          );
+                                        },
+                                      );
+                                    }
+                                    return Container();
+                                  },
+                                );
+                              }
+                              return Center(child: Lottie.asset(Strings.radar));
+                            },
+                          );
+                        }
+                        return Container();
                       },
                     );
                   }

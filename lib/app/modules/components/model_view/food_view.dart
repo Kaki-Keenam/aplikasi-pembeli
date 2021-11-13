@@ -35,6 +35,7 @@ class FoodView extends StatelessWidget {
           child: Stack(
             children: [
               Positioned(
+                left: -35,
                 child: Container(
                   height: 130,
                   width: Get.width,
@@ -65,16 +66,24 @@ class FoodView extends StatelessWidget {
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
-                            overflow: TextOverflow.ellipsis,
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            softWrap: false,
                           ),
                         ),
                         SizedBox(height: 8),
-                        Text(
-                          "${product?.vendorName}",
-                          style: TextStyle(
-                            color: Colors.black45,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
+                        Container(
+                          width: Get.width * 0.45,
+                          child: Text(
+                            "${product?.vendorName}",
+                            style: TextStyle(
+                              color: Colors.black45,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            softWrap: false,
                           ),
                         ),
                         SizedBox(height: 10),
@@ -92,7 +101,7 @@ class FoodView extends StatelessWidget {
                         ),
                         SizedBox(height: 8),
                         subscribed == false ? SizedBox(
-                          width: 135,
+                          width: Get.width * 0.45,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
@@ -107,12 +116,13 @@ class FoodView extends StatelessWidget {
                                     buyerLoc!.latitude,
                                     buyerLoc!.longitude,
                                     vendor!.location!.latitude,
-                                    vendor!.location!.longitude).toStringAsFixed(0)} m",
+                                    vendor!.location!.longitude).toStringAsFixed(0)} meter",
                                 style: TextStyle(
                                   color: Colors.black26,
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
                                 ),
+
                               ): Container(),
                             ],
                           ),

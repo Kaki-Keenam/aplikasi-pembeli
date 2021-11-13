@@ -1,20 +1,24 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:kakikeenam/app/data/models/product_model.dart';
+import 'package:kakikeenam/app/data/models/vendor_model.dart';
+import 'package:kakikeenam/app/modules/home/controllers/home_controller.dart';
 
 class NearVendorController extends GetxController {
-  //TODO: Implement NearVendorController
-
-  final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
+  final HomeController _controller = Get.find<HomeController>();
+  Stream<GeoPoint> getBuyerLoc(){
+    return _controller.getBuyerLoc();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  Stream<List<VendorModel>> getVendorId(GeoPoint? location){
+    return _controller.getVendorId(location);
   }
 
-  @override
-  void onClose() {}
-  void increment() => count.value++;
+  Stream<List<ProductModel>> getNearProduct(List<VendorModel>? query){
+    return _controller.getNearProduct(query);
+  }
+
+  Future<VendorModel> getVendor(String? vendorId) {
+    return _controller.getVendor(vendorId!);
+  }
 }

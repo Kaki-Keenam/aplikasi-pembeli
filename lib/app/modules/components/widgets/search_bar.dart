@@ -17,7 +17,6 @@ class SearchBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Left side - Search Box
             Expanded(
               child: Container(
                 height: 50,
@@ -30,7 +29,7 @@ class SearchBar extends StatelessWidget {
                     Container(
                       margin: EdgeInsets.only(left: 10),
                       child: Text(
-                        'What do you want to eat?',
+                        'Apa yang ingin anda makan?',
                         style: TextStyle(color: Colors.black54.withOpacity(0.3)),
                       ),
                     )

@@ -151,4 +151,8 @@ class DbRemote{
     return _db.collection(Constants.VENDOR).doc(vendorId).get();
   }
 
+  Future<QuerySnapshot> getBanner() async {
+    return _db.collection(Constants.BANNER).get();
+  }
+
 }
