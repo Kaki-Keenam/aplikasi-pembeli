@@ -10,7 +10,6 @@ import 'package:kakikeenam/app/data/models/markers_model.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/modules/components/model_view/food_nearby_view.dart';
 import 'package:kakikeenam/app/modules/components/widgets/custom_button.dart';
-import 'package:kakikeenam/app/modules/components/widgets/loading_view.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/strings.dart';
 
@@ -192,8 +191,11 @@ class DetailItemView extends GetView<DetailItemController> {
                                                                   .circular(10),
                                                               bottomLeft:
                                                                   Radius.circular(
-                                                                      10))),
-                                                )),
+                                                                      10),
+                                                          ),
+                                                  ),
+                                                ),
+                                      ),
                                     ),
                                     SizedBox(
                                       width: 10,
@@ -315,35 +317,34 @@ class DetailItemView extends GetView<DetailItemController> {
                   ),
                   Expanded(
                     child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
                       width: double.infinity,
                       height: Get.height,
                       child: StreamBuilder<List<ProductModel>>(
                           stream: controller.getProduct(food[1].uid),
                           builder: (context, product) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child: GridView.builder(
+                            if(product.hasData){
+                              return GridView.builder(
                                   physics: NeverScrollableScrollPhysics(),
                                   gridDelegate:
-                                      SliverGridDelegateWithMaxCrossAxisExtent(
-                                          maxCrossAxisExtent: 200,
-                                          childAspectRatio: 3 / 4,
-                                          crossAxisSpacing: 30,
-                                          mainAxisSpacing: 30),
+                                  SliverGridDelegateWithMaxCrossAxisExtent(
+                                      maxCrossAxisExtent: 200,
+                                      childAspectRatio: 3 / 4,
+                                      crossAxisSpacing: 30,
+                                      mainAxisSpacing: 30),
                                   itemCount: product.data?.length,
                                   itemBuilder: (BuildContext ctx, index) {
-                                    if (product.data != null) {
-                                      return FoodNearbyView(
-                                          product: product.data?[index],
-                                          func: () {
-                                            print("detail clicked");
-                                            Get.offNamed(Routes.DETAILITEM,
-                                                arguments: product.data?[index]);
-                                          });
-                                    }
-                                    return LoadingView();
-                                  }),
-                            );
+                                    return FoodNearbyView(
+                                        product: product.data?[index],
+                                        func: () {
+                                          Get.offAndToNamed(Routes.DETAILITEM,
+                                              arguments:
+                                              [product.data?[index], food[1], food[2],]
+                                          );
+                                        });
+                                  });
+                            }
+                            return Container();
                           }),
                     ),
                   ),
