@@ -74,8 +74,16 @@ class RepositoryRemote{
     return _dbRemote.streamTrans();
   }
 
+  Future<QuerySnapshot> futureListTrans(){
+    return _dbRemote.futureTrans();
+  }
+
   void setTrans(TransactionModel trans, ProductModel product){
     _dbRemote.createTrans(trans, product);
+  }
+
+  Future updateTrans(String currentTransId, [String? state, double rating = 0.0]) async {
+    await _dbRemote.updateTrans(currentTransId, rating, state!);
   }
 
   Future<VendorModel> getVendor(String vendorId) async{

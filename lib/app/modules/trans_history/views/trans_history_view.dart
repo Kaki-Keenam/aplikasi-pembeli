@@ -15,7 +15,8 @@ class TransHistoryView extends GetView<TransHistoryController> {
         title: Text(Strings.trans_title),
         centerTitle: true,
       ),
-      body: Obx(() => controller.transaction != null ? ListView.separated(
+      body: Obx(() => controller.transaction != null
+          ? ListView.separated(
         separatorBuilder: (context, index){
           return SizedBox(height: 10,);
         },

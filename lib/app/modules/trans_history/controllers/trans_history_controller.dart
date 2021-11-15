@@ -6,7 +6,7 @@ import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 class TransHistoryController extends GetxController {
   final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
   var _transModel = RxList<TransactionModel>();
-  List<TransactionModel>? get transaction => _transModel;
+  List<TransactionModel>? get transaction => this._transModel;
 
   @override
   void onInit() {

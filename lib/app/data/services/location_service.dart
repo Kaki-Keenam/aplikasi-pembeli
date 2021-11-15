@@ -4,25 +4,29 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 class LocationController extends GetxController {
-  final GeolocatorPlatform geolocatorAndroid = GeolocatorPlatform.instance;
+  final GeolocatorPlatform _locator = GeolocatorPlatform.instance;
+  final box = GetStorage();
   StreamSubscription<Position>? _positionStreamSubscription;
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  FirebaseFirestore _db = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
 
 
   Rxn<Position>? streamPosition;
   var statusStream = false.obs;
 
-  set currentPosition(Position current) => this.streamPosition?.value = current;
-
   @override
   void onReady(){
     Future.delayed(Duration(seconds: 4), (){
       getLocationPermission();
     });
+    var isStatus = box.read('location');
+    if(isStatus){
+      toggleListening();
+    }
     super.onReady();
   }
 
@@ -32,7 +36,7 @@ class LocationController extends GetxController {
     if (!hasPermission) {
       return;
     }
-    var currentPosition = await geolocatorAndroid.getCurrentPosition();
+    var currentPosition = await _locator.getCurrentPosition();
     addToFirebase(currentPosition);
   }
 
@@ -41,14 +45,14 @@ class LocationController extends GetxController {
     LocationPermission permission;
 
     // Test if location services are enabled.
-    serviceEnabled = await geolocatorAndroid.isLocationServiceEnabled();
+    serviceEnabled = await _locator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       return false;
     }
 
-    permission = await geolocatorAndroid.checkPermission();
+    permission = await _locator.checkPermission();
     if (permission == LocationPermission.denied) {
-      permission = await geolocatorAndroid.requestPermission();
+      permission = await _locator.requestPermission();
       if (permission == LocationPermission.denied) {
         return false;
       }
@@ -66,7 +70,7 @@ class LocationController extends GetxController {
   Future<void> toggleListening() async {
     if (_positionStreamSubscription == null) {
       final positionStream =
-          await geolocatorAndroid.getPositionStream(timeInterval: 15);
+          await _locator.getPositionStream(timeInterval: 15);
       _positionStreamSubscription = positionStream.handleError((error) {
         _positionStreamSubscription?.cancel();
         _positionStreamSubscription = null;
@@ -94,7 +98,7 @@ class LocationController extends GetxController {
 
   Future<void> addToFirebase(Position stream) async {
     try {
-      CollectionReference users = _firestore.collection(Constants.BUYER);
+      CollectionReference users = _db.collection(Constants.BUYER);
       User _currentUser = _auth.currentUser!;
 
       await users.doc(_currentUser.uid).update({

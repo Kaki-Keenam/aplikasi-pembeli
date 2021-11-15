@@ -117,7 +117,20 @@ class DbRemote{
     }
   }
 
-  void createTrans(TransactionModel trans, ProductModel product) async {
+  Future<QuerySnapshot> futureTrans() async {
+    try{
+      return _db
+          .collection(Constants.TRANSACTION)
+          .orderBy(Constants.ORDER_DATE, descending: true)
+          .where(Constants.BUYER_ID_QUERY, isEqualTo: _auth.currentUser?.uid)
+          .get();
+    }catch(e){
+      print('trans: ${e.toString()}');
+      rethrow;
+    }
+  }
+
+  Future createTrans(TransactionModel trans, ProductModel product) async {
     try{
       var setTrans = _db.collection(Constants.TRANSACTION);
       String transId = await setTrans.doc().id;
@@ -138,13 +151,21 @@ class DbRemote{
         "storeImage": trans.storeImage,
         "storeName": trans.storeName,
         "orderDate": trans.orderDate,
-        "rating": trans.rating,
+        "rating": 0.0,
         "state": trans.state,
         "vendorId": trans.vendorId,
       });
     }catch(e){
       print('create trans: ${e.toString()}');
     }
+  }
+
+  Future updateTrans(String currentTransId, double rating, String state) async {
+    var upTrans = _db.collection(Constants.TRANSACTION);
+    await upTrans.doc(currentTransId).update({
+      'rating': rating,
+      'state': state
+    });
   }
 
   Future<DocumentSnapshot> getVendor(String vendorId) async {
