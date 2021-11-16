@@ -16,7 +16,7 @@ class RepositoryRemote{
   Future<bool> get skipIntro => _authRemote.skipIntro();
   Future<bool> get autoLogin => _authRemote.autoLogin();
 
-  Future<UserModel> get userModel => _dbRemote.getUserModel();
+  Stream<UserModel> get userModel => _dbRemote.getUserModel();
 
   Future<void> addToFirebase([String name = "User"]) {
     return _authRemote.addToFirebase(name);

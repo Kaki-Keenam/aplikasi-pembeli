@@ -106,7 +106,7 @@ class AuthRemote {
       );
 
       addToFirebase(name);
-      await _userSignup.user!.sendEmailVerification();
+      await _userSignup.user?.sendEmailVerification();
 
       Dialogs.verifyDialog();
     } on FirebaseAuthException catch (e) {

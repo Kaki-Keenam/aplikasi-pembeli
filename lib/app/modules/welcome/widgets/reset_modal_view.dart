@@ -2,14 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/modules/components/widgets/custom_text_field.dart';
 import 'package:kakikeenam/app/modules/welcome/controllers/welcome_controller.dart';
-import 'package:kakikeenam/app/modules/welcome/widgets/reset_modal_view.dart';
-import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
-import 'package:kakikeenam/app/utils/utils.dart';
 import 'package:kakikeenam/app/utils/validator.dart';
 
-
-class LoginModal extends GetView<WelcomeController> {
+class ResetModal extends GetView<WelcomeController> {
   @override
   Widget build(BuildContext context) {
     return Wrap(
@@ -39,17 +35,16 @@ class LoginModal extends GetView<WelcomeController> {
                 Container(
                   margin: EdgeInsets.only(bottom: 24),
                   child: Text(
-                    'Masuk',
+                    'Atur ulang password',
                     style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.w700, fontFamily: 'inter'),
                   ),
                 ),
                 Form(
-                  key: controller.formKeyLogin,
+                  key: controller.formKeyReset,
                   child: Column(
                     children: [
                       // Form
-                      NewCustomTextField(controller: controller.emailC, title: 'Email', hint: 'emailanda@email.com', validator: validateEmail, keyboardType: TextInputType.emailAddress,),
-                      NewCustomTextField(controller: controller.passC, title: 'Password', hint: '**********', obsecureText: true, validator: validatePassword, margin: EdgeInsets.only(top: 16),),
+                      NewCustomTextField(controller: controller.resetEmailC, title: 'Email', hint: 'emailanda@email.com', validator: validateEmail, keyboardType: TextInputType.emailAddress,),
                       // Log in Button
                       Container(
                         margin: EdgeInsets.only(top: 32, bottom: 6),
@@ -57,15 +52,12 @@ class LoginModal extends GetView<WelcomeController> {
                         height: 60,
                         child: ElevatedButton(
                           onPressed: () {
-                            if(controller.formKeyLogin.currentState?.validate() ?? false){
-                              controller.loginAuth();
+                            if(controller.formKeyReset.currentState?.validate() ?? false){
+                              controller.resetPassword();
                               Get.back();
-                              if(controller.isLoading.isTrue){
-                                Dialogs.loadingDialog();
-                              }
                             }
                           },
-                          child: Text('Masuk', style: TextStyle(color: AppColor.secondary, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'inter')),
+                          child: Text('Kirim ke email', style: TextStyle(color: AppColor.secondary, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'inter')),
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                             primary: AppColor.primarySoft,
@@ -74,39 +66,6 @@ class LoginModal extends GetView<WelcomeController> {
 
                       ),
                     ],
-                  ),
-                ),
-
-                TextButton(
-                  onPressed: () {
-                    Get.back();
-                    showModalBottomSheet(
-                      context: context,
-                      backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-                      isScrollControlled: true,
-                      builder: (context) {
-                        return ResetModal();
-                      },
-                    );
-                  },
-                  style: TextButton.styleFrom(
-                    primary: Colors.white,
-                  ),
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Lupa password? ',
-                      style: TextStyle(color: Colors.grey),
-                      children: [
-                        TextSpan(
-                            style: TextStyle(
-                              color: AppColor.primary,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'inter',
-                            ),
-                            text: 'Reset')
-                      ],
-                    ),
                   ),
                 ),
               ],

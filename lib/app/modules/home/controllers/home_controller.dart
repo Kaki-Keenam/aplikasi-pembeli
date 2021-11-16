@@ -1,5 +1,8 @@
 
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/banner_model.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
@@ -14,9 +17,9 @@ import 'package:kakikeenam/app/utils/constants/constants.dart';
 class HomeController extends GetxController {
   final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
   final LocationController locationService = Get.find<LocationController>();
-  final HelperController helper = Get.put(HelperController(), permanent: true);
-  Rxn<List<ProductModel>> searchList = Rxn<List<ProductModel>>();
+  final HelperController _helper = Get.find<HelperController>();
 
+  Rxn<List<ProductModel>> searchList = Rxn<List<ProductModel>>();
   List<ProductModel>? get searchData => searchList.value;
 
 
@@ -35,17 +38,23 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    initUser();
+    _user.bindStream(_repositoryRemote.userModel);
     super.onInit();
   }
 
-  initUser() async {
-    try{
-      var _userData = await _repositoryRemote.userModel;
-      _user(_userData);
-    }catch(e){
-      print('user: ${e.toString()}');
-    }
+  @override
+  void onReady(){
+    _helper.connectivitySubscription.onData((data) {
+      if(data == ConnectivityResult.none){
+        Get.defaultDialog(
+            title: 'Tidak ada koneksi internet',
+            middleText: 'Aktifkan koneksi anda !',
+            textConfirm: 'Ok',
+            onConfirm: Get.back
+        );
+      }
+    });
+    super.onReady();
   }
 
   Stream<GeoPoint> getBuyerLoc(){

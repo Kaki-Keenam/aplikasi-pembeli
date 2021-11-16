@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -21,6 +22,7 @@ import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: CustomAppBar(
         title: Text(Strings.home_title,

@@ -18,7 +18,6 @@ class SplashController extends GetxController {
 
   _init() async {
     var skipIntro = await _repositoryRemote.skipIntro;
-    var autoLogin = await _repositoryRemote.autoLogin;
     _auth.authStateChanges().listen((User? user) {
       if (skipIntro) {
         print('skip ${skipIntro}');

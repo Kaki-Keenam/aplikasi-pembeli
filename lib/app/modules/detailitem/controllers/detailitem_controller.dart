@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/transaction_model.dart';
@@ -24,6 +23,9 @@ class DetailItemController extends GetxController {
   List<ProductModel>? get foodOther => _foodModel.value;
   GeocodingPlatform geoCoding = GeocodingPlatform.instance;
 
+  var _user = UserModel().obs;
+  UserModel get user => this._user.value;
+
   @override
   void onReady() {
     super.onReady();
@@ -31,6 +33,7 @@ class DetailItemController extends GetxController {
 
   @override
   void onInit() {
+    _user.bindStream(_repositoryRemote.userModel);
     super.onInit();
   }
 
@@ -146,7 +149,6 @@ class DetailItemController extends GetxController {
       var stringList =
           DateTime.now().toIso8601String().split(new RegExp(r"[T.]"));
       var formattedDate = "${stringList[0]} ${stringList[1]}.${stringList[2]}";
-      UserModel user = await _repositoryRemote.userModel;
       VendorModel vendorModel = await _repositoryRemote.getVendor(product!.vendorId!);
       List<ProductModel> listData = List.empty(growable: true);
       listData.add(ProductModel(

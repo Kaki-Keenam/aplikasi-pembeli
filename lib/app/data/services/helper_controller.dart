@@ -6,24 +6,23 @@ import 'package:get/get.dart';
 
 class HelperController extends GetxController {
 
-  ConnectivityResult connectionStatus = ConnectivityResult.none;
+  Rx<ConnectivityResult> connectionStatus = ConnectivityResult.none.obs;
   final Connectivity _connectivity = Connectivity();
-  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  late StreamSubscription<ConnectivityResult> connectivitySubscription;
 
   bool get mounted => true;
 
   @override
-  void onInit() {
+  void onReady() {
     initConnectivity();
-    _connectivitySubscription =
+    connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
-
     super.onInit();
   }
 
   @override
   void onClose() {
-    _connectivitySubscription.cancel();
+    connectivitySubscription.cancel();
     super.onClose();
   }
 
@@ -50,10 +49,10 @@ class HelperController extends GetxController {
       case ConnectivityResult.wifi:
       case ConnectivityResult.mobile:
       case ConnectivityResult.none:
-        connectionStatus = result;
+        connectionStatus.value = result;
         break;
       default:
-        connectionStatus = ConnectivityResult.none;
+        connectionStatus.value = ConnectivityResult.none;
         break;
     }
       update();

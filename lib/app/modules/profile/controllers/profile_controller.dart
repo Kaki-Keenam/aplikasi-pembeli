@@ -8,6 +8,7 @@ import 'package:kakikeenam/app/data/models/user_model.dart';
 import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 
 class ProfileController extends GetxController {
+  final formKeyName = GlobalKey<FormState>(debugLabel: 'editName');
   final TextEditingController nameEditC = TextEditingController();
 
   final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
@@ -88,16 +89,7 @@ class ProfileController extends GetxController {
 
   @override
   void onInit() {
-    initUser();
+    _user.bindStream(_repositoryRemote.userModel);
     super.onInit();
-  }
-
-  initUser() async {
-    try{
-      var _userData = await _repositoryRemote.userModel;
-      _user(_userData);
-    }catch(e){
-      print('user: ${e.toString()}');
-    }
   }
 }

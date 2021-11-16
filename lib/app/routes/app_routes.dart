@@ -9,7 +9,6 @@ abstract class Routes {
   static const DETAILITEM = _Paths.DETAILITEM;
   static const WELCOME_PAGE = _Paths.WELCOME_PAGE;
   static const REGISTER = _Paths.REGISTER;
-  static const FORGET_PASSWORD = _Paths.FORGET_PASSWORD;
   static const PAGE_SWITCHER = _Paths.PAGE_SWITCHER;
   static const FAVORITE = _Paths.FAVORITE;
   static const MAPS_LOCATION = _Paths.MAPS_LOCATION;
@@ -29,7 +28,6 @@ abstract class _Paths {
   static const DETAILITEM = '/detailitem';
   static const WELCOME_PAGE = '/welcomepage';
   static const REGISTER = '/register';
-  static const FORGET_PASSWORD = '/forget-password';
   static const PAGE_SWITCHER = '/pageswitcher';
   static const FAVORITE = '/favorite';
   static const MAPS_LOCATION = '/maps-location';

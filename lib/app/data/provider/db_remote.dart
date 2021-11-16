@@ -10,19 +10,19 @@ class DbRemote{
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<UserModel> getUserModel() async {
-    var getData = await _db.collection(Constants.BUYER).doc(_auth.currentUser?.uid).get();
-    var userModel = UserModel.fromDocument(getData.data() as Map<String, dynamic>);
-    return userModel;
+  Stream<UserModel> getUserModel() {
+    return _db.collection(Constants.BUYER).doc(_auth.currentUser?.uid).snapshots()
+      .map((DocumentSnapshot doc) {
+      var userModel = UserModel.fromDocument(doc.data() as Map<String, dynamic>);
+      return userModel;
+    });
   }
 
   void editName(String name) async {
-    String date = DateTime.now().toIso8601String();
     CollectionReference users = _db.collection(Constants.BUYER);
     try {
       await users.doc(_auth.currentUser!.uid).update({
         "name": name,
-        "updateTime": date,
       });
       Dialogs.editSuccess();
     } catch (e) {

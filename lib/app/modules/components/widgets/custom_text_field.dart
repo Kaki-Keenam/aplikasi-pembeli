@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
 
 class NewCustomTextField extends StatelessWidget {
@@ -7,6 +8,8 @@ class NewCustomTextField extends StatelessWidget {
   final TextEditingController? controller;
   final bool obsecureText;
   final bool readOnly;
+  final TextInputType? keyboardType;
+  final FormFieldValidator<String>? validator;
   final Color? backgroundColour;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
@@ -19,7 +22,7 @@ class NewCustomTextField extends StatelessWidget {
     this.controller,
     this.obsecureText = false,
     this.padding,
-    this.margin,
+    this.margin, this.validator, this.keyboardType,
   });
 
   @override
@@ -38,25 +41,34 @@ class NewCustomTextField extends StatelessWidget {
               style: TextStyle(color: Colors.grey, fontSize: 14),
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(top: 8),
-            width: MediaQuery.of(context).size.width,
-            height: 50,
-            decoration: BoxDecoration(color: AppColor.primaryExtraSoft, borderRadius: BorderRadius.circular(10)),
-            child: TextField(
-              controller: controller,
-              readOnly: readOnly,
-              style: TextStyle(fontSize: 14),
-              cursorColor: AppColor.primary,
-              obscureText: obsecureText,
-              decoration: InputDecoration(
-                fillColor: backgroundColour,
-                hintText: '$hint',
-                hintStyle: TextStyle(fontSize: 14, color: Colors.grey[400]),
-                contentPadding: EdgeInsets.only(left: 16),
-                border: InputBorder.none,
+          Stack(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 8),
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                decoration: BoxDecoration(color: AppColor.primaryExtraSoft, borderRadius: BorderRadius.circular(10)),
               ),
-            ),
+              Padding(
+                padding: EdgeInsets.only(top: Get.height * 0.013),
+                child: TextFormField(
+                  controller: controller,
+                  readOnly: readOnly,
+                  style: TextStyle(fontSize: 14),
+                  cursorColor: AppColor.primary,
+                  keyboardType: keyboardType,
+                  obscureText: obsecureText,
+                  validator: validator,
+                  decoration: InputDecoration(
+                    fillColor: backgroundColour,
+                    hintText: '$hint',
+                    hintStyle: TextStyle(fontSize: 14, color: Colors.grey[400]),
+                    contentPadding: EdgeInsets.only(left: 16),
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

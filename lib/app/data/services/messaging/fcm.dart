@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,7 +20,7 @@ class Fcm {
 
       FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
         print('ON MESSAGE');
-        if (!kReleaseMode) print('onMessage: ${message.data['body']}');
+        if (!kReleaseMode) print('onMessage: ${message.notification?.android?.imageUrl}');
 
         handleMessage(message.data);
       });
