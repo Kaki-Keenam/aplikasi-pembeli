@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/markers_model.dart';
+import 'package:kakikeenam/app/modules/maps_location/controllers/maps_location_controller.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/strings.dart';
 
@@ -10,15 +12,17 @@ class ItemMarker extends StatelessWidget {
     Key? key,
     required this.listNear,
     this.onPageChanged,
-    this.index,
+    this.index, this.distance,
   }) : super(key: key);
 
   final List<Markers>? listNear;
   final ValueChanged<int>? onPageChanged;
+  final List<double>? distance;
   final int? index;
 
   @override
   Widget build(BuildContext context) {
+    final MapsLocationController _map = Get.find<MapsLocationController>();
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
@@ -90,17 +94,12 @@ class ItemMarker extends StatelessWidget {
                                         color: Color(0xff000000),
                                       ),
                                     ),
-                                    Container(
-                                      width: Get.width * 0.4,
-                                      child: Text(
-                                        "Jarak: ${(listNear![i].distance! * 1000.0).toStringAsFixed(0)} m",
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                          fontFamily: "inter",
-                                          fontSize: 15,
-                                          color: Color(0xff000000),
-                                        ),
+                                    Text(
+                                      "Jarak: ${(listNear![i].distance! * 4.0).toStringAsFixed(0)} meter",
+                                      style: TextStyle(
+                                        fontFamily: "inter",
+                                        fontSize: 15,
+                                        color: Color(0xff000000),
                                       ),
                                     ),
                                     SizedBox(
@@ -108,14 +107,22 @@ class ItemMarker extends StatelessWidget {
                                     ),
                                     Container(
                                       width: Get.width * 0.5,
-                                      child: Text(
-                                        listNear?[i].street ?? Strings.loading,
-                                        overflow: TextOverflow.clip,
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color: Color(0xff000000),
-                                        ),
+                                      child: FutureBuilder<String>(
+                                        future: _map.getStreet(listNear?[i].latLng),
+                                        builder: (context, street) {
+                                          if(street.hasData){
+                                            return Text(
+                                              street.data ?? Strings.loading,
+                                              overflow: TextOverflow.clip,
+                                              maxLines: 1,
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                color: Color(0xff000000),
+                                              ),
+                                            );
+                                          }
+                                          return Container();
+                                        }
                                       ),
                                     ),
                                   ],

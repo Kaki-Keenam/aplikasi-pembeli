@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
+import 'package:kakikeenam/app/data/models/review_model.dart';
 import 'package:kakikeenam/app/data/models/transaction_model.dart';
 import 'package:kakikeenam/app/data/models/user_model.dart';
 import 'package:kakikeenam/app/data/models/vendor_model.dart';
@@ -102,8 +103,20 @@ class RepositoryRemote{
     return vendorModel;
   }
 
+  Stream<QuerySnapshot> getVendorStream() {
+    return _dbRemote.getVendorStream();
+  }
+
   Future<QuerySnapshot> getBanner() async {
     return _dbRemote.getBanner();
+  }
+
+  Future<void> addReview(Review review) async {
+    return await _dbRemote.addReviews(review);
+  }
+
+  Future<QuerySnapshot> getReviews(String vendorId) async {
+    return _dbRemote.getReviews(vendorId);
   }
 
 }

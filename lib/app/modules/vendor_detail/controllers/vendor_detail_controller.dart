@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
+import 'package:kakikeenam/app/data/models/review_model.dart';
 import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 import 'package:kakikeenam/app/modules/home/controllers/home_controller.dart';
@@ -39,5 +40,15 @@ class VendorDetailController extends GetxController {
 
   Stream<GeoPoint> getBuyerLoc(){
     return _controller.getBuyerLoc();
+  }
+
+  Future<ReviewModel> getReviews(String vendorId) async {
+    return _repositoryRemote.getReviews(vendorId).then((review) {
+      List<Review> reviews = List.empty(growable: true);
+      review.docs.forEach((rev) {
+        reviews.add(Review.fromJson(rev.data() as Map<String, dynamic>));
+      });
+      return ReviewModel(results: reviews);
+    });
   }
 }

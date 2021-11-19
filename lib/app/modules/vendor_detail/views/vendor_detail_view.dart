@@ -9,9 +9,10 @@ import 'package:kakikeenam/app/utils/constants/app_colors.dart';
 import 'package:kakikeenam/app/utils/strings.dart';
 
 import '../controllers/vendor_detail_controller.dart';
+import 'components/reviews_view.dart';
 
 class VendorDetailView extends GetView<VendorDetailController> {
-  final args = Get.arguments as Markers;
+  final vendor = Get.arguments as Markers;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,8 +54,8 @@ class VendorDetailView extends GetView<VendorDetailController> {
                           margin: EdgeInsets.only(bottom: 15),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(100),
-                            child: args.image != null ? CachedNetworkImage(
-                              imageUrl: "${args.image}",
+                            child: vendor.image != null ? CachedNetworkImage(
+                              imageUrl: "${vendor.image}",
                               fit: BoxFit.fill,
                               placeholder: (context, url) => Transform.scale(
                                 scale: 0.5,
@@ -67,7 +68,7 @@ class VendorDetailView extends GetView<VendorDetailController> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('${args.name}', style: TextStyle(color:Colors.white, fontSize: 18, fontWeight: FontWeight.w600),),
+                            Text('${vendor.name}', style: TextStyle(color:Colors.white, fontSize: 18, fontWeight: FontWeight.w600),),
                             SizedBox(height: 20,),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,7 +85,24 @@ class VendorDetailView extends GetView<VendorDetailController> {
                     ),
                     Text('Kualitas Layanan'),
                     SizedBox(height: 10,),
-                    Text('Bintang'),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.star,
+                          size: 20,
+                          color: Colors.orange,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 5),
+                          child: Text(
+                            "${vendor.rating} Reviews",
+                            style: TextStyle(fontSize: 10, fontFamily: "inter"),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -108,8 +126,8 @@ class VendorDetailView extends GetView<VendorDetailController> {
                 ),
                 body: TabBarView(
                   children: [
-                    ProductView(vendorId: args.id,),
-                    Icon(Icons.directions_transit),
+                    ProductView(vendorId: vendor.id,),
+                    ReviewsView(vendorId: vendor.id,),
                   ],
                 ),
               ),

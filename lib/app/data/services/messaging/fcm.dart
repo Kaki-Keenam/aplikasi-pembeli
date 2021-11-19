@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
+import 'package:kakikeenam/app/data/models/review_model.dart';
 import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
@@ -22,7 +23,7 @@ class Fcm {
         print('ON MESSAGE');
         if (!kReleaseMode) print('onMessage: ${message.data}');
 
-        // handleMessage(message.data);
+        handleMessage(message.data);
       });
       FirebaseMessaging.onMessageOpenedApp
           .listen((RemoteMessage message) async {
@@ -133,9 +134,17 @@ class Fcm {
                   onRatingUpdate: (rating) {
                     print(rating);
                     _repositoryRemote.futureListTrans().then((value) {
-                      var currentTransId =
-                      value.docs[0].get('transactionId');
-                      _repositoryRemote.updateTrans(currentTransId, state, rating);
+                      var currentTransId = value.docs[0].data() as Map<String, dynamic>;
+                      var transId = currentTransId['transactionId'];
+                      var review = Review()
+                      ..vendorId = currentTransId['vendorId']
+                      ..buyerId = currentTransId['buyerId']
+                        ..buyerName = currentTransId['buyerName']
+                      ..rating = rating;
+
+                      _repositoryRemote.updateTrans(transId, state, rating);
+
+                      _repositoryRemote.addReview(review);
                     });
                   },
                 )

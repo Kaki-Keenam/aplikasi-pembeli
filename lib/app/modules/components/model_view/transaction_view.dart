@@ -93,7 +93,7 @@ class TransactionView extends StatelessWidget {
                       padding: EdgeInsets.only(left: 5),
                       child: Text(
                         "${trans?.rating} Reviews",
-                        style: TextStyle(fontSize: 10, fontFamily: "roboto"),
+                        style: TextStyle(fontSize: 10, fontFamily: "inter"),
                       ),
                     ),
                   ],

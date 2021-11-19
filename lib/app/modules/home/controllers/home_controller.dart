@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/banner_model.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
@@ -41,7 +42,6 @@ class HomeController extends GetxController {
   void onInit() {
     _user.bindStream(_repositoryRemote.userModel);
     setFcm();
-
     super.onInit();
   }
 

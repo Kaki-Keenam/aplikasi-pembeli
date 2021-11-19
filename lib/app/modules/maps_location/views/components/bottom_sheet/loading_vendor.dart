@@ -8,9 +8,10 @@ class LoadingVendor extends StatelessWidget {
     final mapC = Get.find<MapsLocationController>();
     Future.delayed(Duration(milliseconds: 5000), () {
       Get.back();
-      Future.delayed(
-          Duration(seconds: 2), () {
-      mapC.isLoadingDismiss.value = false;});
+      Future.delayed(Duration(seconds: 2), () {
+        mapC.isLoadingDismiss.value = true;
+        mapC.isDismissibleEmpty.value = true;
+      });
     });
     return Material(
       child: Container(

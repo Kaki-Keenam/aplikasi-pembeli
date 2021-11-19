@@ -1,4 +1,4 @@
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class MarkersModel {
@@ -16,13 +16,15 @@ class Markers{
     this.latLng,
     this.distance,
     this.street,
+    this.rating,
     this.image,
   });
   String? id;
   String? name;
-  MarkerId? markerId;
+  String? markerId;
+  double? rating;
   double? distance;
-  LatLng? latLng;
+  GeoPoint? latLng;
   String? street;
   String? image;
 }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
+import 'package:kakikeenam/app/data/models/review_model.dart';
 import 'package:kakikeenam/app/data/models/transaction_model.dart';
 import 'package:kakikeenam/app/data/models/user_model.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
@@ -180,8 +181,25 @@ class DbRemote{
     return _db.collection(Constants.VENDOR).doc(vendorId).get();
   }
 
+  Stream<QuerySnapshot> getVendorStream() {
+    return _db.collection(Constants.VENDOR).snapshots();
+  }
+
   Future<QuerySnapshot> getBanner() async {
     return _db.collection(Constants.BANNER).get();
+  }
+
+  Future<void> addReviews(Review review) async {
+    return _db.collection('reviews').doc().set({
+      "vendorId": review.vendorId,
+      "buyerId": review.buyerId,
+      "buyerName": review.buyerName,
+      "rating": review.rating,
+    });
+  }
+
+  Future<QuerySnapshot> getReviews(String vendorId) async {
+    return _db.collection('reviews').where(Constants.VENDOR_ID_QUERY, isEqualTo: vendorId).get();
   }
 
 }
