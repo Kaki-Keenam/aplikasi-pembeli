@@ -87,7 +87,7 @@ class DetailItemView extends GetView<DetailItemController> {
                                     height: 10,
                                   ),
                                   RatingBar.builder(
-                                    initialRating: 3.5,
+                                    initialRating: food[1].rating,
                                     minRating: 1,
                                     direction: Axis.horizontal,
                                     allowHalfRating: true,
@@ -126,12 +126,6 @@ class DetailItemView extends GetView<DetailItemController> {
                                   ),
                                   SizedBox(
                                     height: 10,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.watch_later_outlined),
-                                      Text("500 Menit")
-                                    ],
                                   ),
                                 ],
                               ),
@@ -274,31 +268,6 @@ class DetailItemView extends GetView<DetailItemController> {
                                   func: () {
                                     controller.setTrans(food[0]);
                                   },
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Flexible(
-                                child: ElevatedButton(
-                                  onPressed: () {},
-                                  child: Container(
-                                    height: 25,
-                                    width: 25,
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.message,
-                                        color: Colors.black87,
-                                      ),
-                                    ),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Colors.white,
-                                    padding: EdgeInsets.symmetric(vertical: 12),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
                                 ),
                               ),
                             ],

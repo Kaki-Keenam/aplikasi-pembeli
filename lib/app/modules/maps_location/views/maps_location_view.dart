@@ -5,6 +5,7 @@ import 'package:flutter_animarker/flutter_map_marker_animation.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kakikeenam/app/modules/components/widgets/loading_view.dart';
+import 'package:kakikeenam/app/modules/maps_location/views/components/bottom_sheet/no_vendor.dart';
 import 'package:kakikeenam/app/modules/maps_location/views/components/item_marker.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
@@ -25,7 +26,7 @@ class MapsLocationView extends GetView<MapsLocationController> {
           GetBuilder<MapsLocationController>(
             initState: (e) {
               Future.delayed(
-                  Duration(seconds: 3), () => e.controller?.getLastLocation());
+                  Duration(seconds: 2), () => e.controller?.getLastLocation());
             },
             builder: (getController) {
               return Animarker(
@@ -50,7 +51,12 @@ class MapsLocationView extends GetView<MapsLocationController> {
                   circles: getController.isDismissibleDialog.value
                       ? getController.setCircleLocation()
                       : getController.blankCircleLocation(),
-                  initialCameraPosition: getController.initPosition,
+                  initialCameraPosition: CameraPosition(
+                    zoom: Constants.CAMERA_ZOOM_INIT,
+                    tilt: Constants.CAMERA_TILT,
+                    bearing: Constants.CAMERA_BEARING,
+                    target: LatLng(controller.user.lastLocation!.latitude, controller.user.lastLocation!.longitude)
+                ),
                   onMapCreated: getController.mapCreated,
                 ),
               );
@@ -88,18 +94,18 @@ class MapsLocationView extends GetView<MapsLocationController> {
             ),
           ),
           Obx(
-                () => Positioned(
-                  bottom: Get.height * 0.22,
-                  right: 20,
-                  child: MyLocation(
+            () => Positioned(
+              bottom: Get.height * 0.22,
+              right: 20,
+              child: MyLocation(
                   isDismissible: controller.isDismissibleDialog.value,
                   func: () {
                     controller.myLocation();
                   }),
-                ),
+            ),
           ),
           Obx(
-                () => ItemVendor(
+            () => ItemVendor(
                 isDismissible: controller.isDismissibleDialog.value,
                 func: () {
                   controller.getLastLocation();
@@ -125,16 +131,27 @@ class MapsLocationView extends GetView<MapsLocationController> {
                   name: name,
                   image: image,
                 );
-                return Obx(() => controller.isLoadingDismiss.value
-                    ? ItemMarker(
-                  listNear: controller.nearMarker.value.markersList,
-                  onPageChanged: (index) {
-                    _index = index;
-                    controller.itemMarkerAnimation(index);
-                  },
-                  index: _index,
-                )
-                    : Container());
+                return Obx(() {
+                  return !controller.isLoadingDismiss.value
+                      ? controller.nearMarker.value.markersList?.length != 0
+                          ? ItemMarker(
+                              listNear: controller.nearMarker.value.markersList,
+                              onPageChanged: (index) {
+                                _index = index;
+                                controller.itemMarkerAnimation(index);
+                              },
+                              index: _index,
+                            )
+                          : Obx(() {
+                              return controller.isLoadingDismiss.value == false ? NoVendor(
+                                func: () {
+                                  controller.isLoadingDismiss.value = true;
+                                  controller.isDismissibleDialog.value = false;
+                                },
+                              ): Container();
+                            })
+                      : Container();
+                });
               }
               return LoadingView();
             },

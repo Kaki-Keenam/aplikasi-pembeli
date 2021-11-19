@@ -11,6 +11,7 @@ import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 import 'package:kakikeenam/app/data/services/helper_controller.dart';
 import 'package:kakikeenam/app/data/services/location_service.dart';
+import 'package:kakikeenam/app/data/services/messaging/fcm.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 
@@ -39,6 +40,8 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     _user.bindStream(_repositoryRemote.userModel);
+    setFcm();
+
     super.onInit();
   }
 
@@ -55,6 +58,11 @@ class HomeController extends GetxController {
       }
     });
     super.onReady();
+  }
+
+  void setFcm() async{
+    var uid = await _repositoryRemote.user;
+    Fcm().initFirebaseMessaging(userId: uid.uid);
   }
 
   Stream<GeoPoint> getBuyerLoc(){

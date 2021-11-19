@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
-class ItemVendor extends StatelessWidget {
+class NoVendor extends StatelessWidget {
+  NoVendor({
+    Key? key,
+    this.func,
+    this.isDismissible = false,
+  });
 
-  ItemVendor({Key? key, this.isDismissible = false, this.func});
-
-  final bool isDismissible;
   final VoidCallback? func;
+  final bool isDismissible;
 
   @override
   Widget build(BuildContext context) {
-    return isDismissible
-        ? Container()
-        : Positioned(
+    return  Positioned(
             bottom: 0,
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
-              height: Get.height * 0.2,
+              height: Get.height * 0.25,
               width: Get.width,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
@@ -37,17 +39,26 @@ class ItemVendor extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    child: Text('Cari jajan disekitar anda?', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'inter'),),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    child: Text(
+                      'Pedagang tidak berhasil ditemukan ?',
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'inter'),
+                    ),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                     child: Container(
                       width: Get.width,
                       padding: EdgeInsets.symmetric(vertical: 5),
                       decoration: BoxDecoration(
-                        color: Colors.amber[600],
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Material(
@@ -57,22 +68,31 @@ class ItemVendor extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Container(
-                                width: 60,
-                                height: 60,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                        "assets/images/merchant.png"),
+                              SizedBox(
+                                width: 80,
+                                height: 80,
+                                child: FittedBox(
+                                  fit: BoxFit.fill,
+                                  child: LottieBuilder.asset(
+                                    'assets/animation/not-found.zip',
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
                               SizedBox(
                                 width: 20,
                               ),
-                              Text(
-                                "Kaki Lima Keliling",
-                                style: TextStyle(fontSize: 18),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: Get.width * 0.1),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.amber[600],
+                                ),
+                                child: Text(
+                                  "Cari lagi",
+                                  style: TextStyle(fontSize: 18),
+                                ),
                               ),
                             ],
                           ),

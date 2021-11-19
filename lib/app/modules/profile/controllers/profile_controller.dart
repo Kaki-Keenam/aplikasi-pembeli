@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kakikeenam/app/data/models/user_model.dart';
 import 'package:kakikeenam/app/data/repository/repository_remote.dart';
+import 'package:kakikeenam/app/routes/app_pages.dart';
 
 class ProfileController extends GetxController {
   final formKeyName = GlobalKey<FormState>(debugLabel: 'editName');
@@ -57,12 +58,9 @@ class ProfileController extends GetxController {
     }
   }
 
-  void logOut() {
-    try{
-       _repositoryRemote.logout();
-    }catch(e){
-      print("Logout: ${e.toString()}");
-    }
+  void logout() {
+      _repositoryRemote.logout();
+      loading.value = false;
   }
 
   void editName(String name){

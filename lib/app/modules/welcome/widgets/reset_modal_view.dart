@@ -40,7 +40,7 @@ class ResetModal extends GetView<WelcomeController> {
                   ),
                 ),
                 Form(
-                  key: controller.formKeyReset,
+                  // key: controller.formKeyReset,
                   child: Column(
                     children: [
                       // Form

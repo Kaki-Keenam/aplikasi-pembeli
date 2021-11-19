@@ -18,6 +18,14 @@ class DbRemote{
     });
   }
 
+  Future<UserModel> userModel() {
+    return _db.collection(Constants.BUYER).doc(_auth.currentUser?.uid).get()
+        .then((value) {
+      var userModel = UserModel.fromDocument(value.data() as Map<String, dynamic>);
+      return userModel;
+    });
+  }
+
   void editName(String name) async {
     CollectionReference users = _db.collection(Constants.BUYER);
     try {

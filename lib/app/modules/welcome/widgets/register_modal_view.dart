@@ -101,7 +101,6 @@ class RegisterModal extends GetView<WelcomeController> {
                           onPressed: () {
                             if (controller.formKeyRegister.currentState?.validate() ?? false) {
                               controller.register();
-                              Get.back();
                             }
                           },
                           child: Text('Daftar',

@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/transaction_model.dart';
 
@@ -17,96 +16,136 @@ class TransactionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white,
-      elevation: 3,
-      shadowColor: Colors.black26,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
+    return Container(
+      height: 130,
+      width: Get.width * 0.7,
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              offset: Offset(0, 15),
+              spreadRadius: -6,
+              blurRadius: 15,
+            )
+          ]),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: 120,
-            width: Get.width * 0.7,
-            padding: const EdgeInsets.all(5),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 110,
-                  height: 120,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: trans?.storeImage != null ? CachedNetworkImage(
-                      imageUrl: "${trans?.storeImage}",
-                      fit: BoxFit.fill,
+          SizedBox(
+            width: 130,
+            height: 130,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: trans?.product?[0].image != null
+                  ? CachedNetworkImage(
+                      imageUrl: "${trans?.product?[0].image}",
+                      fit: BoxFit.cover,
                       placeholder: (context, url) => Transform.scale(
                         scale: 0.5,
                         child: CircularProgressIndicator(),
                       ),
-                    ) : Icon(Icons.error),
+                    )
+                  : Icon(Icons.error),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10, left: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: Get.width * 0.48,
+                  child: Text(
+                    "${trans?.product?[0].name}",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 17, fontFamily: "inter"),
+                    overflow: TextOverflow.clip,
+                    maxLines: 1,
+                    softWrap: false,
                   ),
                 ),
-                Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 10, left: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "${trans?.storeName}",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "roboto"),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                           Icon(Icons.star, size: 20, color: Colors.orange,),
-                            Padding(
-                              padding: EdgeInsets.only(left: 5),
-                              child: Text(
-                                "${trans?.rating} Reviews",
-                                style: TextStyle(
-                                    fontSize: 10, fontFamily: "roboto"),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          "Bapak joni",
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Color(0xFF444444),
-                              fontFamily: "roboto"),
-                        )
-                      ],
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "${trans?.storeName}",
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF444444),
+                      fontFamily: "inter"),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.star,
+                      size: 20,
+                      color: Colors.orange,
                     ),
-                  ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 5),
+                      child: Text(
+                        "${trans?.rating} Reviews",
+                        style: TextStyle(fontSize: 10, fontFamily: "roboto"),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      'Status: ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: trans?.state == 'REJECTED'
+                            ? Colors.red
+                            : trans?.state == 'PROPOSED'
+                                ? Colors.yellow
+                                : trans?.state == 'OTW'
+                                    ? Colors.orangeAccent
+                                    : trans?.state == 'ARRIVED'
+                                        ? Colors.deepOrangeAccent
+                                        : trans?.state == 'TRANSACTION_FINISHED'
+                                            ? Colors.green
+                                            : Colors.grey,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Center(
+                          child: Text(
+                              trans?.state == 'REJECTED'
+                                  ? 'DIBATAL'
+                                  : trans?.state == 'PROPOSED'
+                                  ? 'DIAJUKAN'
+                                  : trans?.state == 'OTW'
+                                  ? 'DIJALAN'
+                                  : trans?.state == 'ARRIVED'
+                                  ? 'SAMPAI'
+                                  : trans?.state == 'TRANSACTION_FINISHED'
+                                  ? 'SELESAI'
+                                  : 'KENDALA',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ),
-          Center(
-            child: Container(
-                margin: EdgeInsets.only(right: 15),
-                width: 75,
-                height: 20,
-                child: Text(
-                  "${trans?.state}",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )),
           ),
         ],
       ),

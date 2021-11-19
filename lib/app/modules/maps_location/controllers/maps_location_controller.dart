@@ -14,6 +14,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kakikeenam/app/data/models/markers_model.dart';
+import 'package:kakikeenam/app/data/models/user_model.dart';
+import 'package:kakikeenam/app/modules/home/controllers/home_controller.dart';
 import 'package:kakikeenam/app/modules/maps_location/views/components/bottom_sheet/loading_vendor.dart';
 import 'package:kakikeenam/app/modules/maps_location/views/components/bottom_sheet/widget_modal.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
@@ -21,6 +23,7 @@ import 'package:kakikeenam/app/utils/maps_style.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class MapsLocationController extends GetxController {
+  final HomeController _home = Get.find<HomeController>();
   var allMarker = MarkersModel().obs;
   var nearMarker = MarkersModel().obs;
 
@@ -58,8 +61,10 @@ class MapsLocationController extends GetxController {
 
   // dialog
   RxBool isDismissibleDialog = false.obs;
-  RxBool isLoadingDismiss = false.obs;
+  RxBool isLoadingDismiss = true.obs;
   RxBool isDismissibleMarker = true.obs;
+
+  UserModel get user => this._home.user;
 
   @override
   void onClose() async {
@@ -79,14 +84,6 @@ class MapsLocationController extends GetxController {
   Stream<Position> streamLocation() {
     return locator.getPositionStream();
   }
-
-  /// This is function for firs initial camera position
-  CameraPosition initPosition = CameraPosition(
-    zoom: Constants.CAMERA_ZOOM_INIT,
-    tilt: Constants.CAMERA_TILT,
-    bearing: Constants.CAMERA_BEARING,
-    target: Constants.SOURCE_LOCATION,
-  );
 
   ///
   List<double> setNearestLocation() {
@@ -361,6 +358,7 @@ class MapsLocationController extends GetxController {
 
   void itemMarkerAnimation(int index) {
     var _markerList = nearMarker.value.markersList;
+    var initPosition = CameraPosition(target: Constants.SOURCE_LOCATION);
     if (_markerList?[index].latLng != null) {
       initPosition = CameraPosition(
         target: _markerList![index].latLng!,

@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/transaction_model.dart';
 import 'package:kakikeenam/app/data/models/user_model.dart';
@@ -12,11 +13,20 @@ class RepositoryRemote{
   final AuthRemote _authRemote = Get.find<AuthRemote>();
   final DbRemote _dbRemote = Get.find<DbRemote>();
 
+  var isAuth = false.obs;
+  var isSkipIntro = false.obs;
+
+  Future<void> firsInitialized() async {
+      skipIntro.then((value) => isSkipIntro.value = value);
+      autoLogin.then((value) => isAuth.value = value);
+  }
 
   Future<bool> get skipIntro => _authRemote.skipIntro();
   Future<bool> get autoLogin => _authRemote.autoLogin();
+  GoogleSignIn get isSignGoogle => _authRemote.googleSignIn;
 
   Stream<UserModel> get userModel => _dbRemote.getUserModel();
+  Future<UserModel> get user => _dbRemote.userModel();
 
   Future<void> addToFirebase([String name = "User"]) {
     return _authRemote.addToFirebase(name);

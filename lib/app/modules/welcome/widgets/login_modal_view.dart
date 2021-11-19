@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:kakikeenam/app/modules/components/widgets/custom_text_field.dart';
 import 'package:kakikeenam/app/modules/welcome/controllers/welcome_controller.dart';
 import 'package:kakikeenam/app/modules/welcome/widgets/reset_modal_view.dart';
-import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
 import 'package:kakikeenam/app/utils/utils.dart';
 import 'package:kakikeenam/app/utils/validator.dart';
@@ -59,7 +58,6 @@ class LoginModal extends GetView<WelcomeController> {
                           onPressed: () {
                             if(controller.formKeyLogin.currentState?.validate() ?? false){
                               controller.loginAuth();
-                              Get.back();
                               if(controller.isLoading.isTrue){
                                 Dialogs.loadingDialog();
                               }

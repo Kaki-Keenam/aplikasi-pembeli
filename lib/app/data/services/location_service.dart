@@ -21,8 +21,10 @@ class LocationController extends GetxController {
   @override
   void onReady(){
     var isStatus = box.read('location');
-    if(isStatus){
-      toggleListening();
+    if(isStatus != null){
+      if(isStatus){
+        toggleListening();
+      }
     }
     Future.delayed(Duration(seconds: 4), (){
       getLocationPermission();

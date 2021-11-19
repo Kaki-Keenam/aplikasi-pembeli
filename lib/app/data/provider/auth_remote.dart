@@ -11,7 +11,7 @@ class AuthRemote {
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  GoogleSignIn _googleSignIn = GoogleSignIn();
+  GoogleSignIn googleSignIn = GoogleSignIn();
   GoogleSignInAccount? _currentGoogle;
   UserCredential? userCredential;
 
@@ -28,9 +28,9 @@ class AuthRemote {
   Future<bool> autoLogin() async {
     try {
 
-      final _isSign = await _googleSignIn.isSignedIn();
+      final _isSign = await googleSignIn.isSignedIn();
       if (_isSign) {
-        await _googleSignIn
+        await googleSignIn
             .signInSilently()
             .then((value) => _currentGoogle = value);
         final googleAuth = await _currentGoogle!.authentication;
@@ -61,9 +61,9 @@ class AuthRemote {
       final box = GetStorage();
       box.writeIfNull(Constants.SKIP_INTRO, true);
 
-      await _googleSignIn.signOut();
-      await _googleSignIn.signIn().then((value) => _currentGoogle = value);
-      final isSign = await _googleSignIn.isSignedIn();
+      await googleSignIn.signOut();
+      await googleSignIn.signIn().then((value) => _currentGoogle = value);
+      final isSign = await googleSignIn.isSignedIn();
       if (isSign) {
         final _googleAuth = await _currentGoogle!.authentication;
         final credential = GoogleAuthProvider.credential(
@@ -75,7 +75,7 @@ class AuthRemote {
             .signInWithCredential(credential)
             .then((value) => userCredential = value);
 
-        // addToFirebase();
+        addToFirebase();
         CollectionReference users = _db.collection(Constants.BUYER);
         final dataFav = await users
             .doc(_auth.currentUser!.uid)
@@ -87,7 +87,7 @@ class AuthRemote {
             "favorites": [],
           });
         }
-
+        Get.offAllNamed(Routes.PAGE_SWITCHER);
       } else {
         Dialogs.errorDialog("Login with Google");
       }
@@ -104,7 +104,7 @@ class AuthRemote {
         email: email,
         password: password,
       );
-
+      print('register: error');
       addToFirebase(name);
       await _userSignup.user?.sendEmailVerification();
 
@@ -120,6 +120,7 @@ class AuthRemote {
         );
       }
     } catch (e) {
+      print('register : ${e.toString()}');
       Dialogs.errorDialog("Registrasi error");
     }
   }
@@ -135,7 +136,7 @@ class AuthRemote {
       );
 
       if (_userLogin.user!.emailVerified) {
-        // addToFirebase();
+        addToFirebase();
         Get.offAllNamed(Routes.PAGE_SWITCHER);
       } else {
         Dialogs.repeatVerifyDialog(
@@ -184,12 +185,17 @@ class AuthRemote {
   }
 
   Future<void> logout() async {
-    final _isSign = await _googleSignIn.isSignedIn();
-    print('issign: $_isSign');
+    final _isSign = await googleSignIn.isSignedIn();
+
     if (_isSign) {
-      await _auth.signOut();
+      await googleSignIn.disconnect();
+      await googleSignIn.signOut();
+      print('google: $_isSign');
+      Get.offAllNamed(Routes.WELCOME_PAGE);
     } else {
       await _auth.signOut();
+      print('auth: $_isSign');
+      Get.offAllNamed(Routes.WELCOME_PAGE);
     }
   }
 

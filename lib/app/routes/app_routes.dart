@@ -12,7 +12,6 @@ abstract class Routes {
   static const PAGE_SWITCHER = _Paths.PAGE_SWITCHER;
   static const FAVORITE = _Paths.FAVORITE;
   static const MAPS_LOCATION = _Paths.MAPS_LOCATION;
-  static const NOTIFICATION = _Paths.NOTIFICATION;
   static const SETTINGS = _Paths.SETTINGS;
   static const PROFILE = _Paths.PROFILE;
   static const TRANS_HISTORY = _Paths.TRANS_HISTORY;
@@ -31,7 +30,6 @@ abstract class _Paths {
   static const PAGE_SWITCHER = '/pageswitcher';
   static const FAVORITE = '/favorite';
   static const MAPS_LOCATION = '/maps-location';
-  static const NOTIFICATION = '/notification';
   static const SETTINGS = '/settings';
   static const PROFILE = '/profile';
   static const TRANS_HISTORY = '/trans-history';

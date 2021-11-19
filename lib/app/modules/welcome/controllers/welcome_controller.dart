@@ -1,8 +1,10 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 import 'package:kakikeenam/app/data/services/helper_controller.dart';
+import 'package:kakikeenam/app/utils/utils.dart';
 
 class WelcomeController extends GetxController{
   final formKeyLogin = GlobalKey<FormState>(debugLabel: 'login');
@@ -24,17 +26,32 @@ class WelcomeController extends GetxController{
     super.onInit();
   }
 
-  void register() {
-    isLoading.value = true;
-    try{
-      _repositoryRemote.registerAuth(
-        nameC.text,
-        emailC.text,
-        passC.text,
+  Future<void> register() async {
+
+    try {
+      FirebaseAuth _auth = FirebaseAuth.instance;
+      UserCredential _userSignup = await _auth.createUserWithEmailAndPassword(
+        email: emailC.text,
+        password: passC.text,
       );
-      isLoading.value = false;
-    }catch (e){
-      print('Email: ' + e.toString());
+      print('register: error');
+      _repositoryRemote.addToFirebase(nameC.text);
+      await _userSignup.user?.sendEmailVerification();
+
+      Dialogs.verifyDialog();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('Password terlalu lemah');
+      } else if (e.code == 'email-already-in-use') {
+        Dialogs.errorEmailDialog(
+            func: () {
+              Get.back();
+            }
+        );
+      }
+    } catch (e) {
+      print('register : ${e.toString()}');
+      Dialogs.errorDialog("Registrasi error");
     }
   }
 

@@ -37,8 +37,7 @@ class TransactionModel {
   String? state;
   List<ProductModel>? product;
 
-   factory TransactionModel.fromDocument(DocumentSnapshot json) {
-     var doc = json.data() as dynamic;
+   factory TransactionModel.fromDocument(Map<String, dynamic> doc) {
     return TransactionModel(
         buyerId: doc["buyerId"],
         buyerLoc: doc["buyerLoc"],
@@ -52,6 +51,7 @@ class TransactionModel {
         orderDate: doc["orderDate"],
         rating: doc["rating"].toDouble(),
         state: doc["state"],
+      product: List<ProductModel>.from(doc["products"]?.map((x) => ProductModel.fromMap(x))),
      );
    }
 }

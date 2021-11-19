@@ -38,7 +38,7 @@ android {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         multiDexEnabled true
         applicationId "com.keenam.kakikeenam"
-        minSdkVersion 23
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -52,6 +52,7 @@ android {
         }
         getByName("release") {
             minifyEnabled = true
+            shrinkResources true
             proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
                     // List additional ProGuard rules for the given build type here. By default,

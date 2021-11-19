@@ -7,8 +7,6 @@ import 'package:kakikeenam/app/modules/maps_location/bindings/maps_location_bind
 import 'package:kakikeenam/app/modules/maps_location/views/maps_location_view.dart';
 import 'package:kakikeenam/app/modules/near_vendor/bindings/near_vendor_binding.dart';
 import 'package:kakikeenam/app/modules/near_vendor/views/near_vendor_view.dart';
-import 'package:kakikeenam/app/modules/notification/bindings/notification_binding.dart';
-import 'package:kakikeenam/app/modules/notification/views/notification_view.dart';
 import 'package:kakikeenam/app/modules/onboarding/bindings/onboarding_binding.dart';
 import 'package:kakikeenam/app/modules/onboarding/views/onboarding_view.dart';
 import 'package:kakikeenam/app/modules/profile/bindings/profile_binding.dart';
@@ -51,11 +49,6 @@ class AppPages {
       name: _Paths.MAPS_LOCATION,
       page: () => MapsLocationView(),
       binding: MapsLocationBinding(),
-    ),
-    GetPage(
-      name: _Paths.NOTIFICATION,
-      page: () => NotificationView(),
-      binding: NotificationBinding(),
     ),
     GetPage(
       name: _Paths.PROFILE,

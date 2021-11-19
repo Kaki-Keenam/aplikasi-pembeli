@@ -9,6 +9,7 @@ import 'package:kakikeenam/app/data/services/messaging/fcm.dart';
 import 'package:kakikeenam/app/modules/favorite/controllers/favorite_controller.dart';
 import 'package:kakikeenam/app/modules/home/controllers/home_controller.dart';
 import 'package:kakikeenam/app/modules/settings/controllers/settings_controller.dart';
+import 'package:kakikeenam/app/modules/splash/controllers/splash_controller.dart';
 
 import 'app/modules/trans_history/controllers/trans_history_controller.dart';
 
@@ -22,6 +23,7 @@ class DependencyInjection {
 
     Get.lazyPut<LocationController>(() => LocationController(), fenix: true);
     Get.lazyPut<HelperController>(() => HelperController(), fenix: true);
+    Get.lazyPut<SplashController>(() => SplashController(), fenix: true);
     Get.lazyPut<Fcm>(() => Fcm(), fenix: true);
 
     Get.lazyPut<TransHistoryController>(

@@ -13,16 +13,16 @@ class Fcm {
   final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
 
   Future<void> initFirebaseMessaging({
-    required String userId,
+     String? userId,
   }) async {
     try {
       print('INIT FIREBASE MESSAGING');
 
       FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
         print('ON MESSAGE');
-        if (!kReleaseMode) print('onMessage: ${message.notification?.android?.imageUrl}');
+        if (!kReleaseMode) print('onMessage: ${message.data}');
 
-        handleMessage(message.data);
+        // handleMessage(message.data);
       });
       FirebaseMessaging.onMessageOpenedApp
           .listen((RemoteMessage message) async {
@@ -45,6 +45,7 @@ class Fcm {
       print('CHANGE TOKEN!');
       CollectionReference users =
           FirebaseFirestore.instance.collection(Constants.BUYER);
+      print('userId ${userId}');
       users
           .doc(userId)
           .update({

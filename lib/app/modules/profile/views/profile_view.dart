@@ -39,7 +39,7 @@ class ProfileView extends GetView<ProfileController> {
                 barrierDismissible: false,
                 content: Text("Apakah anda yakin ingin logout ?"),
                 onConfirm: () {
-                  controller.logOut();
+                  controller.logout();
                   Get.back();
                 },
                 textConfirm: "Ya",

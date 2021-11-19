@@ -19,8 +19,8 @@ class TransHistoryController extends GetxController {
       return _repositoryRemote.streamListTrans()
           .map((QuerySnapshot query) {
         List<TransactionModel> listData = List.empty(growable: true);
-        query.docs.forEach((element) {
-          listData.add(TransactionModel.fromDocument(element));
+        query.docs.forEach((data) {
+          listData.add(TransactionModel.fromDocument(data.data() as Map<String, dynamic>));
         });
         return listData;
       });
