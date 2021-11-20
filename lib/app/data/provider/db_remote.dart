@@ -195,6 +195,8 @@ class DbRemote{
       "buyerId": review.buyerId,
       "buyerName": review.buyerName,
       "rating": review.rating,
+      "buyerImage": review.buyerImage,
+      "time": DateTime.now().toIso8601String(),
     });
   }
 

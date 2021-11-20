@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/review_model.dart';
+import 'package:kakikeenam/app/data/models/user_model.dart';
 import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
@@ -14,7 +14,7 @@ class Fcm {
   final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
 
   Future<void> initFirebaseMessaging({
-     String? userId,
+    String? userId, UserModel? user,
   }) async {
     try {
       print('INIT FIREBASE MESSAGING');
@@ -23,13 +23,13 @@ class Fcm {
         print('ON MESSAGE');
         if (!kReleaseMode) print('onMessage: ${message.data}');
 
-        handleMessage(message.data);
+        handleMessage(message.data, user);
       });
       FirebaseMessaging.onMessageOpenedApp
           .listen((RemoteMessage message) async {
         print('ON MESSAGE OPENED APP');
         if (!kReleaseMode) print('onLaunch: $message');
-        handleMessage(message.data);
+        handleMessage(message.data, user);
       });
 
       await FirebaseMessaging.instance
@@ -61,7 +61,7 @@ class Fcm {
     }
   }
 
-  void handleMessage(Map<String, dynamic> message) {
+  void handleMessage(Map<String, dynamic> message, [UserModel? user]) {
     if (message['state'] == 'PROPOSED') {
       Get.defaultDialog(
           title: 'Pesanan dikirim',
@@ -75,15 +75,15 @@ class Fcm {
           textCancel: 'Batalkan',
           onCancel: () {
             _repositoryRemote.futureListTrans().then((value) {
-              var currentTransId =
-              value.docs[0].get('transactionId');
+              var currentTransId = value.docs[0].get('transactionId');
               _repositoryRemote.updateTrans(currentTransId, "REJECTED");
             });
           });
     } else if (message['state'] == 'REJECTED') {
       Get.defaultDialog(
           title: 'Pesanan anda dibatalkan',
-          middleText: 'Anda tidak bisa melanjukan transaksi saat ini. Silahkan coba lagi nanti!',
+          middleText:
+              'Anda tidak bisa melanjukan transaksi saat ini. Silahkan coba lagi nanti!',
           textConfirm: 'Ok',
           onConfirm: () {
             if (Get.isDialogOpen == true) {
@@ -134,13 +134,15 @@ class Fcm {
                   onRatingUpdate: (rating) {
                     print(rating);
                     _repositoryRemote.futureListTrans().then((value) {
-                      var currentTransId = value.docs[0].data() as Map<String, dynamic>;
+                      var currentTransId =
+                          value.docs[0].data() as Map<String, dynamic>;
                       var transId = currentTransId['transactionId'];
                       var review = Review()
-                      ..vendorId = currentTransId['vendorId']
-                      ..buyerId = currentTransId['buyerId']
+                        ..vendorId = currentTransId['vendorId']
+                        ..buyerId = currentTransId['buyerId']
                         ..buyerName = currentTransId['buyerName']
-                      ..rating = rating;
+                        ..buyerImage = user?.photoUrl
+                        ..rating = rating;
 
                       _repositoryRemote.updateTrans(transId, state, rating);
 

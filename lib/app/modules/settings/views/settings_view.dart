@@ -10,7 +10,7 @@ import '../controllers/settings_controller.dart';
 class SettingsView extends GetView<SettingsController> {
   @override
   Widget build(BuildContext context) {
-    final statusC = Get.find<LocationController>();
+    final statusC = Get.find<LocationService>();
     final box = GetStorage();
     if (box.read('location') != null) {
       var data = box.read('location');

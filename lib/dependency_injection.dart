@@ -21,7 +21,7 @@ class DependencyInjection {
     Get.lazyPut<RepositoryRemote>(() => RepositoryRemote(), fenix: true);
     Get.lazyPut<DbRemote>(() => DbRemote(), fenix: true);
 
-    Get.lazyPut<LocationController>(() => LocationController(), fenix: true);
+    Get.lazyPut<LocationService>(() => LocationService(), fenix: true);
     Get.lazyPut<HelperController>(() => HelperController(), fenix: true);
     Get.lazyPut<SplashController>(() => SplashController(), fenix: true);
     Get.lazyPut<Fcm>(() => Fcm(), fenix: true);

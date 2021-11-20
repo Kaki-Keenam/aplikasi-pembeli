@@ -11,18 +11,19 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kakikeenam/app/data/models/markers_model.dart';
-import 'package:kakikeenam/app/data/models/user_model.dart';
 import 'package:kakikeenam/app/data/repository/repository_remote.dart';
+import 'package:kakikeenam/app/data/services/location_service.dart';
 import 'package:kakikeenam/app/modules/home/controllers/home_controller.dart';
 import 'package:kakikeenam/app/modules/maps_location/views/components/bottom_sheet/loading_vendor.dart';
 import 'package:kakikeenam/app/modules/maps_location/views/components/bottom_sheet/widget_modal.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as tool;
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class MapsLocationController extends GetxController {
   final HomeController _home = Get.find<HomeController>();
   final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
+  final LocationService _locationService = Get.find<LocationService>();
   var mController = Rxn<GoogleMapController>();
   final mapController = Completer<GoogleMapController>();
   GeolocatorPlatform locator = GeolocatorPlatform.instance;
@@ -41,7 +42,7 @@ class MapsLocationController extends GetxController {
 
   var userPosition = Rxn<Position>();
   var markerModel = RxList<Markers>();
-  var itemChallenge = RxList<Markers>();
+  var itemVendor = RxList<Markers>();
 
   var index = 0.obs;
   RxBool ripple = true.obs;
@@ -49,7 +50,7 @@ class MapsLocationController extends GetxController {
   @override
   void onInit() {
     markerModel.bindStream(getMarkerData());
-    itemChallenge.bindStream(getItemMarkerVendor());
+    itemVendor.bindStream(getItemMarkerVendor());
     setCustomMaker();
 
     super.onInit();
@@ -58,6 +59,9 @@ class MapsLocationController extends GetxController {
   @override
   void onReady() {
     getLocationPermission();
+    locationTimer = Timer.periodic(Duration(seconds: 5), (timer) {
+      allVendors();
+    });
     super.onReady();
   }
 
@@ -69,7 +73,7 @@ class MapsLocationController extends GetxController {
     ripple.close();
   }
 
-  UserModel get user => this._home.user;
+  Position? get user => this._home.mapPosition;
 
   set setMarker(BitmapDescriptor markers) => this.vendorMarker = markers;
 
@@ -78,7 +82,7 @@ class MapsLocationController extends GetxController {
   set setMapController(GoogleMapController mapController) =>
       this.mController.value = mapController;
 
-  Future<String> getStreet(GeoPoint? location)async{
+  Future<String> getStreet(GeoPoint? location) async {
     List<Placemark> street = await geoCoding.placemarkFromCoordinates(
         location!.latitude, location.longitude);
     String streetValue = "${street.first.street} ${street.first.subLocality}";
@@ -90,14 +94,13 @@ class MapsLocationController extends GetxController {
       List<Markers> listData = List.empty(growable: true);
       query.docs.forEach((DocumentSnapshot doc) {
         var mark = doc.data() as Map<String, dynamic>;
-        listData.add(
-            Markers()
-                ..latLng = mark["lastLocation"]
-                ..markerId = mark["uid"]
-                ..rating = mark["rating"]/1.0
-                ..name = mark["storeName"]
-                ..image = mark["storeImage"]
-        );
+        listData.add(Markers()
+          ..id = mark["uid"]
+          ..latLng = mark["lastLocation"]
+          ..markerId = mark["uid"]
+          ..rating = mark["rating"] / 1.0
+          ..name = mark["storeName"]
+          ..image = mark["storeImage"]);
       });
       return listData;
     });
@@ -107,19 +110,17 @@ class MapsLocationController extends GetxController {
   Stream<List<Markers>> getItemMarkerVendor() {
     return _repositoryRemote.getVendorStream().map((QuerySnapshot query) {
       List<Markers> listData = List.empty(growable: true);
-      for(var i = 0; i < query.docs.length; i++){
+      for (var i = 0; i < query.docs.length; i++) {
         var mark = query.docs[i].data() as Map<String, dynamic>;
-        if(distanceVendor()[i] < 100){
-
-          listData.add(
-              Markers()
-                ..latLng = mark["lastLocation"]
-                ..markerId = mark["uid"]
-                ..rating = mark["rating"]/1.0
-                ..name = mark["storeName"]
-                ..image = mark["storeImage"]
-                  ..distance = distanceVendor()[i]
-          );
+        if (distanceVendor()[i] < 100) {
+          listData.add(Markers()
+            ..id = mark["uid"]
+            ..latLng = mark["lastLocation"]
+            ..markerId = mark["uid"]
+            ..rating = mark["rating"] / 1.0
+            ..name = mark["storeName"]
+            ..image = mark["storeImage"]
+            ..distance = distanceVendor()[i]);
         }
       }
       return listData;
@@ -127,12 +128,10 @@ class MapsLocationController extends GetxController {
   }
 
   Future setCustomMaker() async {
-    await getBytesFromAsset('assets/images/merchant.png', 64)
-        .then((onValue) {
+    await getBytesFromAsset('assets/images/merchant.png', 64).then((onValue) {
       setMarker = BitmapDescriptor.fromBytes(onValue);
     });
-    await getBytesFromAsset('assets/images/marker.png', 64)
-        .then((onValue) {
+    await getBytesFromAsset('assets/images/marker.png', 64).then((onValue) {
       buyerMarker = BitmapDescriptor.fromBytes(onValue);
     });
   }
@@ -141,7 +140,7 @@ class MapsLocationController extends GetxController {
     Set<Circle> circle = Set.from([
       Circle(
           circleId: CircleId(Constants.MY_LOCATION_ID),
-          center: LatLng(userPosition.value!.latitude, userPosition.value!.longitude),
+          center: LatLng(user!.latitude, user!.longitude),
           radius: Constants.CIRCLE_RADIUS,
           fillColor: Color.fromRGBO(251, 221, 50, 0.12),
           strokeWidth: 2,
@@ -159,12 +158,11 @@ class MapsLocationController extends GetxController {
     return circle;
   }
 
-  void setBuyerMarker(){
+  void setBuyerMarker() {
     markers[MarkerId(Constants.BUYER_MARKER)] = RippleMarker(
       markerId: MarkerId(Constants.BUYER_MARKER),
       icon: buyerMarker ?? BitmapDescriptor.defaultMarker,
-      position: LatLng(
-          userPosition.value!.latitude, userPosition.value!.longitude),
+      position: LatLng(user!.latitude, user!.longitude),
       ripple: true,
     );
   }
@@ -195,39 +193,9 @@ class MapsLocationController extends GetxController {
   }
 
   Future<void> getLocationPermission() async {
-    final hasPermission = await _handlePermission();
-
-    if (!hasPermission) {
-      return;
-    }
     var currentPosition = await locator.getCurrentPosition();
     setPosition = currentPosition;
-  }
-
-  Future<bool> _handlePermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Test if location services are enabled.
-    serviceEnabled = await locator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return false;
-    }
-
-    permission = await locator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await locator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return false;
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
-      return false;
-    }
-
-    return true;
+    await _locationService.getLocationPermission();
   }
 
   Future myLocation() async {
@@ -235,8 +203,8 @@ class MapsLocationController extends GetxController {
       CameraPosition(
         bearing: Constants.CAMERA_BEARING,
         target: LatLng(
-          userPosition.value?.latitude ?? -8.582572687412386,
-          userPosition.value?.longitude ?? 116.1013248977757,
+          user?.latitude ?? -8.582572687412386,
+          user?.longitude ?? 116.1013248977757,
         ),
         zoom: Constants.CAMERA_ZOOM_INIT,
       ),
@@ -260,10 +228,10 @@ class MapsLocationController extends GetxController {
     List<double> listNearChallenge = List.empty(growable: true);
     for (var i = 0; i < markerModel.length; i++) {
       var distance = tool.SphericalUtil.computeDistanceBetween(
-          tool.LatLng(
-              user.lastLocation?.latitude ?? -8.582572687412386, user.lastLocation?.longitude ?? 116.1013248977757),
-          tool.LatLng(markerModel[i].latLng?.latitude ?? -8.582572687412386,
-              markerModel[i].latLng?.longitude ?? 116.1013248977757)) /
+              tool.LatLng(user?.latitude ?? -8.582572687412386,
+                  user?.longitude ?? 116.1013248977757),
+              tool.LatLng(markerModel[i].latLng?.latitude ?? -8.582572687412386,
+                  markerModel[i].latLng?.longitude ?? 116.1013248977757)) /
           4.0;
       listNearChallenge.add(distance);
     }

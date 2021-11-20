@@ -18,12 +18,13 @@ import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 class HomeController extends GetxController {
   final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
-  final LocationController locationService = Get.find<LocationController>();
   final HelperController _helper = Get.find<HelperController>();
-
+  final LocationService _locationService = Get.find<LocationService>();
+  GeolocatorPlatform locator = GeolocatorPlatform.instance;
   Rxn<List<ProductModel>> searchList = Rxn<List<ProductModel>>();
   List<ProductModel>? get searchData => searchList.value;
-
+  var _position = Rxn<Position>();
+  Position? get mapPosition => this._position.value;
 
   var currentIndex = 0.obs;
   List<T> map<T>(List list, Function handler) {
@@ -40,6 +41,7 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
+    _position.bindStream(locator.getPositionStream(timeInterval: 5));
     _user.bindStream(_repositoryRemote.userModel);
     setFcm();
     super.onInit();
@@ -57,12 +59,17 @@ class HomeController extends GetxController {
         );
       }
     });
+    getLocationPermission();
     super.onReady();
   }
 
+  Future<void> getLocationPermission() async {
+    await _locationService.getLocationPermission();
+  }
+
   void setFcm() async{
-    var uid = await _repositoryRemote.user;
-    Fcm().initFirebaseMessaging(userId: uid.uid);
+    var user = await _repositoryRemote.user;
+    Fcm().initFirebaseMessaging(userId: user.uid, user: user);
   }
 
   Stream<GeoPoint> getBuyerLoc(){

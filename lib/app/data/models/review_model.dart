@@ -25,19 +25,25 @@ class Review {
     this.vendorId,
     this.buyerId,
     this.rating,
+    this.buyerImage,
     this.buyerName,
+    this.time,
   });
 
   String? vendorId;
   String? buyerId;
   String? buyerName;
+  String? buyerImage;
   double? rating;
+  String? time;
 
   factory Review.fromJson(Map<String, dynamic> json) => Review(
     vendorId: json["vendorId"],
     buyerId: json["buyerId"],
     buyerName: json["buyerName"],
+    buyerImage: json["buyerImage"],
     rating: json["rating"],
+    time: json['time']
   );
 
   Map<String, dynamic> toJson() => {

@@ -127,7 +127,7 @@ class TransactionView extends StatelessWidget {
                         child: Center(
                           child: Text(
                               trans?.state == 'REJECTED'
-                                  ? 'DIBATAL'
+                                  ? 'DIBATALKAN'
                                   : trans?.state == 'PROPOSED'
                                   ? 'DIAJUKAN'
                                   : trans?.state == 'OTW'

@@ -46,16 +46,15 @@ class MapsLocationView extends GetView<MapsLocationController> {
                     tilt: Constants.CAMERA_TILT,
                     bearing: Constants.CAMERA_BEARING,
                     target: LatLng(
-                        controller.user.lastLocation?.latitude ??
+                        controller.user?.latitude ??
                             -8.582572687412386,
-                        controller.user.lastLocation?.longitude ??
+                        controller.user?.longitude ??
                             116.1013248977757)),
                 onMapCreated: (GoogleMapController ctrl) {
                   controller.mapController.complete(ctrl);
                   controller.setMapController = ctrl;
                   controller.setBuyerMarker();
-                  Future.delayed(
-                      Duration(seconds: 2), () => controller.allVendors());
+
                 }),
           );
         }),
@@ -115,9 +114,9 @@ class MapsLocationView extends GetView<MapsLocationController> {
         ),
         Obx(() {
           return controller.isLoadingDismiss.value
-              ? controller.itemChallenge.length != 0
+              ? controller.itemVendor.length != 0
                   ? ItemMarker(
-                      listNear: controller.itemChallenge,
+                      listNear: controller.itemVendor,
                       onPageChanged: (index) {
                         controller.index.value = index;
                         controller.itemMarkerAnimation(index);

@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
-class LocationController extends GetxController {
+class LocationService extends GetxController {
   final GeolocatorPlatform _locator = GeolocatorPlatform.instance;
   final box = GetStorage();
   StreamSubscription<Position>? _positionStreamSubscription;

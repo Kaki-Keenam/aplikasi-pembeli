@@ -4,12 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 import 'package:kakikeenam/app/data/services/helper_controller.dart';
+import 'package:kakikeenam/app/data/services/location_service.dart';
 import 'package:kakikeenam/app/utils/utils.dart';
 
 class WelcomeController extends GetxController{
   final formKeyLogin = GlobalKey<FormState>(debugLabel: 'login');
   final formKeyRegister = GlobalKey<FormState>(debugLabel: 'register');
   final formKeyReset = GlobalKey<FormState>(debugLabel: 'reset');
+  final LocationService locationService = Get.find<LocationService>();
   TextEditingController emailC = TextEditingController();
   TextEditingController resetEmailC = TextEditingController();
   TextEditingController passC = TextEditingController();
