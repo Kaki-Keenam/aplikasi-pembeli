@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
+import 'package:kakikeenam/app/data/models/review_model.dart';
+import 'package:kakikeenam/app/data/models/user_model.dart';
+import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 import 'package:lottie/lottie.dart';
 
 class NotifyDialogs {
@@ -152,5 +156,115 @@ class NotifyDialogs {
       textConfirm: "Ya",
       textCancel: "Tidak",
     );
+  }
+
+  void proposed(RepositoryRemote repository){
+    Get.defaultDialog(
+        title: 'Pesanan dikirim',
+        middleText: 'Menunggu konfirmasi pesanan',
+        textConfirm: 'Ok',
+        onConfirm: () {
+          if (Get.isDialogOpen == true) {
+            Get.back();
+          }
+        },
+        textCancel: 'Batalkan',
+        onCancel: () {
+          repository.futureListTrans().then((value) {
+            var currentTransId = value.docs[0].get('transactionId');
+            repository.updateTrans(currentTransId, "REJECTED");
+          });
+        });
+  }
+
+  void rejected(){
+    Get.defaultDialog(
+        title: 'Pesanan anda dibatalkan',
+        middleText:
+        'Anda tidak bisa melanjukan transaksi saat ini. Silahkan coba lagi nanti!',
+        textConfirm: 'Ok',
+        onConfirm: () {
+          if (Get.isDialogOpen == true) {
+            Get.back();
+          }
+        });
+  }
+
+  void otw(){
+    Get.defaultDialog(
+        title: 'Pesanan diterima penjual',
+        middleText: 'Silahkan menunggu penjual sampai di lokasi anda',
+        textConfirm: 'Ok',
+        onConfirm: () {
+          if (Get.isDialogOpen == true) {
+            Get.back();
+          }
+        });
+  }
+
+  void arrived(){
+    Get.defaultDialog(
+        title: 'Penjual sudah sampai dilokasi anda',
+        middleText: 'Silahkan melakukan transaksi dengan penjual',
+        textConfirm: 'Ok',
+        onConfirm: () {
+          if (Get.isDialogOpen == true) {
+            Get.back();
+          }
+        });
+  }
+
+  void finished(dynamic message, RepositoryRemote repository, UserModel? user){
+    var state = message['state'];
+    List<Review> _review = List.empty(growable: true);
+    Get.defaultDialog(
+        title: 'Terimakasi sudah melakukan transaksi',
+        titleStyle: TextStyle(fontSize: 18),
+        titlePadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        content: Padding(
+          padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
+          child: Column(
+            children: [
+              Text('Berikan penilaian untuk pedagang'),
+              SizedBox(
+                height: 15,
+              ),
+              RatingBar.builder(
+                minRating: 1,
+                itemSize: 40,
+                itemBuilder: (context, _) => Icon(
+                  Icons.star,
+                  color: Colors.orangeAccent,
+                ),
+                onRatingUpdate: (rating) {
+                  print(rating);
+                  repository.futureListTrans().then((value) {
+                    var currentTransId =
+                    value.docs[0].data() as Map<String, dynamic>;
+                    var transId = currentTransId['transactionId'];
+
+                    var review = Review()
+                      ..vendorId = currentTransId['vendorId']
+                      ..buyerId = currentTransId['buyerId']
+                      ..buyerName = currentTransId['buyerName']
+                      ..buyerImage = user?.photoUrl
+                      ..rating = rating;
+
+                    repository.updateTrans(transId, state, rating);
+                    _review.add(review);
+                  });
+                },
+              )
+            ],
+          ),
+        ),
+        textConfirm: 'Ok',
+        onConfirm: () {
+          if (Get.isDialogOpen == true) {
+            repository.addReview(_review.last);
+            _review.clear();
+            Get.back();
+          }
+        });
   }
 }

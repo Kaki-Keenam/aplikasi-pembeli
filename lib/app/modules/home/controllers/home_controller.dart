@@ -1,10 +1,10 @@
-
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:kakikeenam/app/data/models/banner_model.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/user_model.dart';
@@ -15,18 +15,20 @@ import 'package:kakikeenam/app/data/services/location_service.dart';
 import 'package:kakikeenam/app/data/services/messaging/fcm.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
-
 class HomeController extends GetxController {
   final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
   final HelperController _helper = Get.find<HelperController>();
   final LocationService _locationService = Get.find<LocationService>();
   GeolocatorPlatform locator = GeolocatorPlatform.instance;
   Rxn<List<ProductModel>> searchList = Rxn<List<ProductModel>>();
+
   List<ProductModel>? get searchData => searchList.value;
   var _position = Rxn<Position>();
+
   Position? get mapPosition => this._position.value;
 
   var currentIndex = 0.obs;
+
   List<T> map<T>(List list, Function handler) {
     List<T> result = [];
     for (var i = 0; i < list.length; i++) {
@@ -44,43 +46,58 @@ class HomeController extends GetxController {
     _position.bindStream(locator.getPositionStream(timeInterval: 5));
     _user.bindStream(_repositoryRemote.userModel);
     setFcm();
+    realLocationCheck();
     super.onInit();
   }
 
   @override
-  void onReady(){
+  void onReady() {
+    connectivityChecker();
+    getLocationPermission();
+    super.onReady();
+  }
+
+  void realLocationCheck() {
+    var box = GetStorage();
+    var isStatus = box.read(Constants.LOCATION);
+    if (isStatus != null) {
+      if (isStatus) {
+        _locationService.toggleListening();
+      }
+    }
+  }
+
+  void connectivityChecker() {
     _helper.connectivitySubscription.onData((data) {
-      if(data == ConnectivityResult.none){
+      if (data == ConnectivityResult.none) {
         Get.defaultDialog(
             title: 'Tidak ada koneksi internet',
             middleText: 'Aktifkan koneksi anda !',
             textConfirm: 'Ok',
-            onConfirm: Get.back
+            onConfirm: Get.back,
         );
       }
     });
-    getLocationPermission();
-    super.onReady();
   }
 
   Future<void> getLocationPermission() async {
     await _locationService.getLocationPermission();
   }
 
-  void setFcm() async{
+  void setFcm() async {
     var user = await _repositoryRemote.user;
     Fcm().initFirebaseMessaging(userId: user.uid, user: user);
   }
 
-  Stream<GeoPoint> getBuyerLoc(){
+  Stream<GeoPoint> getBuyerLoc() {
     return _repositoryRemote.buyerLoc().map((event) {
       var location = event.get('lastLocation');
       return location;
     });
   }
 
-  Stream<List<VendorModel>> getVendorId(GeoPoint? location){
-    try{
+  Stream<List<VendorModel>> getVendorId(GeoPoint? location) {
+    try {
       double lowerLat =
           location!.latitude - (Constants.LAT * Constants.DISTANCE_MILE);
       double lowerLong =
@@ -93,7 +110,9 @@ class HomeController extends GetxController {
 
       GeoPoint lesserGeoPoint = GeoPoint(lowerLat, lowerLong);
       GeoPoint greaterGeoPoint = GeoPoint(greaterLat, greaterLong);
-      return _repositoryRemote.vendorId(lesserGeoPoint, greaterGeoPoint).map((event) {
+      return _repositoryRemote
+          .vendorId(lesserGeoPoint, greaterGeoPoint)
+          .map((event) {
         List<VendorModel> listData = List.empty(growable: true);
         event.docs.forEach((element) {
           var data = element.data() as dynamic;
@@ -103,7 +122,7 @@ class HomeController extends GetxController {
         });
         return listData;
       });
-    }catch(e){
+    } catch (e) {
       print('vendorId: ${e.toString()}');
       rethrow;
     }
@@ -127,7 +146,7 @@ class HomeController extends GetxController {
     return _repositoryRemote.getVendor(vendorId!);
   }
 
-  Future<BannerModel> getBanner(){
+  Future<BannerModel> getBanner() {
     return _repositoryRemote.getBanner().then((banner) {
       List<Result> listData = List.empty(growable: true);
       banner.docs.forEach((data) {
@@ -136,5 +155,4 @@ class HomeController extends GetxController {
       return BannerModel(result: listData);
     });
   }
-
 }

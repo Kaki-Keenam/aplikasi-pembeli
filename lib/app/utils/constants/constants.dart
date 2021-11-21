@@ -26,22 +26,24 @@ abstract class Constants {
   static const double RIPPLE_RADIUS = 0.35;
   static const double CIRCLE_RADIUS = 400;
 
-  // firestore collection constants
-  // child collection of firestore database
+  //  collection constants
+  // child collection of  database
   static const String FAVORITE = "favorite";
   static const String FAVORITES = "favorites";
 
-  // Main collection of buyer firestore database
+  // Main collection of buyer database
   static const String BUYER = "buyer";
 
-  // Main collection of vendor firesore database
+  // Main collection of vendor  database
   static const String VENDOR = "vendors";
+  static const String REVIEWS = "reviews";
   static const String PRODUCTS = "products";
   static const String TRANSACTION = "transaction";
   static const String BANNER = "banner";
 
   //save shared preference
   static const String SKIP_INTRO = "skipIntro";
+  static const String LOCATION = "location";
 
   //Query Product
   static const String VENDOR_ID_QUERY = "vendorId";

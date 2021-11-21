@@ -144,7 +144,7 @@ class DbRemote{
       var setTrans = _db.collection(Constants.TRANSACTION);
       String transId = await setTrans.doc().id;
 
-      setTrans.doc(transId).set({
+      await setTrans.doc(transId).set({
         "buyerId": _auth.currentUser!.uid,
         "buyerLoc": trans.buyerLoc,
         "buyerName": trans.buyerName,
@@ -157,7 +157,6 @@ class DbRemote{
           }
         ],
         "transactionId": transId,
-        "storeImage": trans.storeImage,
         "storeName": trans.storeName,
         "orderDate": trans.orderDate,
         "rating": 0.0,
@@ -190,7 +189,7 @@ class DbRemote{
   }
 
   Future<void> addReviews(Review review) async {
-    return _db.collection('reviews').doc().set({
+    return _db.collection(Constants.REVIEWS).doc().set({
       "vendorId": review.vendorId,
       "buyerId": review.buyerId,
       "buyerName": review.buyerName,
@@ -201,7 +200,7 @@ class DbRemote{
   }
 
   Future<QuerySnapshot> getReviews(String vendorId) async {
-    return _db.collection('reviews').where(Constants.VENDOR_ID_QUERY, isEqualTo: vendorId).get();
+    return _db.collection(Constants.REVIEWS).where(Constants.VENDOR_ID_QUERY, isEqualTo: vendorId).get();
   }
 
 }

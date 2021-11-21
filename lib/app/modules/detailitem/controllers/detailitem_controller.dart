@@ -162,7 +162,6 @@ class DetailItemController extends GetxController {
         buyerLoc: user.lastLocation,
         buyerName: user.name,
         product: listData,
-        storeImage: vendorModel.storeImage,
         storeName: vendorModel.storeName,
         orderDate: formattedDate,
         rating: vendorModel.rating,
@@ -172,16 +171,6 @@ class DetailItemController extends GetxController {
       _repositoryRemote.setTrans(trans, product);
     } catch (e) {
       print('set trans: ${e.toString()}');
-    }
-  }
-  void stateCancelConfirm(String? transId) {
-    try {
-      var trans = _dbStore.collection(Constants.TRANSACTION);
-      trans.doc(transId).update({
-        "state": "CANCEL",
-      });
-    } catch (e) {
-      print(e.toString());
     }
   }
 }

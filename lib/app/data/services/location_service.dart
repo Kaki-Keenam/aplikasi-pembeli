@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
-class LocationService extends GetxController {
+class LocationService {
   final GeolocatorPlatform _locator = GeolocatorPlatform.instance;
   final box = GetStorage();
   StreamSubscription<Position>? _positionStreamSubscription;
@@ -17,20 +17,6 @@ class LocationService extends GetxController {
 
   Rxn<Position>? streamPosition;
   var statusStream = false.obs;
-
-  @override
-  void onReady(){
-    var isStatus = box.read('location');
-    if(isStatus != null){
-      if(isStatus){
-        toggleListening();
-      }
-    }
-    Future.delayed(Duration(seconds: 4), (){
-      getLocationPermission();
-    });
-    super.onReady();
-  }
 
   Future<void> getLocationPermission() async {
     final hasPermission = await _handlePermission();
@@ -71,8 +57,7 @@ class LocationService extends GetxController {
 
   Future<void> toggleListening() async {
     if (_positionStreamSubscription == null) {
-      final positionStream =
-          await _locator.getPositionStream(timeInterval: 15);
+      final positionStream = _locator.getPositionStream(distanceFilter: 10, timeInterval: 10);
       _positionStreamSubscription = positionStream.handleError((error) {
         _positionStreamSubscription?.cancel();
         _positionStreamSubscription = null;
@@ -112,11 +97,5 @@ class LocationService extends GetxController {
     } catch (e) {
       print("location service: ${e.toString()}");
     }
-  }
-
-  @override
-  void onClose() {
-    _positionStreamSubscription?.cancel();
-    super.onClose();
   }
 }
