@@ -29,4 +29,8 @@ class TransHistoryController extends GetxController {
       rethrow;
     }
   }
+
+  Future<void> delTrans(String id) async{
+    return await _repositoryRemote.delTrans(id);
+  }
 }

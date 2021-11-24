@@ -147,7 +147,13 @@ class DetailItemView extends GetView<DetailItemController> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: InkWell(
-                              onTap: () => Get.toNamed(Routes.VENDOR_DETAIL, arguments: Markers(id: food[1].uid, image: food[1].storeImage, name: food[1].storeName,)),
+                              onTap: () => Get.toNamed(Routes.VENDOR_DETAIL,
+                                  arguments: Markers(
+                                    id: food[1].uid,
+                                    image: food[1].storeImage,
+                                    name: food[1].storeName,
+                                    rating: food[1].rating
+                                  )),
                               child: Container(
                                 width: Get.width,
                                 height: Get.height * 0.18,
@@ -160,35 +166,34 @@ class DetailItemView extends GetView<DetailItemController> {
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: ClipRRect(
-                                          borderRadius: BorderRadius.only(
-                                              bottomLeft: Radius.circular(10),
-                                              topLeft: Radius.circular(10)),
-                                          child: food[1].storeImage != null
-                                              ? CachedNetworkImage(
-                                                  imageUrl:
-                                                      "${food[1].storeImage}",
-                                                  fit: BoxFit.fill,
-                                                  placeholder: (context, url) =>
-                                                      Transform.scale(
-                                                    scale: 0.5,
-                                                    child:
-                                                        CircularProgressIndicator(),
-                                                  ),
-                                                )
-                                              : Container(
-                                                  height: Get.height * 0.18,
-                                                  width: Get.width * 0.35,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.only(
-                                                              topLeft: Radius
-                                                                  .circular(10),
-                                                              bottomLeft:
-                                                                  Radius.circular(
-                                                                      10),
-                                                          ),
+                                        borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(10),
+                                            topLeft: Radius.circular(10)),
+                                        child: food[1].storeImage != null
+                                            ? CachedNetworkImage(
+                                                imageUrl:
+                                                    "${food[1].storeImage}",
+                                                fit: BoxFit.fill,
+                                                placeholder: (context, url) =>
+                                                    Transform.scale(
+                                                  scale: 0.5,
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                ),
+                                              )
+                                            : Container(
+                                                height: Get.height * 0.18,
+                                                width: Get.width * 0.35,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(10),
+                                                    bottomLeft:
+                                                        Radius.circular(10),
                                                   ),
                                                 ),
+                                              ),
                                       ),
                                     ),
                                     SizedBox(
@@ -204,7 +209,8 @@ class DetailItemView extends GetView<DetailItemController> {
                                         Container(
                                           width: Get.width * 0.45,
                                           child: Text(
-                                            food[1].storeName ?? Strings.loading,
+                                            food[1].storeName ??
+                                                Strings.loading,
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                                 fontSize: 20,
@@ -292,24 +298,26 @@ class DetailItemView extends GetView<DetailItemController> {
                       child: StreamBuilder<List<ProductModel>>(
                           stream: controller.getProduct(food[1].uid),
                           builder: (context, product) {
-                            if(product.hasData){
+                            if (product.hasData) {
                               return GridView.builder(
                                   physics: NeverScrollableScrollPhysics(),
                                   gridDelegate:
-                                  SliverGridDelegateWithMaxCrossAxisExtent(
-                                      maxCrossAxisExtent: 200,
-                                      childAspectRatio: 3 / 4,
-                                      crossAxisSpacing: 30,
-                                      mainAxisSpacing: 30),
+                                      SliverGridDelegateWithMaxCrossAxisExtent(
+                                          maxCrossAxisExtent: 200,
+                                          childAspectRatio: 3 / 4,
+                                          crossAxisSpacing: 30,
+                                          mainAxisSpacing: 30),
                                   itemCount: product.data?.length,
                                   itemBuilder: (BuildContext ctx, index) {
                                     return FoodNearbyView(
                                         product: product.data?[index],
                                         func: () {
                                           Get.offAndToNamed(Routes.DETAILITEM,
-                                              arguments:
-                                              [product.data?[index], food[1], food[2],]
-                                          );
+                                              arguments: [
+                                                product.data?[index],
+                                                food[1],
+                                                food[2],
+                                              ]);
                                         });
                                   });
                             }

@@ -119,4 +119,8 @@ class RepositoryRemote{
     return _dbRemote.getReviews(vendorId);
   }
 
+  Future<void> delTrans(String id) async{
+    return _dbRemote.delTrans(id);
+  }
+
 }

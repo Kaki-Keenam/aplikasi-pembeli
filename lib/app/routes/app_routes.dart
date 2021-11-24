@@ -19,6 +19,7 @@ abstract class Routes {
   static const NEAR_VENDOR = _Paths.NEAR_VENDOR;
   static const VENDOR_DETAIL = _Paths.VENDOR_DETAIL;
   static const SPLASH = _Paths.SPLASH;
+  static const TRANSACTION_DETAIL = _Paths.TRANSACTION_DETAIL;
 }
 
 abstract class _Paths {
@@ -37,4 +38,5 @@ abstract class _Paths {
   static const NEAR_VENDOR = '/near-vendor';
   static const VENDOR_DETAIL = '/vendor-detail';
   static const SPLASH = '/splash';
+  static const TRANSACTION_DETAIL = '/transaction-detail';
 }

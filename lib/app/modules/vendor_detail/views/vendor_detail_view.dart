@@ -56,7 +56,7 @@ class VendorDetailView extends GetView<VendorDetailController> {
                             borderRadius: BorderRadius.circular(100),
                             child: vendor.image != null ? CachedNetworkImage(
                               imageUrl: "${vendor.image}",
-                              fit: BoxFit.fill,
+                              fit: BoxFit.cover,
                               placeholder: (context, url) => Transform.scale(
                                 scale: 0.5,
                                 child: CircularProgressIndicator(),

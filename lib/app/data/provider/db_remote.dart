@@ -194,7 +194,7 @@ class DbRemote{
       "buyerId": review.buyerId,
       "buyerName": review.buyerName,
       "rating": review.rating,
-      "buyerImage": review.buyerImage,
+      "buyerImage": review.buyerImage ?? _auth.currentUser?.photoURL,
       "time": DateTime.now().toIso8601String(),
     });
   }
@@ -203,4 +203,7 @@ class DbRemote{
     return _db.collection(Constants.REVIEWS).where(Constants.VENDOR_ID_QUERY, isEqualTo: vendorId).get();
   }
 
+  Future<void> delTrans(String id) async{
+    return _db.collection(Constants.TRANSACTION).doc(id).delete();
+  }
 }

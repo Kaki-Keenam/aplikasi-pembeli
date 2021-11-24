@@ -23,23 +23,39 @@ enum StateDialog {
 class Fcm {
   final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
 
-
   Future<void> initFirebaseMessaging({
     String? userId, UserModel? user,
   }) async {
     try {
       print('INIT FIREBASE MESSAGING');
-
+      List<RemoteMessage> lastState = List.empty(growable: true);
       FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
         print('ON MESSAGE');
         if (!kReleaseMode) print('onMessage: ${message.data}');
-
-        handleMessage(message.data, user);
+      }
+      ).onData((data) {
+        lastState.add(data);
+        if(lastState.length > 1){
+          print(' more ${lastState.length}');
+          handleMessage(data.data);
+        }else{
+          handleMessage(data.data);
+          print(' less ${lastState.length}');
+        }
       });
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
         print('ON MESSAGE OPENED APP');
         if (!kReleaseMode) print('onLaunch: $message');
-        handleMessage(message.data, user);
+      }
+      ).onData((data) {
+        lastState.add(data);
+        if(lastState.length > 1){
+          print(' more ${lastState.length}');
+          handleMessage(data.data);
+        }else{
+          handleMessage(data.data);
+          print(' less ${lastState.length}');
+        }
       });
 
       await FirebaseMessaging.instance

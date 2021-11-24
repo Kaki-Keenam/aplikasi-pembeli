@@ -15,11 +15,12 @@ import 'package:kakikeenam/app/modules/search/bindings/search_binding.dart';
 import 'package:kakikeenam/app/modules/search/views/search_view.dart';
 import 'package:kakikeenam/app/modules/splash/bindings/splash_binding.dart';
 import 'package:kakikeenam/app/modules/splash/views/splash_view.dart';
+import 'package:kakikeenam/app/modules/transaction_detail/bindings/transaction_detail_binding.dart';
+import 'package:kakikeenam/app/modules/transaction_detail/views/transaction_detail_view.dart';
 import 'package:kakikeenam/app/modules/vendor_detail/bindings/vendor_detail_binding.dart';
 import 'package:kakikeenam/app/modules/vendor_detail/views/vendor_detail_view.dart';
 import 'package:kakikeenam/app/modules/welcome/bindings/welcome_binding.dart';
 import 'package:kakikeenam/app/modules/welcome/welcome_page.dart';
-
 
 part 'app_routes.dart';
 
@@ -40,9 +41,11 @@ class AppPages {
       binding: DetailitemBinding(),
     ),
     GetPage(
-        name: _Paths.PAGE_SWITCHER,
-        page: () => PageSwitcher(),),
-    GetPage(name: _Paths.WELCOME_PAGE,
+      name: _Paths.PAGE_SWITCHER,
+      page: () => PageSwitcher(),
+    ),
+    GetPage(
+        name: _Paths.WELCOME_PAGE,
         page: () => WelcomePage(),
         binding: WelcomeBinding()),
     GetPage(
@@ -74,6 +77,11 @@ class AppPages {
       name: _Paths.SPLASH,
       page: () => SplashView(),
       binding: SplashBinding(),
+    ),
+    GetPage(
+      name: _Paths.TRANSACTION_DETAIL,
+      page: () => TransactionDetailView(),
+      binding: TransactionDetailBinding(),
     ),
   ];
 }
