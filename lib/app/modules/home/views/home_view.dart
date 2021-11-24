@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/banner_model.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
@@ -30,6 +30,7 @@ class HomeView extends GetView<HomeController> {
         showProfilePhoto: true,
         profilePhotoOnPressed: () {
           Get.toNamed(Routes.PROFILE);
+
         },
       ),
       body: ListView(

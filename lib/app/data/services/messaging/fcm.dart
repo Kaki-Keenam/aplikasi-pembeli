@@ -28,34 +28,15 @@ class Fcm {
   }) async {
     try {
       print('INIT FIREBASE MESSAGING');
-      List<RemoteMessage> lastState = List.empty(growable: true);
       FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
         print('ON MESSAGE');
         if (!kReleaseMode) print('onMessage: ${message.data}');
-      }
-      ).onData((data) {
-        lastState.add(data);
-        if(lastState.length > 1){
-          print(' more ${lastState.length}');
-          handleMessage(data.data);
-        }else{
-          handleMessage(data.data);
-          print(' less ${lastState.length}');
-        }
+        handleMessage(message.data);
       });
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
         print('ON MESSAGE OPENED APP');
         if (!kReleaseMode) print('onLaunch: $message');
-      }
-      ).onData((data) {
-        lastState.add(data);
-        if(lastState.length > 1){
-          print(' more ${lastState.length}');
-          handleMessage(data.data);
-        }else{
-          handleMessage(data.data);
-          print(' less ${lastState.length}');
-        }
+        handleMessage(message.data);
       });
 
       await FirebaseMessaging.instance
@@ -90,13 +71,13 @@ class Fcm {
       var msg =  message['state'];
       if(msg == 'REJECTED'){
         return StateDialog.REJECTED;
-      }else if(msg == 'PROPOSED'){
+      }if(msg == 'PROPOSED'){
         return StateDialog.PROPOSED;
-      }else if(msg == 'OTW'){
+      }if(msg == 'OTW'){
         return StateDialog.OTW;
-      }else if(msg == "ARRIVED"){
+      }if(msg == "ARRIVED"){
         return StateDialog.ARRIVED;
-      }else if(msg == 'TRANSACTION_FINISHED'){
+      }if(msg == 'TRANSACTION_FINISHED'){
         return StateDialog.FINISHED;
       }else{
         return StateDialog.NONE;
@@ -105,16 +86,15 @@ class Fcm {
 
     switch (_state()){
       case StateDialog.REJECTED:
-        Dialogs.rejected();
         break;
       case StateDialog.PROPOSED:
-        Dialogs.proposed(_repositoryRemote);
+        Dialogs.orderConfirm(_repositoryRemote);
         break;
       case StateDialog.OTW:
-        Dialogs.otw();
+        Dialogs.otw(_repositoryRemote);
         break;
       case StateDialog.ARRIVED:
-        Dialogs.arrived();
+        Dialogs.arrived(_repositoryRemote);
         break;
       case StateDialog.FINISHED:
         Dialogs.finished(message, _repositoryRemote, user);

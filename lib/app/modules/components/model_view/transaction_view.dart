@@ -122,13 +122,13 @@ class TransactionView extends GetView<TransHistoryController> {
                                   : trans?.state == 'OTW'
                                       ? Colors.orangeAccent
                                       : trans?.state == 'ARRIVED'
-                                          ? Colors.deepOrangeAccent
+                                          ? Colors.blueAccent
                                           : trans?.state == 'TRANSACTION_FINISHED'
                                               ? Colors.green
                                               : Colors.grey,
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(4.0),
+                          padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 6),
                           child: Center(
                             child: Text(
                                 trans?.state == 'REJECTED'
@@ -142,7 +142,7 @@ class TransactionView extends GetView<TransHistoryController> {
                                     : trans?.state == 'TRANSACTION_FINISHED'
                                     ? 'SELESAI'
                                     : 'KENDALA',
-                              style: TextStyle(fontWeight: FontWeight.w600),
+                              style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
                             ),
                           ),
                         ),

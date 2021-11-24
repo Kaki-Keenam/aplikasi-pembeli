@@ -11,7 +11,7 @@ class WelcomeController extends GetxController{
   final formKeyLogin = GlobalKey<FormState>(debugLabel: 'login');
   final formKeyRegister = GlobalKey<FormState>(debugLabel: 'register');
   final formKeyReset = GlobalKey<FormState>(debugLabel: 'reset');
-  final LocationService locationService = Get.find<LocationService>();
+  final LocationService _locationService = Get.find<LocationService>();
   TextEditingController emailC = TextEditingController();
   TextEditingController resetEmailC = TextEditingController();
   TextEditingController passC = TextEditingController();
@@ -24,9 +24,15 @@ class WelcomeController extends GetxController{
 
   @override
   void onInit() {
+    getLocationPermission();
     init();
     super.onInit();
   }
+
+  Future<void> getLocationPermission() async {
+    await _locationService.getLocationPermission();
+  }
+
 
   Future<void> register() async {
 

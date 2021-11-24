@@ -1,7 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kakikeenam/app/data/models/review_model.dart';
+import 'package:kakikeenam/app/data/models/transaction_model.dart';
 import 'package:kakikeenam/app/data/models/user_model.dart';
 import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 import 'package:lottie/lottie.dart';
@@ -75,12 +78,8 @@ class NotifyDialogs {
           child: Container(
             height: 150,
             width: 150,
-            child: Lottie.asset(
-                'assets/animation/loading.zip',
-                width: 140,
-                height: 140,
-                fit: BoxFit.fill
-            ),
+            child: Lottie.asset('assets/animation/loading.zip',
+                width: 140, height: 140, fit: BoxFit.fill),
           ),
         ),
       ),
@@ -117,26 +116,6 @@ class NotifyDialogs {
         textConfirm: "Ok");
   }
 
-  void proposedDialog({VoidCallback? func}) {
-    Get.defaultDialog(
-        title: "Menunggu Konfirmasi",
-        barrierDismissible: false,
-        content: CircularProgressIndicator(),
-        onCancel: func,
-        onConfirm: () => Get.back(),
-        textConfirm: "Hide");
-  }
-
-  void arrivedDialog({VoidCallback? func}) {
-    Get.defaultDialog(
-        title: "Pedagang sudah samapai",
-        barrierDismissible: false,
-        content: Text(
-            "Silahkan melakukan transaksi ! \nJika sudah klik transaksi berhasil"),
-        onConfirm: func,
-        textConfirm: "Berhasil");
-  }
-
   void logoutDialog({VoidCallback? func}) {
     Get.defaultDialog(
       title: "Logout Akun",
@@ -147,6 +126,7 @@ class NotifyDialogs {
       textCancel: "Tidak",
     );
   }
+
   void exitDialog({VoidCallback? func}) {
     Get.defaultDialog(
       title: "Keluar Aplikasi",
@@ -158,113 +138,319 @@ class NotifyDialogs {
     );
   }
 
-  void proposed(RepositoryRemote repository){
-    Get.defaultDialog(
-        title: 'Pesanan dikirim',
-        middleText: 'Menunggu konfirmasi pesanan',
-        textConfirm: 'Ok',
-        onConfirm: () {
-          if (Get.isDialogOpen == true) {
-            Get.back();
-          }
-        },
-        textCancel: 'Batalkan',
-        onCancel: () {
-          repository.futureListTrans().then((value) {
-            var currentTransId = value.docs[0].get('transactionId');
-            repository.updateTrans(currentTransId, "REJECTED");
-          });
-        });
+  void otw(RepositoryRemote repository) {
+      repository.futureListTrans().then((value) {
+        TransactionModel trans = TransactionModel.fromDocument(
+            value.docs[0].data() as Map<String, dynamic>);
+        Get.snackbar(
+          '${trans.storeName} dalam perjalanan',
+          'Silahkan menunggu. pedagang sedang menuju lokasi anda !',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+      });
   }
 
-  void rejected(){
-    Get.defaultDialog(
-        title: 'Pesanan anda dibatalkan',
-        middleText:
-        'Anda tidak bisa melanjukan transaksi saat ini. Silahkan coba lagi nanti!',
-        textConfirm: 'Ok',
-        onConfirm: () {
-          if (Get.isDialogOpen == true) {
-            Get.back();
-          }
-        });
+  void arrived(RepositoryRemote repository) {
+    repository.futureListTrans().then((value) {
+      TransactionModel trans = TransactionModel.fromDocument(
+          value.docs[0].data() as Map<String, dynamic>);
+      Get.snackbar(
+        '${trans.storeName} Sudah Sampai',
+        'Pedagang sudah sampai, segera selesaikan transaksi Anda !',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+    });
   }
 
-  void otw(){
-    Get.defaultDialog(
-        title: 'Pesanan diterima penjual',
-        middleText: 'Silahkan menunggu penjual sampai di lokasi anda',
-        textConfirm: 'Ok',
-        onConfirm: () {
-          if (Get.isDialogOpen == true) {
-            Get.back();
-          }
-        });
-  }
-
-  void arrived(){
-    Get.defaultDialog(
-        title: 'Penjual sudah sampai dilokasi anda',
-        middleText: 'Silahkan melakukan transaksi dengan penjual',
-        textConfirm: 'Ok',
-        onConfirm: () {
-          if (Get.isDialogOpen == true) {
-            Get.back();
-          }
-        });
-  }
-
-  void finished(dynamic message, RepositoryRemote repository, UserModel? user){
+  void finished(dynamic message, RepositoryRemote repository, UserModel? user) {
     var state = message['state'];
     List<Review> _review = List.empty(growable: true);
-    Get.defaultDialog(
-        title: 'Terimakasi sudah melakukan transaksi',
-        titleStyle: TextStyle(fontSize: 18),
-        titlePadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        content: Padding(
-          padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
-          child: Column(
-            children: [
-              Text('Berikan penilaian untuk pedagang'),
-              SizedBox(
-                height: 15,
+    Get.bottomSheet(
+      Container(
+        height: Get.height * 0.3,
+        child: Stack(
+          children: [
+            Container(
+              height: 50,
+              width: Get.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20)),
+                color: Colors.amber[600],
               ),
-              RatingBar.builder(
-                minRating: 1,
-                itemSize: 40,
-                itemBuilder: (context, _) => Icon(
-                  Icons.star,
-                  color: Colors.orangeAccent,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20.0, 10, 20, 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Text(
+                      'Berikan Penilaian Pedagang',
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  RatingBar.builder(
+                    minRating: 1,
+                    itemSize: 40,
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: Colors.orangeAccent,
+                    ),
+                    onRatingUpdate: (rating) {
+                      print(rating);
+                      repository.futureListTrans().then((value) {
+                        TransactionModel trans = TransactionModel.fromDocument(
+                            value.docs[0].data() as Map<String, dynamic>);
+                        var review = Review()
+                          ..vendorId = trans.vendorId
+                          ..buyerId = trans.buyerId
+                          ..buyerName = trans.buyerName
+                          ..buyerImage = user?.photoUrl
+                          ..rating = rating;
+                        repository.updateTrans(trans.transactionId!, state, rating);
+                        _review.add(review);
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                              repository.addReview(_review.last);
+                              _review.clear();
+                              Get.back();
+
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.green,
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Terimakasih',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      isDismissible: false,
+      elevation: 20.0,
+      enableDrag: false,
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(20.0),
+        ),
+      ),
+    );
+  }
+
+  void orderConfirm(RepositoryRemote repository) {
+    repository.futureListTrans().then((value) {
+      var trans = TransactionModel.fromDocument(
+          value.docs[0].data() as Map<String, dynamic>);
+      Get.bottomSheet(
+        Container(
+          height: Get.height * 0.4,
+          child: Stack(
+            children: [
+              Container(
+                height: 50,
+                width: Get.width,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20)),
+                  color: Colors.amber[600],
                 ),
-                onRatingUpdate: (rating) {
-                  print(rating);
-                  repository.futureListTrans().then((value) {
-                    var currentTransId =
-                    value.docs[0].data() as Map<String, dynamic>;
-                    var transId = currentTransId['transactionId'];
-
-                    var review = Review()
-                      ..vendorId = currentTransId['vendorId']
-                      ..buyerId = currentTransId['buyerId']
-                      ..buyerName = currentTransId['buyerName']
-                      ..buyerImage = user?.photoUrl
-                      ..rating = rating;
-
-                    repository.updateTrans(transId, state, rating);
-                    _review.add(review);
-                  });
-                },
-              )
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20.0, 10, 20, 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Text(
+                        'Menunggu Pedagang',
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      'Detail Pesanan',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Nama',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        Text(
+                          '${trans.product?[0].name}',
+                          style: TextStyle(fontSize: 16),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Harga',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        Text(
+                          '${NumberFormat.currency(
+                            name: "id",
+                            decimalDigits: 0,
+                            symbol: "Rp",
+                          ).format(trans.product?[0].price)}',
+                          style: TextStyle(fontSize: 16),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          height: Get.height * 0.1,
+                          width: Get.height * 0.1,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.grey,
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: trans.product?[0].image != null
+                                ? CachedNetworkImage(
+                                    imageUrl: "${trans.product?[0].image}",
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        Transform.scale(
+                                      scale: 0.5,
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  )
+                                : Icon(Icons.error),
+                          ),
+                        ),
+                        Text('X 1')
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              repository.futureListTrans().then((value) {
+                                var currentTransId =
+                                    value.docs[0].get('transactionId');
+                                repository.updateTrans(
+                                    currentTransId, "REJECTED");
+                              });
+                              Get.back();
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.red,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Batalkan',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              Get.back();
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.green,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Lanjutkan',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
             ],
           ),
         ),
-        textConfirm: 'Ok',
-        onConfirm: () {
-          if (Get.isDialogOpen == true) {
-            repository.addReview(_review.last);
-            _review.clear();
-            Get.back();
-          }
-        });
+        isDismissible: false,
+        elevation: 20.0,
+        enableDrag: false,
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
+          ),
+        ),
+      );
+    });
   }
 }

@@ -81,10 +81,77 @@ class TransactionDetailView extends GetView<TransactionDetailController> {
               ],
             ),
           ),
-          Text('Detail Produk', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'inter'),),
-          ListTile(leading: Text('Tanggal Pesan', style: TextStyle(fontSize: 16, fontFamily: 'sans-serif')), trailing: Text(DateFormat('EEE, d MMM yyyy').format(DateTime.parse(trans.orderDate ?? ""),), style: TextStyle(fontSize: 16, fontFamily: 'inter')), contentPadding: EdgeInsets.zero,),
-          ListTile(leading: Text('Produk', style: TextStyle(fontSize: 16, fontFamily: 'sans-serif')), trailing: Text('${trans.product?[0].name}', style: TextStyle(fontSize: 16, fontFamily: 'sans-serif')), contentPadding: EdgeInsets.zero,),
-          ListTile(leading: Text('Penjual', style: TextStyle(fontSize: 16, fontFamily: 'sans-serif')), trailing: Text('${trans.storeName}', style: TextStyle(fontSize: 16, fontFamily: 'sans-serif')), contentPadding: EdgeInsets.zero,),
+          Text('Detail Produk', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, fontFamily: 'inter'),),
+          SizedBox(height: 20,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+            Text('Tanggal Pesan', style: TextStyle(fontSize: 16, fontFamily: 'sans-serif')),
+              Text(DateFormat('EEE, d MMM yyyy').format(DateTime.parse(trans.orderDate ?? ""),), style: TextStyle(fontSize: 16, fontFamily: 'inter')),
+            ],
+          ),
+          SizedBox(height: 10,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Produk', style: TextStyle(fontSize: 16, fontFamily: 'sans-serif')),
+              Text('${trans.product?[0].name}', style: TextStyle(fontSize: 16, fontFamily: 'sans-serif')),
+            ],
+          ),
+          SizedBox(height: 10,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Penjual', style: TextStyle(fontSize: 16, fontFamily: 'sans-serif')),
+              Text('${trans.storeName}', style: TextStyle(fontSize: 16, fontFamily: 'sans-serif'))
+            ],
+          ),
+          SizedBox(height: 10,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Status: ',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: trans.state == 'REJECTED'
+                      ? Colors.red
+                      : trans.state == 'PROPOSED'
+                      ? Colors.yellow
+                      : trans.state == 'OTW'
+                      ? Colors.orangeAccent
+                      : trans.state == 'ARRIVED'
+                      ? Colors.blueAccent
+                      : trans.state == 'TRANSACTION_FINISHED'
+                      ? Colors.green
+                      : Colors.grey,
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 6),
+                  child: Center(
+                    child: Text(
+                      trans.state == 'REJECTED'
+                          ? 'DIBATALKAN'
+                          : trans.state == 'PROPOSED'
+                          ? 'DIAJUKAN'
+                          : trans.state == 'OTW'
+                          ? 'DIJALAN'
+                          : trans.state == 'ARRIVED'
+                          ? 'SAMPAI'
+                          : trans.state == 'TRANSACTION_FINISHED'
+                          ? 'SELESAI'
+                          : 'KENDALA',
+                      style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 20,),
           Container(
             width: Get.width * 0.89,
             height: Get.height * 0.3,
