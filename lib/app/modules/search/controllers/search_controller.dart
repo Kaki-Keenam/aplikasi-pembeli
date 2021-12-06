@@ -1,11 +1,13 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/modules/home/controllers/home_controller.dart';
 
 class SearchController extends GetxController {
+  final TextEditingController searchInputController = TextEditingController();
   final HomeController _controller = Get.find<HomeController>();
   Rxn<List<ProductModel>> fromHome = Rxn<List<ProductModel>>();
   List<ProductModel>? get searchData => fromHome.value;
@@ -19,6 +21,8 @@ class SearchController extends GetxController {
     fromHome.value = _controller.searchData;
     super.onInit();
   }
+
+  var popularRecipeKeyword = ['Cilok', 'Bakso', 'Rujak', 'Roti', 'Ice Cream', 'Bakmi'];
 
   void searchFood(String data){
     if(data.length == 0){

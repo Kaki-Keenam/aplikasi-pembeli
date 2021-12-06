@@ -231,7 +231,9 @@ class NotifyDialogs {
                               repository.addReview(_review.last);
                               _review.clear();
                               Get.back();
-
+                              if(Get.isBottomSheetOpen == true){
+                                Get.back();
+                              }
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(
@@ -391,6 +393,9 @@ class NotifyDialogs {
                                     currentTransId, "REJECTED");
                               });
                               Get.back();
+                              if(Get.isBottomSheetOpen == true){
+                                Get.back();
+                              }
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(
@@ -415,6 +420,9 @@ class NotifyDialogs {
                           child: InkWell(
                             onTap: () {
                               Get.back();
+                              if(Get.isBottomSheetOpen == true){
+                                Get.back();
+                              }
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(

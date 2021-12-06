@@ -13,6 +13,7 @@ import 'package:lottie/lottie.dart';
 
 import '../controllers/search_controller.dart';
 
+
 class SearchView extends GetView<SearchController> {
 
   @override
@@ -56,6 +57,7 @@ class SearchView extends GetView<SearchController> {
                           margin: EdgeInsets.only(right: 15),
                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppColor.thirdSoft),
                           child: TextField(
+                            controller: controller.searchInputController,
                             onChanged: (value) {
                               controller.searchFood(value);                            },
                             style: TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w400),
@@ -68,13 +70,19 @@ class SearchView extends GetView<SearchController> {
                               contentPadding: EdgeInsets.symmetric(horizontal: 17),
                               focusedBorder: InputBorder.none,
                               border: InputBorder.none,
-                              prefixIcon: Container(
-                                margin: EdgeInsets.only(left: 10, right: 12),
-                                child: SvgPicture.asset(
-                                  Strings.search,
-                                  width: 20,
-                                  height: 20,
-                                  color: Colors.black54,
+                              prefixIcon: InkWell(
+                                onTap: (){
+                                  controller.searchFood(controller.searchInputController.text);
+                                  print(controller.searchInputController.text);
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(left: 10, right: 12),
+                                  child: SvgPicture.asset(
+                                    Strings.search,
+                                    width: 20,
+                                    height: 20,
+                                    color: Colors.black54,
+                                  ),
                                 ),
                               ),
                             ),
@@ -106,6 +114,37 @@ class SearchView extends GetView<SearchController> {
                     ],
                   ),
                 ),
+                Container(
+                  height: 60,
+                  margin: EdgeInsets.only(top: 8),
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: controller.popularRecipeKeyword.length,
+                    separatorBuilder: (context, index) {
+                      return SizedBox(width: 8);
+                    },
+                    itemBuilder: (context, index) {
+                      return Container(
+                        alignment: Alignment.topCenter,
+                        child: TextButton(
+                          onPressed: () {
+                            controller.searchInputController.text = controller.popularRecipeKeyword[index];
+                          },
+                          child: Text(
+                            controller.popularRecipeKeyword[index],
+                            style: TextStyle(color: Colors.white.withOpacity(0.7), fontWeight: FontWeight.w400),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: Colors.white.withOpacity(0.15), width: 1),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                )
               ],
             ),
           ),
@@ -147,11 +186,9 @@ class SearchView extends GetView<SearchController> {
                                       product: controller.searchResult?[index],
                                       func: () => Get.toNamed(
                                         Routes.DETAILITEM,
-                                        arguments: [
-                                          controller.searchResult?[index],
-                                          vendor.data,
-                                          buyer.data
-                                        ]),
+                                        arguments:
+                                          controller.searchResult?[index]
+                                        ),
                                     );
                                   }
                               );
@@ -189,11 +226,8 @@ class SearchView extends GetView<SearchController> {
                                                   product: product.data?[index],
                                                   func: () => Get.toNamed(
                                                       Routes.DETAILITEM,
-                                                      arguments: [
-                                                        product.data?[index],
-                                                        vendor.data,
-                                                        buyer.data
-                                                      ]),
+                                                      arguments:
+                                                        product.data?[index]),
                                                 );
                                               });
                                         },

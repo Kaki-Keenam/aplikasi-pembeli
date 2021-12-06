@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/banner_model.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
@@ -187,11 +186,8 @@ class HomeView extends GetView<HomeController> {
                                                 product: product.data?[index],
                                                 func: () => Get.toNamed(
                                                     Routes.DETAILITEM,
-                                                    arguments: [
-                                                      product.data?[index],
-                                                      vendor.data,
-                                                      buyer.data
-                                                    ]),
+                                                    arguments:
+                                                      product.data?[index],),
                                               );
                                             });
                                       },

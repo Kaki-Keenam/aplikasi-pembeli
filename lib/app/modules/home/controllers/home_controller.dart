@@ -4,21 +4,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:kakikeenam/app/data/models/banner_model.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/user_model.dart';
 import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 import 'package:kakikeenam/app/data/services/helper_controller.dart';
-import 'package:kakikeenam/app/data/services/location_service.dart';
 import 'package:kakikeenam/app/data/services/messaging/fcm.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 class HomeController extends GetxController {
   final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
   final HelperController _helper = Get.find<HelperController>();
-  final LocationService _locationService = Get.find<LocationService>();
   GeolocatorPlatform locator = GeolocatorPlatform.instance;
   Rxn<List<ProductModel>> searchList = Rxn<List<ProductModel>>();
 
@@ -46,25 +43,13 @@ class HomeController extends GetxController {
     _position.bindStream(locator.getPositionStream(timeInterval: 5));
     _user.bindStream(_repositoryRemote.userModel);
     setFcm();
-    realLocationCheck();
     super.onInit();
   }
 
   @override
   void onReady() {
     connectivityChecker();
-    getLocationPermission();
     super.onReady();
-  }
-
-  void realLocationCheck() {
-    var box = GetStorage();
-    var isStatus = box.read(Constants.LOCATION);
-    if (isStatus != null) {
-      if (isStatus) {
-        _locationService.toggleListening();
-      }
-    }
   }
 
   void connectivityChecker() {
@@ -78,10 +63,6 @@ class HomeController extends GetxController {
         );
       }
     });
-  }
-
-  Future<void> getLocationPermission() async {
-    await _locationService.getLocationPermission();
   }
 
   void setFcm() async {
@@ -133,6 +114,7 @@ class HomeController extends GetxController {
     query?.forEach((element) {
       queryList.add(element.uid ?? "");
     });
+    print('search ${queryList}');
     return _repositoryRemote.nearProduct(queryList).map((QuerySnapshot query) {
       List<ProductModel> listData = List.empty(growable: true);
       query.docs.forEach((element) {

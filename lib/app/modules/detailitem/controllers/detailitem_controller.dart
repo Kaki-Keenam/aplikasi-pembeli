@@ -14,13 +14,7 @@ class DetailItemController extends GetxController {
   FirebaseFirestore _dbStore = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
   RxBool isFav = false.obs;
-  Rxn<GeoPoint> _vendorLocation = Rxn<GeoPoint>();
 
-  GeoPoint? get vendorLocation => this._vendorLocation.value;
-
-  Rxn<List<ProductModel>> _foodModel = Rxn<List<ProductModel>>();
-
-  List<ProductModel>? get foodOther => _foodModel.value;
   GeocodingPlatform geoCoding = GeocodingPlatform.instance;
 
   var _user = UserModel().obs;
@@ -36,7 +30,6 @@ class DetailItemController extends GetxController {
     _user.bindStream(_repositoryRemote.userModel);
     super.onInit();
   }
-
 
   Stream<List<ProductModel>> getProduct(String vendorId) {
     try {
@@ -60,9 +53,6 @@ class DetailItemController extends GetxController {
     isFavorite(id).then((value) => {if (value) isFav.value = true});
   }
 
-  /// other products
-  set setVendorLocation(GeoPoint _location) => this._vendorLocation.value = _location;
-
   Future<bool> isFavorite([String? id]) async {
     CollectionReference users = _dbStore.collection(Constants.BUYER);
     final docUser = await users
@@ -81,7 +71,7 @@ class DetailItemController extends GetxController {
     return false;
   }
 
-  void addFavorite({ProductModel? food}) async {
+  void addFavorite(ProductModel? food,) async {
     CollectionReference users = _dbStore.collection(Constants.BUYER);
     String update = DateTime.now().toIso8601String();
     try {
@@ -90,10 +80,10 @@ class DetailItemController extends GetxController {
           .collection(Constants.FAVORITE)
           .doc(_auth.currentUser!.email)
           .get();
-      final docFavorite =
+      final favorite =
           (docUser.data() as Map<String, dynamic>)[Constants.FAVORITES] as List;
 
-      docFavorite.add({
+      favorite.add({
         "productId": food?.productId,
         "name": food?.name,
         "image": food?.image,
@@ -108,7 +98,7 @@ class DetailItemController extends GetxController {
           .doc(_auth.currentUser!.uid)
           .collection(Constants.FAVORITE)
           .doc(_auth.currentUser!.email)
-          .update({Constants.FAVORITES: docFavorite});
+          .update({Constants.FAVORITES: favorite});
     } catch (e) {
       print(e.toString());
     }
@@ -137,12 +127,6 @@ class DetailItemController extends GetxController {
     update();
   }
 
-  Future<String> getStreet()async{
-    List<Placemark> street = await geoCoding.placemarkFromCoordinates(
-        _vendorLocation.value!.latitude, _vendorLocation.value!.longitude);
-    String streetValue = "${street.first.street} ${street.first.subLocality}";
-    return streetValue;
-  }
 
   void setTrans(ProductModel? product) async {
     try {
@@ -172,5 +156,15 @@ class DetailItemController extends GetxController {
     } catch (e) {
       print('set trans: ${e.toString()}');
     }
+  }
+
+  Future<int> reviews(String vendorId) async{
+    return _repositoryRemote.getReviews(vendorId).then((value) {
+      return value.docs.length;
+    });
+  }
+
+  Future<VendorModel> vendorDetail(String vendorId) {
+    return _repositoryRemote.getVendor(vendorId);
   }
 }

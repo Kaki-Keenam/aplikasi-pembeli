@@ -94,7 +94,7 @@ class FoodView extends StatelessWidget {
                             symbol: "Rp",
                           ).format(product?.price)}",
                           style: TextStyle(
-                            color: Colors.black26,
+                            color: Colors.black45,
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
                           ),
@@ -131,9 +131,9 @@ class FoodView extends StatelessWidget {
                           height: 25,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
-                            color: Colors.grey
+                            color: Colors.black26
                           ),
-                          child: Center(child: Text("Langganan", style: TextStyle(color: Colors.black45, fontWeight: FontWeight.w800),)),
+                          child: Center(child: Text("Langganan", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800),)),
                         )
                       ],
                     ),
