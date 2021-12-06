@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/markers_model.dart';
 import 'package:kakikeenam/app/modules/maps_location/controllers/maps_location_controller.dart';

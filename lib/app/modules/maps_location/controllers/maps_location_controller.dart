@@ -44,7 +44,7 @@ class MapsLocationController extends GetxController {
   var markerModel = RxList<Markers>();
   var itemVendor = RxList<Markers>();
 
-  var index = 0.obs;
+  var indexItem = 0.obs;
   RxBool ripple = true.obs;
 
   @override
@@ -74,6 +74,8 @@ class MapsLocationController extends GetxController {
   }
 
   Position? get user => this._home.mapPosition;
+
+  set index(int index) => this.indexItem.value;
 
   set setMarker(BitmapDescriptor markers) => this.vendorMarker = markers;
 
@@ -206,17 +208,18 @@ class MapsLocationController extends GetxController {
           user?.latitude ?? -8.582572687412386,
           user?.longitude ?? 116.1013248977757,
         ),
-        zoom: Constants.CAMERA_ZOOM_INIT,
+        zoom: Constants.CAMERA_ZOOM_OUT,
       ),
     ));
   }
 
   void itemMarkerAnimation(int index) {
     if (markerModel[index].latLng != null) {
+      print("index vendor ${markerModel[index].name}");
       var initPosition = CameraPosition(
         target: LatLng(markerModel[index].latLng!.latitude,
             markerModel[index].latLng!.longitude),
-        zoom: Constants.CAMERA_ZOOM_INIT,
+        zoom: Constants.CAMERA_ZOOM_IN,
       );
       mController.value?.animateCamera(
         CameraUpdate.newCameraPosition(initPosition),

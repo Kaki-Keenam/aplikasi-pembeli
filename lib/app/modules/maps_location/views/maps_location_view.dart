@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -118,10 +117,10 @@ class MapsLocationView extends GetView<MapsLocationController> {
                   ? ItemMarker(
                       listNear: controller.itemVendor,
                       onPageChanged: (index) {
-                        controller.index.value = index;
+                        controller.index = index;
                         controller.itemMarkerAnimation(index);
                       },
-                      index: controller.index.value,
+                      index: controller.indexItem.value,
                       distance: controller.distanceVendor(),
                     )
                   : controller.isDismissibleEmpty.value

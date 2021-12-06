@@ -181,7 +181,7 @@ class DbRemote{
   }
 
   Stream<QuerySnapshot> getVendorStream() {
-    return _db.collection(Constants.VENDOR).snapshots();
+    return _db.collection(Constants.VENDOR).where(Constants.STATUS_QUERY, isEqualTo: Constants.ONLINE) .snapshots();
   }
 
   Future<QuerySnapshot> getBanner() async {
