@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 String? validateName(String? value) {
   String patttern = r'(^[a-zA-Z ]*$)';
   RegExp regExp = new RegExp(patttern);
@@ -37,3 +39,5 @@ String? validateEmail(String? value) {
   else
     return null;
 }
+
+var textValid = GlobalKey<FormState>(debugLabel: 'address');

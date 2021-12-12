@@ -14,6 +14,8 @@ import 'package:kakikeenam/app/modules/components/model_view/food_nearby_view.da
 import 'package:kakikeenam/app/modules/components/widgets/custom_button.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/strings.dart';
+import 'package:kakikeenam/app/utils/utils.dart';
+import 'package:kakikeenam/app/utils/validator.dart';
 
 import '../controllers/detailitem_controller.dart';
 
@@ -88,34 +90,35 @@ class DetailItemView extends GetView<DetailItemController> {
                                     height: 10,
                                   ),
                                   FutureBuilder<VendorModel>(
-                                    future: controller.vendorDetail(prod.vendorId!),
-                                    builder: (context, vendor) {
-                                      return RatingBar.builder(
-                                        initialRating: vendor.data?.rating ?? 0.0,
-                                        minRating: 1,
-                                        direction: Axis.horizontal,
-                                        allowHalfRating: true,
-                                        itemCount: 5,
-                                        itemSize: 20,
-                                        itemBuilder: (context, _) => Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                        ),
-                                        onRatingUpdate: (rating) {
-                                          print(rating);
-                                        },
-                                      );
-                                    }
-                                  ),
+                                      future: controller
+                                          .vendorDetail(prod.vendorId!),
+                                      builder: (context, vendor) {
+                                        return RatingBar.builder(
+                                          initialRating:
+                                              vendor.data?.rating ?? 0.0,
+                                          minRating: 1,
+                                          direction: Axis.horizontal,
+                                          allowHalfRating: true,
+                                          itemCount: 5,
+                                          itemSize: 20,
+                                          itemBuilder: (context, _) => Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                          ),
+                                          onRatingUpdate: (rating) {
+                                            print(rating);
+                                          },
+                                        );
+                                      }),
                                   SizedBox(
                                     height: 10,
                                   ),
                                   FutureBuilder<int>(
-                                    future: controller.reviews(prod.vendorId!),
-                                    builder: (context, reviews) {
-                                      return Text("${reviews.data} Ulasan");
-                                    }
-                                  ),
+                                      future:
+                                          controller.reviews(prod.vendorId!),
+                                      builder: (context, reviews) {
+                                        return Text("${reviews.data} Ulasan");
+                                      }),
                                 ],
                               ),
                               Center(
@@ -129,20 +132,20 @@ class DetailItemView extends GetView<DetailItemController> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   FutureBuilder<VendorModel>(
-                                    future: controller.vendorDetail(prod.vendorId!),
-                                    builder: (context, vendor) {
-                                      if(vendor.hasData){
-                                        return Row(
-                                          children: [
-                                            Icon(Icons.location_on_sharp),
-                                            Text(
-                                                "${Geolocator.distanceBetween(controller.user.lastLocation!.latitude, controller.user.lastLocation!.longitude, vendor.data!.location!.latitude, vendor.data!.location!.longitude).toStringAsFixed(0)} meter"),
-                                          ],
-                                        );
-                                      }
-                                      return Container();
-                                    }
-                                  ),
+                                      future: controller
+                                          .vendorDetail(prod.vendorId!),
+                                      builder: (context, vendor) {
+                                        if (vendor.hasData) {
+                                          return Row(
+                                            children: [
+                                              Icon(Icons.location_on_sharp),
+                                              Text(
+                                                  "${Geolocator.distanceBetween(controller.user.lastLocation!.latitude, controller.user.lastLocation!.longitude, vendor.data!.location!.latitude, vendor.data!.location!.longitude).toStringAsFixed(0)} meter"),
+                                            ],
+                                          );
+                                        }
+                                        return Container();
+                                      }),
                                   SizedBox(
                                     height: 10,
                                   ),
@@ -160,132 +163,157 @@ class DetailItemView extends GetView<DetailItemController> {
                           SizedBox(
                             height: 10,
                           ),
-                           Card(
-                                elevation: 5,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: FutureBuilder<VendorModel>(
-                                  future: controller.vendorDetail(prod.vendorId!),
-                                  builder: (context, vendor) {
-                                    if(vendor.hasData){
-                                      return InkWell(
-                                        onTap: () => Get.toNamed(Routes.VENDOR_DETAIL,
-                                            arguments: Markers(
-                                                id: vendor.data?.uid,
-                                                image: vendor.data?.storeImage,
-                                                name: vendor.data?.storeName,
-                                                rating: vendor.data?.rating
-                                            )),
-                                        child: Container(
-                                          width: Get.width,
-                                          height: Get.height * 0.18,
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                height: Get.height * 0.18,
-                                                width: Get.width * 0.35,
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(10),
-                                                ),
-                                                child: ClipRRect(
-                                                  borderRadius: BorderRadius.only(
-                                                      bottomLeft: Radius.circular(10),
-                                                      topLeft: Radius.circular(10)),
-                                                  child: vendor.data?.storeImage != null
-                                                      ? CachedNetworkImage(
-                                                    imageUrl:
-                                                    "${vendor.data?.storeImage}",
-                                                    fit: BoxFit.fill,
-                                                    placeholder: (context, url) =>
-                                                        Transform.scale(
+                          Card(
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: FutureBuilder<VendorModel>(
+                                future: controller.vendorDetail(prod.vendorId!),
+                                builder: (context, vendor) {
+                                  if (vendor.hasData) {
+                                    return InkWell(
+                                      onTap: () => Get.toNamed(
+                                          Routes.VENDOR_DETAIL,
+                                          arguments: Markers(
+                                              id: vendor.data?.uid,
+                                              image: vendor.data?.storeImage,
+                                              name: vendor.data?.storeName,
+                                              rating: vendor.data?.rating)),
+                                      child: Container(
+                                        width: Get.width,
+                                        height: Get.height * 0.18,
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              height: Get.height * 0.18,
+                                              width: Get.width * 0.35,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.only(
+                                                    bottomLeft:
+                                                        Radius.circular(10),
+                                                    topLeft:
+                                                        Radius.circular(10)),
+                                                child: vendor
+                                                            .data?.storeImage !=
+                                                        null
+                                                    ? CachedNetworkImage(
+                                                        imageUrl:
+                                                            "${vendor.data?.storeImage}",
+                                                        fit: BoxFit.fill,
+                                                        placeholder:
+                                                            (context, url) =>
+                                                                Transform.scale(
                                                           scale: 0.5,
                                                           child:
-                                                          CircularProgressIndicator(),
+                                                              CircularProgressIndicator(),
                                                         ),
-                                                  )
-                                                      : Container(
-                                                    height: Get.height * 0.18,
-                                                    width: Get.width * 0.35,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                      BorderRadius.only(
-                                                        topLeft:
-                                                        Radius.circular(10),
-                                                        bottomLeft:
-                                                        Radius.circular(10),
+                                                      )
+                                                    : Container(
+                                                        height:
+                                                            Get.height * 0.18,
+                                                        width: Get.width * 0.35,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.only(
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                    10),
+                                                            bottomLeft:
+                                                                Radius.circular(
+                                                                    10),
+                                                          ),
+                                                        ),
                                                       ),
-                                                    ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Container(
+                                                  width: Get.width * 0.45,
+                                                  child: Text(
+                                                    vendor.data?.storeName ??
+                                                        Strings.loading,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                                children: [
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Container(
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Text(
+                                                  Strings.position,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18),
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Container(
                                                     width: Get.width * 0.45,
-                                                    child: Text(
-                                                      vendor.data?.storeName ??
-                                                          Strings.loading,
-                                                      overflow: TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                          fontSize: 20,
-                                                          fontWeight: FontWeight.bold),
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Text(
-                                                    Strings.position,
-                                                    style: TextStyle(
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 18),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Container(
-                                                      width: Get.width * 0.45,
-                                                      child: FutureBuilder<List<Placemark> >(
-                                                          future: controller.geoCoding.placemarkFromCoordinates(
-                                                              vendor.data!.location!.latitude, vendor.data!.location!.longitude),
-                                                          builder: (context, street) {
-                                                            return Text(
-                                                              "${street.data?.first.street} ${street.data?.first.subLocality}",
-                                                              overflow: TextOverflow.fade,
-                                                              maxLines: 1,
-                                                              softWrap: false,
-                                                            );
-                                                          })),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Text(Strings.status),
-                                                      Text(vendor.data?.status ??
-                                                          Strings.loading),
-                                                    ],
-                                                  )
-                                                ],
-                                              ),
-                                            ],
-                                          ),
+                                                    child: FutureBuilder<
+                                                            List<Placemark>>(
+                                                        future: controller
+                                                            .geoCoding
+                                                            .placemarkFromCoordinates(
+                                                                vendor
+                                                                    .data!
+                                                                    .location!
+                                                                    .latitude,
+                                                                vendor
+                                                                    .data!
+                                                                    .location!
+                                                                    .longitude),
+                                                        builder:
+                                                            (context, street) {
+                                                          return Text(
+                                                            "${street.data?.first.street} ${street.data?.first.subLocality}",
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .fade,
+                                                            maxLines: 1,
+                                                            softWrap: false,
+                                                          );
+                                                        })),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text(Strings.status),
+                                                    Text(vendor.data?.status ??
+                                                        Strings.loading),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          ],
                                         ),
-                                      );
-                                    }
-                                    return Container();
+                                      ),
+                                    );
                                   }
-                                ),
-                              ),
+                                  return Container();
+                                }),
+                          ),
                           SizedBox(
                             height: 10,
                           ),
@@ -299,7 +327,21 @@ class DetailItemView extends GetView<DetailItemController> {
                                   text: Strings.call_know,
                                   backgroundColor: Colors.amber[600],
                                   func: () {
-                                    controller.setTrans(prod);
+                                    Dialogs.orderConfirm(
+                                      product: prod,
+                                      okFunc: () {
+                                        if (textValid.currentState
+                                                ?.validate() ??
+                                            false) {
+                                          controller.setTrans(prod);
+                                          Get.back();
+                                        }
+                                      },
+                                      cancelFunc: () {
+                                        Get.back();
+                                      },
+                                      controller: controller.addressC,
+                                    );
                                   },
                                 ),
                               ),

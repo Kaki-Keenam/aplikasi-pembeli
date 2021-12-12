@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/review_model.dart';
 import 'package:kakikeenam/app/data/models/transaction_model.dart';
 import 'package:kakikeenam/app/data/models/user_model.dart';
 import 'package:kakikeenam/app/data/repository/repository_remote.dart';
+import 'package:kakikeenam/app/utils/validator.dart';
 import 'package:lottie/lottie.dart';
 
 class NotifyDialogs {
@@ -138,17 +140,30 @@ class NotifyDialogs {
     );
   }
 
+  void rejected(RepositoryRemote repository) {
+    repository.futureListTrans().then((value) {
+      TransactionModel trans = TransactionModel.fromDocument(
+          value.docs[0].data() as Map<String, dynamic>);
+      Get.snackbar(
+        'Permintaan anda ditolak oleh ${trans.storeName}',
+        'Silahkan coba lagi nanti atau pilih pedagang lainnya!',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    });
+  }
+
   void otw(RepositoryRemote repository) {
-      repository.futureListTrans().then((value) {
-        TransactionModel trans = TransactionModel.fromDocument(
-            value.docs[0].data() as Map<String, dynamic>);
-        Get.snackbar(
-          '${trans.storeName} dalam perjalanan',
-          'Silahkan menunggu. pedagang sedang menuju lokasi anda !',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
-      });
+    repository.futureListTrans().then((value) {
+      TransactionModel trans = TransactionModel.fromDocument(
+          value.docs[0].data() as Map<String, dynamic>);
+      Get.snackbar(
+        '${trans.storeName} dalam perjalanan',
+        'Silahkan menunggu. pedagang sedang menuju lokasi anda !',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+    });
   }
 
   void arrived(RepositoryRemote repository) {
@@ -214,7 +229,8 @@ class NotifyDialogs {
                           ..buyerName = trans.buyerName
                           ..buyerImage = user?.photoUrl
                           ..rating = rating;
-                        repository.updateTrans(trans.transactionId!, state, rating);
+                        repository.updateTrans(
+                            trans.transactionId!, state, rating);
                         _review.add(review);
                       });
                     },
@@ -228,12 +244,12 @@ class NotifyDialogs {
                       Expanded(
                         child: InkWell(
                           onTap: () {
-                              repository.addReview(_review.last);
-                              _review.clear();
+                            repository.addReview(_review.last);
+                            _review.clear();
+                            Get.back();
+                            if (Get.isBottomSheetOpen == true) {
                               Get.back();
-                              if(Get.isBottomSheetOpen == true){
-                                Get.back();
-                              }
+                            }
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(
@@ -272,43 +288,39 @@ class NotifyDialogs {
     );
   }
 
-  void orderConfirm(RepositoryRemote repository) {
-    repository.futureListTrans().then((value) {
-      var trans = TransactionModel.fromDocument(
-          value.docs[0].data() as Map<String, dynamic>);
-      Get.bottomSheet(
-        Container(
-          height: Get.height * 0.4,
-          child: Stack(
-            children: [
-              Container(
-                height: 50,
-                width: Get.width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20)),
-                  color: Colors.amber[600],
+  void orderConfirm(
+      {ProductModel? product, VoidCallback? okFunc, VoidCallback? cancelFunc, TextEditingController? controller}) {
+    Get.bottomSheet(
+      Container(
+        height: Get.height * 0.7,
+        child: Stack(
+          children: [
+            Container(
+              height: 50,
+              width: Get.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20)),
+                color: Colors.amber[600],
+              ),
+              child: Center(
+                child: Text(
+                  'Panggil Pedagang',
+                  style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20.0, 10, 20, 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, Get.height * 0.08, 20, 20),
+              child: Form(
+                key: textValid,
+                child: ListView(
+                  physics: AlwaysScrollableScrollPhysics(),
                   children: [
-                    Center(
-                      child: Text(
-                        'Menunggu Pedagang',
-                        style: TextStyle(fontSize: 20, color: Colors.white),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
                     Text(
                       'Detail Pesanan',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
                     ),
                     SizedBox(
                       height: 10,
@@ -321,7 +333,7 @@ class NotifyDialogs {
                           style: TextStyle(fontSize: 16),
                         ),
                         Text(
-                          '${trans.product?[0].name}',
+                          '${product?.name}',
                           style: TextStyle(fontSize: 16),
                         )
                       ],
@@ -341,7 +353,7 @@ class NotifyDialogs {
                             name: "id",
                             decimalDigits: 0,
                             symbol: "Rp",
-                          ).format(trans.product?[0].price)}',
+                          ).format(product?.price)}',
                           style: TextStyle(fontSize: 16),
                         )
                       ],
@@ -361,9 +373,9 @@ class NotifyDialogs {
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
-                            child: trans.product?[0].image != null
+                            child: product?.image != null
                                 ? CachedNetworkImage(
-                                    imageUrl: "${trans.product?[0].image}",
+                                    imageUrl: "${product?.image}",
                                     fit: BoxFit.cover,
                                     placeholder: (context, url) =>
                                         Transform.scale(
@@ -374,8 +386,48 @@ class NotifyDialogs {
                                 : Icon(Icons.error),
                           ),
                         ),
-                        Text('X 1')
+                        Text('X 1'),
                       ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      width: Get.width,
+                      height: Get.height * 0.14,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                      ),
+                      child: Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Harus diisi',
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                            TextFormField(
+                              controller: controller,
+                              maxLines: 2,
+                              keyboardType: TextInputType.multiline,
+                              scrollPhysics: AlwaysScrollableScrollPhysics(),
+                              decoration: InputDecoration(
+                                hintText: 'Alamat Lengkap / No Rumah / Gang',
+                                hintStyle: TextStyle(
+                                    fontSize: 14, color: Colors.grey[400]),
+                                border: InputBorder.none,
+                              ),
+                              validator: (text){
+                                if(text!.isEmpty){
+                                  return 'Tidak boleh kosong';
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                     SizedBox(
                       height: 10,
@@ -385,18 +437,7 @@ class NotifyDialogs {
                       children: [
                         Expanded(
                           child: InkWell(
-                            onTap: () {
-                              repository.futureListTrans().then((value) {
-                                var currentTransId =
-                                    value.docs[0].get('transactionId');
-                                repository.updateTrans(
-                                    currentTransId, "REJECTED");
-                              });
-                              Get.back();
-                              if(Get.isBottomSheetOpen == true){
-                                Get.back();
-                              }
-                            },
+                            onTap: cancelFunc,
                             child: Container(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 10),
@@ -418,12 +459,7 @@ class NotifyDialogs {
                         ),
                         Expanded(
                           child: InkWell(
-                            onTap: () {
-                              Get.back();
-                              if(Get.isBottomSheetOpen == true){
-                                Get.back();
-                              }
-                            },
+                            onTap: okFunc,
                             child: Container(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 10),
@@ -445,20 +481,20 @@ class NotifyDialogs {
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        isDismissible: false,
-        elevation: 20.0,
-        enableDrag: false,
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.0),
-            topRight: Radius.circular(20.0),
-          ),
+      ),
+      isDismissible: false,
+      elevation: 20.0,
+      enableDrag: false,
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(20.0),
         ),
-      );
-    });
+      ),
+    );
   }
 }

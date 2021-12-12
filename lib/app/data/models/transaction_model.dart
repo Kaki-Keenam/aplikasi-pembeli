@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:ffi';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
@@ -19,6 +19,7 @@ class TransactionModel {
     this.buyerName,
     this.rating,
     this.state,
+    this.address,
     this.totalPrice,
     this.quantity,
     this.product,
@@ -31,6 +32,7 @@ class TransactionModel {
   String? orderDate;
   GeoPoint? buyerLoc;
   String? buyerName;
+  String? address;
   int? totalPrice;
   int? quantity;
   double? rating;

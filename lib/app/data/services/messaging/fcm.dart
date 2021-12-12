@@ -86,9 +86,10 @@ class Fcm {
 
     switch (_state()){
       case StateDialog.REJECTED:
+        Dialogs.rejected(_repositoryRemote);
         break;
       case StateDialog.PROPOSED:
-        Dialogs.orderConfirm(_repositoryRemote);
+        // Dialogs.orderConfirm(_repositoryRemote);
         break;
       case StateDialog.OTW:
         Dialogs.otw(_repositoryRemote);

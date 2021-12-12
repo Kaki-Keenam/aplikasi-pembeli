@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
@@ -11,6 +12,7 @@ import 'package:kakikeenam/app/utils/constants/constants.dart';
 
 class DetailItemController extends GetxController {
   final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
+  final TextEditingController addressC = TextEditingController();
   FirebaseFirestore _dbStore = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
   RxBool isFav = false.obs;
@@ -30,6 +32,8 @@ class DetailItemController extends GetxController {
     _user.bindStream(_repositoryRemote.userModel);
     super.onInit();
   }
+
+  RepositoryRemote get repo => this._repositoryRemote;
 
   Stream<List<ProductModel>> getProduct(String vendorId) {
     try {
@@ -149,6 +153,7 @@ class DetailItemController extends GetxController {
         storeName: vendorModel.storeName,
         orderDate: formattedDate,
         rating: vendorModel.rating,
+        address: addressC.text,
         state: "PROPOSED",
         vendorId: vendorModel.uid
       );

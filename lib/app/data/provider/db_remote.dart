@@ -159,6 +159,7 @@ class DbRemote{
         "transactionId": transId,
         "storeName": trans.storeName,
         "orderDate": trans.orderDate,
+        "address": trans.address,
         "rating": 0.0,
         "state": trans.state,
         "vendorId": trans.vendorId,
