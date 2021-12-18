@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
 
 class SearchBar extends StatelessWidget {
@@ -27,10 +28,14 @@ class SearchBar extends StatelessWidget {
                   children: [
                     SvgPicture.asset('assets/icons/search.svg', color: Colors.black54, height: 18, width: 18),
                     Container(
+                      width: Get.width * 0.55,
                       margin: EdgeInsets.only(left: 10),
                       child: Text(
-                        'Apa yang ingin anda makan?',
+                        'Cari makan disini'
+                            '',
                         style: TextStyle(color: Colors.black54.withOpacity(0.3)),
+                        overflow: TextOverflow.fade,
+                        maxLines: 1,
                       ),
                     )
                   ],

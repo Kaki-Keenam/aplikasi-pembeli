@@ -2,6 +2,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:kakikeenam/app/data/models/chat_model.dart';
+import 'package:kakikeenam/app/data/models/chat_room_model.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/review_model.dart';
 import 'package:kakikeenam/app/data/models/transaction_model.dart';
@@ -104,7 +106,10 @@ class RepositoryRemote{
   }
 
   Stream<QuerySnapshot> getVendorStream() {
-    return _dbRemote.getVendorStream();
+    return _dbRemote.getVendorStreamQuery();
+  }
+  Stream<DocumentSnapshot> getVendorChat(String vendorId) {
+    return _dbRemote.getVendorStream(vendorId);
   }
 
   Future<QuerySnapshot> getBanner() async {
@@ -123,4 +128,31 @@ class RepositoryRemote{
     return _dbRemote.delTrans(id);
   }
 
+  Stream<QuerySnapshot> getChats() {
+    return _dbRemote.getChats();
+  }
+
+  Stream<QuerySnapshot> getChatRoom(String chatId) {
+    return _dbRemote.getChatRoom(chatId);
+  }
+
+  Future sendChat(Chat chat, String chatC) async{
+    return _dbRemote.sendChat(chat, chatC);
+  }
+
+  Future updateChat(Chat chat) async{
+    return _dbRemote.updateChat(chat);
+  }
+
+  Stream<QuerySnapshot> getChatRoomBySender(Chat chat){
+    return _dbRemote.getChatRoomBySender(chat);
+  }
+
+  Future updateUnread(ChatRoom? chatRoom, Chat chat) async{
+    return _dbRemote.updateUnread(chatRoom, chat);
+  }
+
+  Future deleteChat(String messageId, Chat chat) async{
+    _dbRemote.deleteChat(messageId, chat);
+  }
 }

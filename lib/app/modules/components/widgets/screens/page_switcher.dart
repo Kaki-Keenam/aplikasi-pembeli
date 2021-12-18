@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kakikeenam/app/modules/chat/views/chat_view.dart';
 import 'package:kakikeenam/app/modules/favorite/views/favorite_view.dart';
 import 'package:kakikeenam/app/modules/home/views/home_view.dart';
 import 'package:kakikeenam/app/modules/maps_location/views/maps_location_view.dart';
@@ -39,6 +40,7 @@ class _PageSwitcherState extends State<PageSwitcher> {
             HomeView(),
             FavoriteView(),
             MapsLocationView(),
+            ChatView(),
             TransHistoryView(),
             SettingsView(),
           ][_selectedIndex],

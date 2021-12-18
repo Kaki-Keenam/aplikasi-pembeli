@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:kakikeenam/app/data/models/chat_model.dart';
+import 'package:kakikeenam/app/data/models/chat_room_model.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/review_model.dart';
 import 'package:kakikeenam/app/data/models/transaction_model.dart';
@@ -181,8 +183,11 @@ class DbRemote{
     return _db.collection(Constants.VENDOR).doc(vendorId).get();
   }
 
-  Stream<QuerySnapshot> getVendorStream() {
+  Stream<QuerySnapshot> getVendorStreamQuery() {
     return _db.collection(Constants.VENDOR).where(Constants.STATUS_QUERY, isEqualTo: Constants.ONLINE) .snapshots();
+  }
+  Stream<DocumentSnapshot> getVendorStream(String vendorId) {
+    return _db.collection(Constants.VENDOR).doc(vendorId).snapshots();
   }
 
   Future<QuerySnapshot> getBanner() async {
@@ -206,5 +211,50 @@ class DbRemote{
 
   Future<void> delTrans(String id) async{
     return _db.collection(Constants.TRANSACTION).doc(id).delete();
+  }
+
+  Stream<QuerySnapshot> getChats() {
+    return _db.collection(Constants.CHAT).where("connections", arrayContainsAny: [_auth.currentUser?.uid]).orderBy("lastUpdate", descending: true).snapshots();
+  }
+
+  Stream<QuerySnapshot> getChatRoom(String chatId) {
+    return _db.collection(Constants.CHAT).doc(chatId).collection("message").orderBy("time", descending: false).snapshots();
+  }
+
+  Stream<QuerySnapshot> getChatRoomBySender(Chat chat) {
+    return _db.collection(Constants.CHAT).doc(chat.chatId).collection("message").where("pengirim", isEqualTo: chat.connection?[0]).snapshots();
+  }
+
+  Future sendChat(Chat chat, String chatC) async {
+    return _db.collection(Constants.CHAT).doc(chat.chatId).collection("message").add({
+      "isRead" : false,
+      "pengirim": chat.connection?[1],
+      "penerima": chat.connection?[0],
+      "pesan": chatC,
+      "time": Timestamp.now(),
+    });
+  }
+
+  Future updateChat(Chat chat) async{
+    return _db.collection(Constants.CHAT).doc(chat.chatId).update({
+      "lastUpdate" : Timestamp.now()
+    });
+  }
+
+  Future updateChatRoom(Chat chat) async{
+    return _db.collection(Constants.CHAT).doc(chat.chatId).collection("message").doc().update({
+      "lastUpdate" : Timestamp.now()
+    });
+  }
+
+
+  Future updateUnread(ChatRoom? chatRoom, Chat chat) async{
+    _db.collection(Constants.CHAT).doc(chat.chatId).collection("message").doc(chatRoom?.idMessage).update({
+      "isRead": true
+    });
+  }
+
+  Future deleteChat(String messageId, Chat chat) async {
+    _db.collection(Constants.CHAT).doc(chat.chatId).collection("message").doc(messageId).delete();
   }
 }

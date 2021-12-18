@@ -405,7 +405,7 @@ class NotifyDialogs {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Harus diisi',
+                              'Lokasi anda',
                               style: TextStyle(fontWeight: FontWeight.w600),
                             ),
                             TextFormField(

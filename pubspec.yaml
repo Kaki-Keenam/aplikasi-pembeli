@@ -32,6 +32,7 @@ dependencies:
   date_format: 2.0.4
   font_awesome_flutter: any
   lottie: 1.2.1
+  emoji_picker_flutter: 1.0.6
   firebase_messaging: 10.0.8
   flutter: 
     sdk: flutter

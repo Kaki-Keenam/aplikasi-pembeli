@@ -33,6 +33,7 @@ abstract class Constants {
 
   // Main collection of buyer database
   static const String BUYER = "buyer";
+  static const String CHAT = "chat";
 
   // Main collection of vendor  database
   static const String VENDOR = "vendors";

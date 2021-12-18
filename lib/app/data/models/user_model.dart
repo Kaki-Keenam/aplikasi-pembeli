@@ -48,3 +48,4 @@ class UserModel {
     "updateTime": updateTime,
   };
 }
+

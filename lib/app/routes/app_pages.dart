@@ -1,5 +1,9 @@
 import 'package:get/get.dart';
 
+import 'package:kakikeenam/app/modules/chat/bindings/chat_binding.dart';
+import 'package:kakikeenam/app/modules/chat/views/chat_view.dart';
+import 'package:kakikeenam/app/modules/chat_room/bindings/chat_room_binding.dart';
+import 'package:kakikeenam/app/modules/chat_room/views/chat_room_view.dart';
 import 'package:kakikeenam/app/modules/components/widgets/screens/page_switcher.dart';
 import 'package:kakikeenam/app/modules/detailitem/bindings/detailitem_binding.dart';
 import 'package:kakikeenam/app/modules/detailitem/views/detailitem_view.dart';
@@ -82,6 +86,16 @@ class AppPages {
       name: _Paths.TRANSACTION_DETAIL,
       page: () => TransactionDetailView(),
       binding: TransactionDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHAT,
+      page: () => ChatView(),
+      binding: ChatBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHAT_ROOM,
+      page: () => ChatRoomView(),
+      binding: ChatRoomBinding(),
     ),
   ];
 }

@@ -6,6 +6,7 @@ import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 import 'package:kakikeenam/app/data/services/helper_controller.dart';
 import 'package:kakikeenam/app/data/services/location_service.dart';
 import 'package:kakikeenam/app/data/services/messaging/fcm.dart';
+import 'package:kakikeenam/app/modules/chat/controllers/chat_controller.dart';
 import 'package:kakikeenam/app/modules/favorite/controllers/favorite_controller.dart';
 import 'package:kakikeenam/app/modules/home/controllers/home_controller.dart';
 import 'package:kakikeenam/app/modules/settings/controllers/settings_controller.dart';
@@ -41,6 +42,10 @@ class DependencyInjection {
     Get.lazyPut<SettingsController>(
           () => SettingsController(),
       fenix: true
+    );
+    Get.lazyPut<ChatController>(
+            () => ChatController(),
+        fenix: true
     );
   }
 }
