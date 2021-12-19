@@ -68,10 +68,13 @@ class Fcm {
   }
 
   void handleMessageAction(Map<String, dynamic> message){
-    if(message['transId'] != null){
-      Get.toNamed(Routes.TRANSACTION_DETAIL, arguments: message['transId']);
-    }
-
+    Get.toNamed(Routes.CHAT_ROOM, arguments: message['chatId']);
+    // if(message['transId'] != null){
+    //   Get.toNamed(Routes.TRANSACTION_DETAIL, arguments: message['transId']);
+    // }
+    // if(message['chatId'] != null){
+    //   Get.toNamed(Routes.CHAT_ROOM, arguments: message['chatId']);
+    // }
   }
 
   void handleMessage(Map<String, dynamic> message, [UserModel? user]) {

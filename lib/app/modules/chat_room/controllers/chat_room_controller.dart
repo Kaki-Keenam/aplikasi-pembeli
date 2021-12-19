@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/chat_model.dart';
 import 'package:kakikeenam/app/data/models/chat_room_model.dart';
+import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 
 class ChatRoomController extends GetxController {
@@ -60,6 +61,7 @@ class ChatRoomController extends GetxController {
 
   Future sendChat(Chat chat) async {
     await _repositoryRemote.sendChat(chat, chatC.text);
+
     Timer(
       Duration.zero,
           () => scrollC.jumpTo(
@@ -80,6 +82,18 @@ class ChatRoomController extends GetxController {
 
   Future deleteChat(ChatRoom? chatRoom, Chat chat) async {
     await _repositoryRemote.deleteChat(chatRoom, chat);
+  }
+
+  Stream<Chat> singleChat(String chatId) {
+    return _repositoryRemote.getSingleChat(chatId).map((value) {
+      return Chat.fromJson(value.data() as Map<String, dynamic>);
+    });
+  }
+
+  Future<VendorModel> vendor(String vendorId) async {
+    return _repositoryRemote.getVendor(vendorId).then((vendor) {
+      return vendor;
+    });
   }
 
 }

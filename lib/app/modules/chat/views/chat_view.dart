@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/chat_model.dart';
@@ -40,10 +41,7 @@ class ChatView extends GetView<ChatController> {
                                   vertical: 5,
                                 ),
                                 onTap: () {
-                                  Get.toNamed(Routes.CHAT_ROOM, arguments: [
-                                    chat.data?.chats?[index],
-                                    vendor.data
-                                  ]);
+                                  Get.toNamed(Routes.CHAT_ROOM, arguments: chat.data?.chats?[index].chatId);
                                 },
                                 leading: CircleAvatar(
                                   radius: 30,
@@ -51,9 +49,13 @@ class ChatView extends GetView<ChatController> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(100),
                                     child: vendor.data?.storeImage != null
-                                        ? Image.network(
-                                      "${vendor.data?.storeImage}",
-                                      fit: BoxFit.cover,
+                                        ? CachedNetworkImage(
+                                      imageUrl: "${vendor.data?.storeImage}",
+                                      fit: BoxFit.fill,
+                                      placeholder: (context, url) => Transform.scale(
+                                        scale: 0.5,
+                                        child: CircularProgressIndicator(),
+                                      ),
                                     )
                                         : Image.asset(
                                       "assets/images/person.png",
@@ -104,6 +106,7 @@ class ChatView extends GetView<ChatController> {
 
             ),
           ],
-        ));
+        ),
+    );
   }
 }

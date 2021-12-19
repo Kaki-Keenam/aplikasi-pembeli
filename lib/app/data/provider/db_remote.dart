@@ -257,4 +257,8 @@ class DbRemote{
   Future deleteChat(ChatRoom? chatRoom, Chat chat) async {
     _db.collection(Constants.CHAT).doc(chat.chatId).collection("message").doc(chatRoom?.messageId).delete();
   }
+
+  Stream<DocumentSnapshot> getSingleChat(String chatId) {
+    return _db.collection(Constants.CHAT).doc(chatId).snapshots();
+  }
 }

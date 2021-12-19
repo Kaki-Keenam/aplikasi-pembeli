@@ -159,4 +159,8 @@ class RepositoryRemote{
   Future deleteChat(ChatRoom? chatRoom, Chat chat) async{
     _dbRemote.deleteChat(chatRoom, chat);
   }
+
+  Stream<DocumentSnapshot> getSingleChat(String chatId) {
+    return _dbRemote.getSingleChat(chatId);
+  }
 }

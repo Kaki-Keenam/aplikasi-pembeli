@@ -114,7 +114,6 @@ class HomeController extends GetxController {
     query?.forEach((element) {
       queryList.add(element.uid ?? "");
     });
-    print('search ${queryList}');
     return _repositoryRemote.nearProduct(queryList).map((QuerySnapshot query) {
       List<ProductModel> listData = List.empty(growable: true);
       query.docs.forEach((element) {
