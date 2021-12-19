@@ -1,9 +1,10 @@
 import 'package:get/get.dart';
+import 'package:kakikeenam/app/data/models/transaction_model.dart';
+import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 
 class TransactionDetailController extends GetxController {
-  //TODO: Implement TransactionDetailController
+  final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
@@ -16,5 +17,11 @@ class TransactionDetailController extends GetxController {
 
   @override
   void onClose() {}
-  void increment() => count.value++;
+
+  Stream<TransactionModel> detailTrans(String transId)  {
+     return _repositoryRemote.detailTrans(transId).map((value) {
+      return TransactionModel.fromDocument(value.data() as Map<String, dynamic>);
+    });
+  }
+
 }

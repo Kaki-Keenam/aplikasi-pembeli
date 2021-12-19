@@ -19,7 +19,11 @@ class FavoriteView extends GetView<FavoriteController> {
         backgroundColor: AppColor.primary,
         elevation: 0,
         centerTitle: true,
-        title: Text(Strings.favorite_title, style: TextStyle(fontFamily: 'inter', fontWeight: FontWeight.w400, fontSize: 16)),
+        title: Text(Strings.favorite_title,
+            style: TextStyle(
+                fontFamily: 'inter',
+                fontWeight: FontWeight.w400,
+                fontSize: 16)),
       ),
       body: ListView(
         shrinkWrap: true,
@@ -45,28 +49,31 @@ class FavoriteView extends GetView<FavoriteController> {
                         child: Container(
                           height: 50,
                           margin: EdgeInsets.only(right: 15),
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppColor.thirdSoft),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: AppColor.thirdSoft),
                           child: TextField(
-                            onChanged: (value) {                         },
-                            style: TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w400),
+                            controller: controller.searchInputController,
+                            onChanged: (value) {
+                              controller.searchFood(value);
+                              print("keyword: ${value}");
+                            },
+                            style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
                             maxLines: 1,
                             textInputAction: TextInputAction.search,
                             decoration: InputDecoration(
                               hintText: Strings.fav_search,
-                              hintStyle: TextStyle(color: Colors.black54.withOpacity(0.2)),
-                              prefixIconConstraints: BoxConstraints(maxHeight: 20),
-                              contentPadding: EdgeInsets.symmetric(horizontal: 17),
+                              hintStyle: TextStyle(
+                                  color: Colors.black54.withOpacity(0.2)),
+                              prefixIconConstraints:
+                                  BoxConstraints(maxHeight: 20),
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 17),
                               focusedBorder: InputBorder.none,
                               border: InputBorder.none,
-                              prefixIcon: Container(
-                                margin: EdgeInsets.only(left: 10, right: 12),
-                                child: SvgPicture.asset(
-                                  Strings.search,
-                                  width: 20,
-                                  height: 20,
-                                  color: Colors.black54,
-                                ),
-                              ),
                             ),
                           ),
                         ),
@@ -74,13 +81,8 @@ class FavoriteView extends GetView<FavoriteController> {
                       // Filter Button
                       GestureDetector(
                         onTap: () {
-                          // showModalBottomSheet(
-                          //     context: context,
-                          //     backgroundColor: Colors.white,
-                          //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-                          //     builder: (context) {
-                          //       return SearchFilterModal();
-                          //     });
+                          controller.searchFood(
+                              controller.searchInputController.text);
                         },
                         child: Container(
                           width: 50,
@@ -90,12 +92,48 @@ class FavoriteView extends GetView<FavoriteController> {
                             borderRadius: BorderRadius.circular(10),
                             color: AppColor.secondary,
                           ),
-                          child: SvgPicture.asset(Strings.filter),
+                          child: SvgPicture.asset(Strings.search),
                         ),
                       )
                     ],
                   ),
                 ),
+                Container(
+                  height: 60,
+                  margin: EdgeInsets.only(top: 8),
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: controller.popularRecipeKeyword.length,
+                    separatorBuilder: (context, index) {
+                      return SizedBox(width: 8);
+                    },
+                    itemBuilder: (context, index) {
+                      return Container(
+                        alignment: Alignment.topCenter,
+                        child: TextButton(
+                          onPressed: () {
+                            controller.searchInputController.text =
+                                controller.popularRecipeKeyword[index];
+                          },
+                          child: Text(
+                            controller.popularRecipeKeyword[index],
+                            style: TextStyle(
+                                color: Colors.white.withOpacity(0.7),
+                                fontWeight: FontWeight.w400),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(
+                                color: Colors.white.withOpacity(0.15),
+                                width: 1,),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                )
               ],
             ),
           ),
@@ -108,11 +146,29 @@ class FavoriteView extends GetView<FavoriteController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Obx(() {
-                  if(controller.food != null && controller.food?.length != 0){
+                  print("data: ${controller.searchResult}");
+                  if (controller.searchResult != null && controller.searchInputController.text.isNotEmpty) {
+                    return ListView.separated(
+                      shrinkWrap: true,
+                      itemCount: controller.searchResult!.length,
+                      physics: AlwaysScrollableScrollPhysics(),
+                      separatorBuilder: (context, index) {
+                        return SizedBox(height: 16);
+                      },
+                      itemBuilder: (context, index) {
+                        return FoodView(
+                          subscribed: true,
+                          product: controller.searchResult?[index],
+                          func: () => Get.toNamed(Routes.DETAILITEM,
+                              arguments: controller.searchResult?[index]),
+                        );
+                      },
+                    );
+                  } else if (controller.food != null && controller.food?.length != 0) {
                     return ListView.separated(
                       shrinkWrap: true,
                       itemCount: controller.food!.length,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: AlwaysScrollableScrollPhysics(),
                       separatorBuilder: (context, index) {
                         return SizedBox(height: 16);
                       },
@@ -120,15 +176,14 @@ class FavoriteView extends GetView<FavoriteController> {
                         return FoodView(
                           subscribed: true,
                           product: controller.food?[index],
-                          func: ()=> Get.toNamed(Routes.DETAILITEM, arguments: controller.food?[index]),
+                          func: () => Get.toNamed(Routes.DETAILITEM,
+                              arguments: controller.food?[index]),
                         );
                       },
                     );
-                  }else{
-                    return Lottie.asset(Strings.no_data);
                   }
-                }
-                ),
+                  return Lottie.asset(Strings.no_data);
+                }),
               ],
             ),
           ),

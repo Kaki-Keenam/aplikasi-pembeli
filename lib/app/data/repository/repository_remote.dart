@@ -91,6 +91,10 @@ class RepositoryRemote{
     return _dbRemote.futureTrans();
   }
 
+  Stream<DocumentSnapshot> detailTrans(String transId) {
+    return _dbRemote.detailTrans(transId);
+  }
+
   void setTrans(TransactionModel trans, ProductModel product){
     _dbRemote.createTrans(trans, product);
   }
@@ -105,10 +109,10 @@ class RepositoryRemote{
     return vendorModel;
   }
 
-  Stream<QuerySnapshot> getVendorStream() {
+  Stream<QuerySnapshot> getVendorStreamQuery() {
     return _dbRemote.getVendorStreamQuery();
   }
-  Stream<DocumentSnapshot> getVendorChat(String vendorId) {
+  Stream<DocumentSnapshot> getVendorStream(String vendorId) {
     return _dbRemote.getVendorStream(vendorId);
   }
 
@@ -152,7 +156,7 @@ class RepositoryRemote{
     return _dbRemote.updateUnread(chatRoom, chat);
   }
 
-  Future deleteChat(String messageId, Chat chat) async{
-    _dbRemote.deleteChat(messageId, chat);
+  Future deleteChat(ChatRoom? chatRoom, Chat chat) async{
+    _dbRemote.deleteChat(chatRoom, chat);
   }
 }

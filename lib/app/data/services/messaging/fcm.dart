@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/user_model.dart';
 import 'package:kakikeenam/app/data/repository/repository_remote.dart';
+import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 import 'package:kakikeenam/app/utils/utils.dart';
 
@@ -36,7 +37,7 @@ class Fcm {
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
         print('ON MESSAGE OPENED APP');
         if (!kReleaseMode) print('onLaunch: $message');
-        handleMessage(message.data);
+        handleMessageAction(message.data);
       });
 
       await FirebaseMessaging.instance
@@ -66,6 +67,13 @@ class Fcm {
     }
   }
 
+  void handleMessageAction(Map<String, dynamic> message){
+    if(message['transId'] != null){
+      Get.toNamed(Routes.TRANSACTION_DETAIL, arguments: message['transId']);
+    }
+
+  }
+
   void handleMessage(Map<String, dynamic> message, [UserModel? user]) {
     StateDialog _state(){
       var msg =  message['state'];
@@ -87,9 +95,9 @@ class Fcm {
     switch (_state()){
       case StateDialog.REJECTED:
         Dialogs.rejected(_repositoryRemote);
+
         break;
       case StateDialog.PROPOSED:
-        // Dialogs.orderConfirm(_repositoryRemote);
         break;
       case StateDialog.OTW:
         Dialogs.otw(_repositoryRemote);

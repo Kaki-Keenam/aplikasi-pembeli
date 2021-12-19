@@ -6,9 +6,10 @@ import 'package:intl/intl.dart';
 import '../controllers/transaction_detail_controller.dart';
 
 class TransactionDetailView extends GetView<TransactionDetailController> {
-  final trans = Get.arguments as TransactionModel;
+  final transId = Get.arguments as String;
   @override
   Widget build(BuildContext context) {
+    print('transId ${transId}');
     return Scaffold(
       appBar: AppBar(
         title: Text('Detail Transaksi'),
@@ -43,7 +44,15 @@ class TransactionDetailView extends GetView<TransactionDetailController> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(height: 20,),
-                        Text('${NumberFormat.currency(name: "id", decimalDigits: 0, symbol: "Rp",).format(trans.product?[0].price)}', style: TextStyle(fontSize: 28, fontFamily: 'inter', fontWeight: FontWeight.w600, color: Colors.white),),
+                        StreamBuilder<TransactionModel>(
+                          stream: controller.detailTrans(transId),
+                          builder: (context, trans) {
+                            if(trans.hasData){
+                              return Text('${NumberFormat.currency(name: "id", decimalDigits: 0, symbol: "Rp",).format(trans.data?.product?[0].price)}', style: TextStyle(fontSize: 28, fontFamily: 'inter', fontWeight: FontWeight.w600, color: Colors.white),);
+                            }
+                            return Container();
+                          }
+                        ),
                         SizedBox(height: 10,),
                         Text('Pembayaran Tunai', style: TextStyle(fontSize: 20,fontFamily: 'inter', fontWeight: FontWeight.w600, color: Colors.white),),
                       ],
@@ -87,7 +96,15 @@ class TransactionDetailView extends GetView<TransactionDetailController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
             Text('Tanggal Pesan', style: TextStyle(fontSize: 16, fontFamily: 'sans-serif')),
-              Text(DateFormat('EEE, d MMM yyyy').format(DateTime.parse(trans.orderDate ?? ""),), style: TextStyle(fontSize: 16, fontFamily: 'inter')),
+              StreamBuilder<TransactionModel?>(
+                stream: controller.detailTrans(transId),
+                builder: (context, trans) {
+                  if(trans.hasData){
+                    return Text(DateFormat('EEE, d MMM yyyy').format(DateTime.parse(trans.data?.orderDate ?? ""),), style: TextStyle(fontSize: 16, fontFamily: 'inter'));
+                  }
+                  return Container();
+                }
+              ),
             ],
           ),
           SizedBox(height: 10,),
@@ -95,7 +112,15 @@ class TransactionDetailView extends GetView<TransactionDetailController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Produk', style: TextStyle(fontSize: 16, fontFamily: 'sans-serif')),
-              Text('${trans.product?[0].name}', style: TextStyle(fontSize: 16, fontFamily: 'sans-serif')),
+              StreamBuilder<TransactionModel?>(
+                stream: controller.detailTrans(transId),
+                builder: (context, trans) {
+                  if(trans.hasData){
+                    return Text('${trans.data?.product?[0].name}', style: TextStyle(fontSize: 16, fontFamily: 'sans-serif'));
+                  }
+                  return Container();
+                }
+              ),
             ],
           ),
           SizedBox(height: 10,),
@@ -103,7 +128,15 @@ class TransactionDetailView extends GetView<TransactionDetailController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Penjual', style: TextStyle(fontSize: 16, fontFamily: 'sans-serif')),
-              Text('${trans.storeName}', style: TextStyle(fontSize: 16, fontFamily: 'sans-serif'))
+              StreamBuilder<TransactionModel?>(
+                stream: controller.detailTrans(transId),
+                builder: (context, trans) {
+                  if(trans.hasData){
+                    return Text('${trans.data?.storeName}', style: TextStyle(fontSize: 16, fontFamily: 'sans-serif'));
+                  }
+                  return Container();
+                }
+              )
             ],
           ),
           SizedBox(height: 10,),
@@ -114,40 +147,48 @@ class TransactionDetailView extends GetView<TransactionDetailController> {
                 'Status: ',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: trans.state == 'REJECTED'
-                      ? Colors.red
-                      : trans.state == 'PROPOSED'
-                      ? Colors.yellow
-                      : trans.state == 'OTW'
-                      ? Colors.orangeAccent
-                      : trans.state == 'ARRIVED'
-                      ? Colors.blueAccent
-                      : trans.state == 'TRANSACTION_FINISHED'
-                      ? Colors.green
-                      : Colors.grey,
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 6),
-                  child: Center(
-                    child: Text(
-                      trans.state == 'REJECTED'
-                          ? 'DIBATALKAN'
-                          : trans.state == 'PROPOSED'
-                          ? 'DIAJUKAN'
-                          : trans.state == 'OTW'
-                          ? 'DIJALAN'
-                          : trans.state == 'ARRIVED'
-                          ? 'SAMPAI'
-                          : trans.state == 'TRANSACTION_FINISHED'
-                          ? 'SELESAI'
-                          : 'KENDALA',
-                      style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
-                    ),
-                  ),
-                ),
+              StreamBuilder<TransactionModel?>(
+                stream: controller.detailTrans(transId),
+                builder: (context, trans) {
+                  if(trans.hasData){
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: trans.data?.state == 'REJECTED'
+                            ? Colors.red
+                            : trans.data?.state == 'PROPOSED'
+                            ? Colors.yellow
+                            : trans.data?.state == 'OTW'
+                            ? Colors.orangeAccent
+                            : trans.data?.state == 'ARRIVED'
+                            ? Colors.blueAccent
+                            : trans.data?.state == 'TRANSACTION_FINISHED'
+                            ? Colors.green
+                            : Colors.grey,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 6),
+                        child: Center(
+                          child: Text(
+                            trans.data?.state == 'REJECTED'
+                                ? 'DIBATALKAN'
+                                : trans.data?.state == 'PROPOSED'
+                                ? 'DIAJUKAN'
+                                : trans.data?.state == 'OTW'
+                                ? 'DIJALAN'
+                                : trans.data?.state == 'ARRIVED'
+                                ? 'SAMPAI'
+                                : trans.data?.state == 'TRANSACTION_FINISHED'
+                                ? 'SELESAI'
+                                : 'KENDALA',
+                            style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  return Container();
+                }
               ),
             ],
           ),
@@ -159,18 +200,26 @@ class TransactionDetailView extends GetView<TransactionDetailController> {
               borderRadius: BorderRadius.circular(10),
               color: Colors.grey,
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: trans.product?[0].image !=  null
-                  ? CachedNetworkImage(
-                imageUrl: "${trans.product?[0].image}",
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Transform.scale(
-                  scale: 0.5,
-                  child: CircularProgressIndicator(),
-                ),
-              )
-                  : Icon(Icons.error),
+            child: StreamBuilder<TransactionModel?>(
+              stream: controller.detailTrans(transId),
+              builder: (context,trans) {
+                if(trans.hasData){
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: trans.data?.product?[0].image !=  null
+                        ? CachedNetworkImage(
+                      imageUrl: "${trans.data?.product?[0].image}",
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Transform.scale(
+                        scale: 0.5,
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                        : Icon(Icons.error),
+                  );
+                }
+                return Container();
+              }
             ),
           ),
         ],

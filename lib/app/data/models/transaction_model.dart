@@ -39,21 +39,21 @@ class TransactionModel {
   String? state;
   List<ProductModel>? product;
 
-   factory TransactionModel.fromDocument(Map<String, dynamic> doc) {
+   factory TransactionModel.fromDocument(Map<String, dynamic> json) {
     return TransactionModel(
-        buyerId: doc["buyerId"],
-        buyerLoc: doc["buyerLoc"],
-        buyerName: doc["buyerName"],
-        totalPrice: doc["totalPrice"],
-        quantity: doc["quantity"],
-        transactionId: doc["transactionId"],
-        vendorId: doc["vendorId"],
-        storeImage: doc["storeImage"],
-        storeName: doc["storeName"],
-        orderDate: doc["orderDate"],
-        rating: doc["rating"].toDouble(),
-        state: doc["state"],
-      product: List<ProductModel>.from(doc["products"]?.map((x) => ProductModel.fromMap(x))),
+        buyerId: json["buyerId"],
+        buyerLoc: json["buyerLoc"],
+        buyerName: json["buyerName"],
+        totalPrice: json["totalPrice"],
+        quantity: json["quantity"],
+        transactionId: json["transactionId"],
+        vendorId: json["vendorId"],
+        storeImage: json["storeImage"],
+        storeName: json["storeName"],
+        orderDate: json["orderDate"],
+        rating: json["rating"].toDouble(),
+        state: json["state"],
+      product: List<ProductModel>.from(json["products"]?.map((x) => ProductModel.fromMap(x))),
      );
    }
 }

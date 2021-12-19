@@ -92,7 +92,7 @@ class MapsLocationController extends GetxController {
   }
 
   Stream<List<Markers>> getMarkerData() {
-    return _repositoryRemote.getVendorStream().map((QuerySnapshot query) {
+    return _repositoryRemote.getVendorStreamQuery().map((QuerySnapshot query) {
       List<Markers> listData = List.empty(growable: true);
       query.docs.forEach((DocumentSnapshot doc) {
         var mark = doc.data() as Map<String, dynamic>;
@@ -110,7 +110,7 @@ class MapsLocationController extends GetxController {
 
   // Distance settings
   Stream<List<Markers>> getItemMarkerVendor() {
-    return _repositoryRemote.getVendorStream().map((QuerySnapshot query) {
+    return _repositoryRemote.getVendorStreamQuery().map((QuerySnapshot query) {
       List<Markers> listData = List.empty(growable: true);
       for (var i = 0; i < query.docs.length; i++) {
         var mark = query.docs[i].data() as Map<String, dynamic>;

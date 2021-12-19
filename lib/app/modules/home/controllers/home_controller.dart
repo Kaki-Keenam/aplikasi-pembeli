@@ -124,8 +124,10 @@ class HomeController extends GetxController {
     });
   }
 
-  Future<VendorModel> getVendor(String? vendorId) {
-    return _repositoryRemote.getVendor(vendorId!);
+  Stream<VendorModel> getVendor(String? vendorId) {
+    return _repositoryRemote.getVendorStream(vendorId!).map((event) {
+      return VendorModel.fromDocument(event);
+    });
   }
 
   Future<BannerModel> getBanner() {

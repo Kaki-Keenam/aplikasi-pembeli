@@ -6,7 +6,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-ChatRoomModel chatRoomModelFromJson(String str, String id) => ChatRoomModel.fromJson(json.decode(str), id);
+ChatRoomModel chatRoomModelFromJson(String str) => ChatRoomModel.fromJson(json.decode(str));
 
 String chatRoomModelToJson(ChatRoomModel data) => json.encode(data.toJson());
 
@@ -17,8 +17,8 @@ class ChatRoomModel {
 
   List<ChatRoom>? chatRoom;
 
-  factory ChatRoomModel.fromJson(Map<String, dynamic> json, String id) => ChatRoomModel(
-    chatRoom: List<ChatRoom>.from(json["chatRoom"].map((x) => ChatRoom.fromJson(x, id))),
+  factory ChatRoomModel.fromJson(Map<String, dynamic> json) => ChatRoomModel(
+    chatRoom: List<ChatRoom>.from(json["chatRoom"].map((x) => ChatRoom.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -29,7 +29,7 @@ class ChatRoomModel {
 class ChatRoom {
   ChatRoom({
     this.isRead,
-    this.idMessage,
+    this.messageId,
     this.penerima,
     this.pengirim,
     this.pesan,
@@ -37,14 +37,14 @@ class ChatRoom {
   });
 
   bool? isRead;
-  String? idMessage;
+  String? messageId;
   String? penerima;
   String? pengirim;
   String? pesan;
   Timestamp? time;
 
-  factory ChatRoom.fromJson(Map<String, dynamic> json, String id) => ChatRoom(
-    idMessage: id,
+  factory ChatRoom.fromJson(Map<String, dynamic> json) => ChatRoom(
+    messageId: json["messageId"],
     isRead: json["isRead"],
     penerima: json["penerima"],
     pengirim: json["pengirim"],

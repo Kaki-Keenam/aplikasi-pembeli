@@ -6,9 +6,7 @@ import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 
 class ChatController extends GetxController {
   final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
-  var _chatModel = ChatModel().obs;
 
-  ChatModel get chatList => this._chatModel.value;
   @override
   void onInit() {
 
@@ -17,7 +15,6 @@ class ChatController extends GetxController {
 
   @override
   void onReady() {
-    _chatModel.bindStream(getChats());
     super.onReady();
   }
 
@@ -30,14 +27,13 @@ class ChatController extends GetxController {
       List<Chat> listData = List.empty(growable: true);
        chat.docs.forEach((element) {
           listData.add(Chat.fromJson(element.data() as Map<String, dynamic>));
-          print('chat ${element.get('chatId')}');
       });
        return ChatModel(chats: listData);
     });
   }
 
   Stream<VendorModel> getVendorChat(String vendorId) {
-    return _repositoryRemote.getVendorChat(vendorId).map((event) {
+    return _repositoryRemote.getVendorStream(vendorId).map((event) {
       return VendorModel.fromDocument(event);
     });
   }
@@ -47,7 +43,7 @@ class ChatController extends GetxController {
       List<ChatRoom> listData = List.empty(growable: true);
       unread.docs.forEach((element) {
         if(element.get("isRead") == false){
-          listData.add(ChatRoom.fromJson(element.data() as Map<String, dynamic>, element.id));
+          listData.add(ChatRoom.fromJson(element.data() as Map<String, dynamic>));
         }
       });
       return ChatRoomModel(chatRoom: listData);

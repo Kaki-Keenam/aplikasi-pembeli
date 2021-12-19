@@ -24,15 +24,15 @@ class SearchController extends GetxController {
 
   var popularRecipeKeyword = ['Cilok', 'Bakso', 'Rujak', 'Roti', 'Ice Cream', 'Bakmi'];
 
-  void searchFood(String data){
-    if(data.length == 0){
+  void searchFood(String textSearch){
+    if(textSearch.length == 0){
       resultData.value = [];
     }else {
-      var capitalized = data.substring(0, 1).toUpperCase() + data.substring(1);
+      var capitalized = textSearch.substring(0, 1).toUpperCase() + textSearch.substring(1);
       if (searchData?.length != 0) {
         resultData.value = [];
         searchData?.forEach((element) {
-          if (element.name!.contains(capitalized) || element.name!.contains(data)) {
+          if (element.name!.contains(capitalized) || element.name!.contains(textSearch)) {
             resultData.value?.add(ProductModel(
               productId: element.productId,
               vendorId: element.vendorId,
@@ -64,7 +64,13 @@ class SearchController extends GetxController {
     return _controller.getNearProduct(query);
   }
 
-  Future<VendorModel> getVendor(String? vendorId) {
+  Stream<VendorModel> getVendor(String? vendorId) {
     return _controller.getVendor(vendorId!);
+  }
+
+  @override
+  void onClose() {
+    searchInputController.dispose();
+    super.onClose();
   }
 }

@@ -18,7 +18,4 @@ class NearVendorController extends GetxController {
     return _controller.getNearProduct(query);
   }
 
-  Future<VendorModel> getVendor(String? vendorId) {
-    return _controller.getVendor(vendorId!);
-  }
 }

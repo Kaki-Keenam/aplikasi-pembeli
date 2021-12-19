@@ -131,7 +131,7 @@ class FoodView extends StatelessWidget {
                           height: 25,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
-                            color: Colors.black26
+                            color: Colors.red
                           ),
                           child: Center(child: Text("Langganan", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800),)),
                         )

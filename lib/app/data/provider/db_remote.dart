@@ -141,6 +141,11 @@ class DbRemote{
     }
   }
 
+  Stream<DocumentSnapshot> detailTrans(String transId) {
+      return _db.collection(Constants.TRANSACTION).doc(transId).snapshots();
+
+  }
+
   Future createTrans(TransactionModel trans, ProductModel product) async {
     try{
       var setTrans = _db.collection(Constants.TRANSACTION);
@@ -226,7 +231,9 @@ class DbRemote{
   }
 
   Future sendChat(Chat chat, String chatC) async {
-    return _db.collection(Constants.CHAT).doc(chat.chatId).collection("message").add({
+    String messageId = await _db.collection(Constants.CHAT).doc(chat.chatId).collection("message").doc().id;
+    return _db.collection(Constants.CHAT).doc(chat.chatId).collection("message").doc(messageId).set({
+      "messageId" : messageId,
       "isRead" : false,
       "pengirim": chat.connection?[1],
       "penerima": chat.connection?[0],
@@ -241,20 +248,13 @@ class DbRemote{
     });
   }
 
-  Future updateChatRoom(Chat chat) async{
-    return _db.collection(Constants.CHAT).doc(chat.chatId).collection("message").doc().update({
-      "lastUpdate" : Timestamp.now()
-    });
-  }
-
-
   Future updateUnread(ChatRoom? chatRoom, Chat chat) async{
-    _db.collection(Constants.CHAT).doc(chat.chatId).collection("message").doc(chatRoom?.idMessage).update({
+    _db.collection(Constants.CHAT).doc(chat.chatId).collection("message").doc(chatRoom?.messageId).update({
       "isRead": true
     });
   }
 
-  Future deleteChat(String messageId, Chat chat) async {
-    _db.collection(Constants.CHAT).doc(chat.chatId).collection("message").doc(messageId).delete();
+  Future deleteChat(ChatRoom? chatRoom, Chat chat) async {
+    _db.collection(Constants.CHAT).doc(chat.chatId).collection("message").doc(chatRoom?.messageId).delete();
   }
 }

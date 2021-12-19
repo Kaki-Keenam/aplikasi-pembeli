@@ -34,7 +34,7 @@ class TransactionView extends GetView<TransHistoryController> {
             )
           ]),
       child: InkWell(
-        onTap: ()=> Get.toNamed(Routes.TRANSACTION_DETAIL, arguments: trans),
+        onTap: ()=> Get.toNamed(Routes.TRANSACTION_DETAIL, arguments: trans?.transactionId),
         onLongPress: ()=> controller.delTrans(trans!.transactionId!),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,

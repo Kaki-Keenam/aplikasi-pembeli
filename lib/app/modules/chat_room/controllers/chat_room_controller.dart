@@ -52,7 +52,7 @@ class ChatRoomController extends GetxController {
     return _repositoryRemote.getChatRoom(chatId).map((room) {
       List<ChatRoom> listData = List.empty(growable: true);
       room.docs.forEach((element) {
-        listData.add(ChatRoom.fromJson(element.data() as Map<String, dynamic>, element.id));
+        listData.add(ChatRoom.fromJson(element.data() as Map<String, dynamic>));
       });
       return ChatRoomModel(chatRoom: listData);
     });
@@ -78,8 +78,8 @@ class ChatRoomController extends GetxController {
     }
   }
 
-  Future deleteChat(String messageId, Chat chat) async {
-    await _repositoryRemote.deleteChat(messageId, chat);
+  Future deleteChat(ChatRoom? chatRoom, Chat chat) async {
+    await _repositoryRemote.deleteChat(chatRoom, chat);
   }
 
 }

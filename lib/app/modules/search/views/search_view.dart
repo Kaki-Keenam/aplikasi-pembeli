@@ -70,21 +70,7 @@ class SearchView extends GetView<SearchController> {
                               contentPadding: EdgeInsets.symmetric(horizontal: 17),
                               focusedBorder: InputBorder.none,
                               border: InputBorder.none,
-                              prefixIcon: InkWell(
-                                onTap: (){
-                                  controller.searchFood(controller.searchInputController.text);
-                                  print(controller.searchInputController.text);
-                                },
-                                child: Container(
-                                  margin: EdgeInsets.only(left: 10, right: 12),
-                                  child: SvgPicture.asset(
-                                    Strings.search,
-                                    width: 20,
-                                    height: 20,
-                                    color: Colors.black54,
-                                  ),
-                                ),
-                              ),
+
                             ),
                           ),
                         ),
@@ -92,13 +78,7 @@ class SearchView extends GetView<SearchController> {
                       // Filter Button
                       GestureDetector(
                         onTap: () {
-                          // showModalBottomSheet(
-                          //     context: context,
-                          //     backgroundColor: Colors.white,
-                          //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-                          //     builder: (context) {
-                          //       return SearchFilterModal();
-                          //     });
+                          controller.searchFood(controller.searchInputController.text);
                         },
                         child: Container(
                           width: 50,
@@ -108,7 +88,7 @@ class SearchView extends GetView<SearchController> {
                             borderRadius: BorderRadius.circular(10),
                             color: AppColor.secondary,
                           ),
-                          child: SvgPicture.asset(Strings.filter),
+                          child: SvgPicture.asset(Strings.search),
                         ),
                       )
                     ],
@@ -164,7 +144,7 @@ class SearchView extends GetView<SearchController> {
                   ),
                 ),
                 Obx(() {
-                  if(controller.searchResult != null && controller.searchResult?.length != 0){
+                  if(controller.searchResult != null && controller.searchInputController.text != ""){
                     return StreamBuilder<GeoPoint>(
                       stream: controller.getBuyerLoc(),
                       builder: (context, buyer) {
@@ -177,8 +157,8 @@ class SearchView extends GetView<SearchController> {
                               return SizedBox(height: 16);
                             },
                             itemBuilder: (context, index) {
-                              return FutureBuilder<VendorModel>(
-                                  future: controller.getVendor(controller.searchResult?[index].vendorId),
+                              return StreamBuilder<VendorModel>(
+                                  stream: controller.getVendor(controller.searchResult?[index].vendorId),
                                   builder: (context, vendor) {
                                     return FoodView(
                                       buyerLoc: buyer.data,
@@ -216,8 +196,8 @@ class SearchView extends GetView<SearchController> {
                                         physics: NeverScrollableScrollPhysics(),
                                         itemCount: product.data?.length ?? 3,
                                         itemBuilder: (context, index) {
-                                          return FutureBuilder<VendorModel>(
-                                              future: controller.getVendor(
+                                          return StreamBuilder<VendorModel>(
+                                              stream: controller.getVendor(
                                                   product.data?[index].vendorId),
                                               builder: (context, vendor) {
                                                 return FoodView(

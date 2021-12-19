@@ -176,8 +176,8 @@ class HomeView extends GetView<HomeController> {
                                       physics: NeverScrollableScrollPhysics(),
                                       itemCount: product.data?.length ?? 3,
                                       itemBuilder: (context, index) {
-                                        return FutureBuilder<VendorModel>(
-                                            future: controller.getVendor(
+                                        return StreamBuilder<VendorModel>(
+                                            stream: controller.getVendor(
                                                 product.data?[index].vendorId),
                                             builder: (context, vendor) {
                                               return FoodView(
