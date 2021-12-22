@@ -10,6 +10,7 @@ class NewCustomTextField extends StatelessWidget {
   final bool readOnly;
   final TextInputType? keyboardType;
   final FormFieldValidator<String>? validator;
+  final ValueChanged<String>? onChanged;
   final Color? backgroundColour;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
@@ -22,7 +23,7 @@ class NewCustomTextField extends StatelessWidget {
     this.controller,
     this.obsecureText = false,
     this.padding,
-    this.margin, this.validator, this.keyboardType,
+    this.margin, this.validator, this.keyboardType, this.onChanged,
   });
 
   @override
@@ -53,6 +54,8 @@ class NewCustomTextField extends StatelessWidget {
                 padding: EdgeInsets.only(top: Get.height * 0.013),
                 child: TextFormField(
                   controller: controller,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  onChanged: onChanged,
                   readOnly: readOnly,
                   style: TextStyle(fontSize: 14),
                   cursorColor: AppColor.primary,

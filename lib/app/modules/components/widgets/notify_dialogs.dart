@@ -400,33 +400,31 @@ class NotifyDialogs {
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.white,
                       ),
-                      child: Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Lokasi anda',
-                              style: TextStyle(fontWeight: FontWeight.w600),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Lokasi anda',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          TextFormField(
+                            controller: controller,
+                            maxLines: 2,
+                            keyboardType: TextInputType.multiline,
+                            scrollPhysics: AlwaysScrollableScrollPhysics(),
+                            decoration: InputDecoration(
+                              hintText: 'Alamat Lengkap / No Rumah / Gang',
+                              hintStyle: TextStyle(
+                                  fontSize: 14, color: Colors.grey[400]),
+                              border: InputBorder.none,
                             ),
-                            TextFormField(
-                              controller: controller,
-                              maxLines: 2,
-                              keyboardType: TextInputType.multiline,
-                              scrollPhysics: AlwaysScrollableScrollPhysics(),
-                              decoration: InputDecoration(
-                                hintText: 'Alamat Lengkap / No Rumah / Gang',
-                                hintStyle: TextStyle(
-                                    fontSize: 14, color: Colors.grey[400]),
-                                border: InputBorder.none,
-                              ),
-                              validator: (text){
-                                if(text!.isEmpty){
-                                  return 'Tidak boleh kosong';
-                                }
-                              },
-                            ),
-                          ],
-                        ),
+                            validator: (text){
+                              if(text!.isEmpty){
+                                return 'Tidak boleh kosong';
+                              }
+                            },
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(

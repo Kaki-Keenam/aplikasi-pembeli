@@ -63,6 +63,7 @@ class RegisterModal extends GetView<WelcomeController> {
                         title: 'Email',
                         hint: 'emailanda@email.com',
                         validator: validateEmail,
+                        onChanged: validateEmail,
                         keyboardType: TextInputType.emailAddress,
                       ),
                       NewCustomTextField(
@@ -70,6 +71,7 @@ class RegisterModal extends GetView<WelcomeController> {
                           title: 'Nama Lengkap',
                           hint: 'Nama Lengkap Anda',
                           validator: validateName,
+                          onChanged: validateName,
                           margin: EdgeInsets.only(top: 16)),
                       NewCustomTextField(
                           controller: controller.passC,
@@ -77,6 +79,7 @@ class RegisterModal extends GetView<WelcomeController> {
                           hint: '**********',
                           obsecureText: true,
                           validator: validatePassword,
+                          onChanged: validatePassword,
                           margin: EdgeInsets.only(top: 16)),
                       NewCustomTextField(
                           title: 'Konfirmasi Password',
