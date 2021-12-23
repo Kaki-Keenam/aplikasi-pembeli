@@ -1,8 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -269,31 +266,33 @@ class DetailItemView extends GetView<DetailItemController> {
                                                   height: 10,
                                                 ),
                                                 Container(
-                                                    width: Get.width * 0.45,
-                                                    child: FutureBuilder<
-                                                            List<Placemark>>(
-                                                        future: controller
-                                                            .geoCoding
-                                                            .placemarkFromCoordinates(
-                                                                vendor
-                                                                    .data!
-                                                                    .location!
-                                                                    .latitude,
-                                                                vendor
-                                                                    .data!
-                                                                    .location!
-                                                                    .longitude),
-                                                        builder:
-                                                            (context, street) {
-                                                          return Text(
-                                                            "${street.data?.first.street} ${street.data?.first.subLocality}",
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .fade,
-                                                            maxLines: 1,
-                                                            softWrap: false,
-                                                          );
-                                                        })),
+                                                  width: Get.width * 0.45,
+                                                  child: FutureBuilder<
+                                                      List<Placemark>>(
+                                                    future: controller.geoCoding
+                                                        .placemarkFromCoordinates(
+                                                            vendor
+                                                                .data!
+                                                                .location!
+                                                                .latitude,
+                                                            vendor
+                                                                .data!
+                                                                .location!
+                                                                .longitude),
+                                                    builder: (context, street) {
+                                                      if (street.hasData) {
+                                                        return Text(
+                                                          "${street.data?.first.street} ${street.data?.first.subLocality}",
+                                                          overflow:
+                                                              TextOverflow.fade,
+                                                          maxLines: 1,
+                                                          softWrap: false,
+                                                        );
+                                                      }
+                                                      return Text('');
+                                                    },
+                                                  ),
+                                                ),
                                                 SizedBox(
                                                   height: 10,
                                                 ),

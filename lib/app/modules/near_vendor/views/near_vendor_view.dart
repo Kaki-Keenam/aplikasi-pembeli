@@ -41,11 +41,19 @@ class NearVendorView extends GetView<NearVendorController> {
                             physics: BouncingScrollPhysics(),
                             itemCount: product.data?.length ?? 3,
                             itemBuilder: (context, index) {
-                              return FoodView(
-                                product: product.data?[index],
-                                func: () => Get.toNamed(
-                                    Routes.DETAILITEM,
-                                    arguments: product.data?[index]),
+                              return StreamBuilder<VendorModel>(
+                                stream: controller.getVendor(
+                                    product.data?[index].vendorId),
+                                builder: (context, vendor) {
+                                  return FoodView(
+                                    buyerLoc: buyer.data,
+                                    vendor: vendor.data,
+                                    product: product.data?[index],
+                                    func: () => Get.toNamed(
+                                        Routes.DETAILITEM,
+                                        arguments: product.data?[index]),
+                                  );
+                                }
                               );
                             },
                             separatorBuilder:
