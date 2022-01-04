@@ -2,9 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/user_model.dart';
 import 'package:kakikeenam/app/data/repository/repository_remote.dart';
@@ -69,12 +67,6 @@ class Fcm {
 
   void handleMessageAction(Map<String, dynamic> message){
     Get.toNamed(Routes.CHAT_ROOM, arguments: message['chatId']);
-    // if(message['transId'] != null){
-    //   Get.toNamed(Routes.TRANSACTION_DETAIL, arguments: message['transId']);
-    // }
-    // if(message['chatId'] != null){
-    //   Get.toNamed(Routes.CHAT_ROOM, arguments: message['chatId']);
-    // }
   }
 
   void handleMessage(Map<String, dynamic> message, [UserModel? user]) {

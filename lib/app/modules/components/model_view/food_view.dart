@@ -116,7 +116,15 @@ class FoodView extends StatelessWidget {
                                     buyerLoc!.latitude,
                                     buyerLoc!.longitude,
                                     vendor!.location!.latitude,
-                                    vendor!.location!.longitude).toStringAsFixed(0)} meter",
+                                    vendor!.location!.longitude).toStringAsFixed(0).length == 4 ? Geolocator.distanceBetween(
+                                    buyerLoc!.latitude,
+                                    buyerLoc!.longitude,
+                                    vendor!.location!.latitude,
+                                    vendor!.location!.longitude).toStringAsExponential(2).substring(0,3) + " km" : Geolocator.distanceBetween(
+                                    buyerLoc!.latitude,
+                                    buyerLoc!.longitude,
+                                    vendor!.location!.latitude,
+                                    vendor!.location!.longitude).toStringAsFixed(0) + " meter"} ",
                                 style: TextStyle(
                                   color: Colors.black26,
                                   fontSize: 15,

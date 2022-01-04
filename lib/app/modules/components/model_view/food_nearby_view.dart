@@ -7,7 +7,8 @@ import 'package:kakikeenam/app/data/models/product_model.dart';
 class FoodNearbyView extends StatelessWidget {
   const FoodNearbyView({
     Key? key,
-    this.func, this.product,
+    this.func,
+    this.product,
   }) : super(key: key);
 
   final ProductModel? product;
@@ -19,17 +20,16 @@ class FoodNearbyView extends StatelessWidget {
       height: 150,
       width: 50,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black26,
-            offset: Offset(0, 1),
-            spreadRadius: 1,
-            blurRadius: 1
-          )
-        ]
-      ),
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              offset: Offset(0, 15),
+              spreadRadius: -6,
+              blurRadius: 15,
+            )
+          ]),
       child: InkWell(
         onTap: func,
         child: Column(
@@ -39,18 +39,24 @@ class FoodNearbyView extends StatelessWidget {
               height: Get.height * 0.18,
               width: double.infinity,
               child: ClipRRect(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                child: product?.image != null ? CachedNetworkImage(
-                  imageUrl: "${product?.image}",
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Transform.scale(
-                    scale: 0.5,
-                    child: CircularProgressIndicator(),
-                  ),
-                ): Icon(Icons.error),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10)),
+                child: product?.image != null
+                    ? CachedNetworkImage(
+                        imageUrl: "${product?.image}",
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Transform.scale(
+                          scale: 0.5,
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : Icon(Icons.error),
               ),
             ),
-            SizedBox(height: 5,),
+            SizedBox(
+              height: 5,
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5),
               child: Text(
@@ -62,22 +68,26 @@ class FoodNearbyView extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 5,),
-            product?.price?.isNegative == false ? Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Text(
-                NumberFormat.currency(
-                  name: "id",
-                  decimalDigits: 0,
-                  symbol: "Rp",
-                ).format(product?.price).toString(),
-                style: TextStyle(
-                  color: Colors.black26,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ): Text('${product?.price}'),
+            SizedBox(
+              height: 5,
+            ),
+            product?.price?.isNegative == false
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Text(
+                      NumberFormat.currency(
+                        name: "id",
+                        decimalDigits: 0,
+                        symbol: "Rp",
+                      ).format(product?.price).toString(),
+                      style: TextStyle(
+                        color: Colors.black26,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  )
+                : Text('${product?.price}'),
           ],
         ),
       ),

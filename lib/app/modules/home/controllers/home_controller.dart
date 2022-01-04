@@ -12,6 +12,7 @@ import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 import 'package:kakikeenam/app/data/services/helper_controller.dart';
 import 'package:kakikeenam/app/data/services/messaging/fcm.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
+import 'package:kakikeenam/app/utils/utils.dart';
 
 class HomeController extends GetxController {
   final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
@@ -55,19 +56,14 @@ class HomeController extends GetxController {
   void connectivityChecker() {
     _helper.connectivitySubscription.onData((data) {
       if (data == ConnectivityResult.none) {
-        Get.defaultDialog(
-            title: 'Tidak ada koneksi internet',
-            middleText: 'Aktifkan koneksi anda !',
-            textConfirm: 'Ok',
-            onConfirm: Get.back,
-        );
+       Dialogs.noInternetConnection();
       }
     });
   }
 
   void setFcm() async {
-    var user = await _repositoryRemote.user;
-    Fcm().initFirebaseMessaging(userId: user.uid, user: user);
+    var _user = await _repositoryRemote.user;
+    Fcm().initFirebaseMessaging(userId: _user.uid, user: _user);
   }
 
   Stream<GeoPoint> getBuyerLoc() {

@@ -14,6 +14,7 @@ class ProductModel {
     this.image,
     this.distance,
     this.price,
+    this.quantity,
     this.isFavorite,
     this.creationTime,
     this.updateTime,
@@ -26,6 +27,7 @@ class ProductModel {
   String? image;
   double? distance;
   int? price;
+  int? quantity;
   bool? isFavorite;
   String? creationTime;
   String? updateTime;
@@ -39,6 +41,7 @@ class ProductModel {
       vendorName: doc["vendorName"],
       isFavorite: doc["isFavorite"],
       image: doc["image"],
+      quantity: doc["quantity"],
       price: doc["price"],
      );
    }
@@ -50,6 +53,7 @@ class ProductModel {
       vendorName: json["vendorName"],
       isFavorite: json["isFavorite"],
       image: json["image"],
+      quantity: json["quantity"],
       price: json["price"],
     );
   }

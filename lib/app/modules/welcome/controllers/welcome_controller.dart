@@ -116,12 +116,7 @@ class WelcomeController extends GetxController{
   void onReady(){
     _helper.connectivitySubscription.onData((data) {
       if(data == ConnectivityResult.none){
-        Get.defaultDialog(
-            title: 'Tidak ada koneksi internet',
-            middleText: 'Aktifkan koneksi anda !',
-            textConfirm: 'Ok',
-            onConfirm: Get.back
-        );
+        Dialogs.noInternetConnection();
       }
     });
     super.onReady();

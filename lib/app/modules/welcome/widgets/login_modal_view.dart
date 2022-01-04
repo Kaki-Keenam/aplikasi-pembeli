@@ -49,7 +49,6 @@ class LoginModal extends GetView<WelcomeController> {
                       // Form
                       NewCustomTextField(controller: controller.emailC, title: 'Email', hint: 'emailanda@email.com', onChanged: (value){
                         validateEmail(value);
-                        print('email');
                       }, validator: validateEmail, keyboardType: TextInputType.emailAddress,),
                       NewCustomTextField(controller: controller.passC, title: 'Password', hint: '**********', obsecureText: true, onChanged: validatePassword, validator: validatePassword, margin: EdgeInsets.only(top: 16),),
                       // Log in Button

@@ -60,7 +60,7 @@ abstract class Constants {
   static const String PROFILE = "assets/images/person.png";
 
   // Radius Filter
-  static double DISTANCE_MILE = 0.15;
+  static double DISTANCE_MILE =0.9;
   static double LAT = 0.0144927536231884;
   static double LONG = 0.0181818181818182;
   static double MARKER_RADIUS = 1040.0;

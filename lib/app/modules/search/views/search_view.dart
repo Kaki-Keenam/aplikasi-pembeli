@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/modules/components/model_view/food_view.dart';
+import 'package:kakikeenam/app/modules/components/widgets/item_loading.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
 import 'package:kakikeenam/app/utils/strings.dart';
@@ -200,7 +201,7 @@ class SearchView extends GetView<SearchController> {
                                               stream: controller.getVendor(
                                                   product.data?[index].vendorId),
                                               builder: (context, vendor) {
-                                                return FoodView(
+                                                return (vendor.data?.location?.latitude != null) ? FoodView(
                                                   buyerLoc: buyer.data,
                                                   vendor: vendor.data,
                                                   product: product.data?[index],
@@ -208,7 +209,7 @@ class SearchView extends GetView<SearchController> {
                                                       Routes.DETAILITEM,
                                                       arguments:
                                                         product.data?[index]),
-                                                );
+                                                ): ItemLoadingView(isShimmer: true,);
                                               });
                                         },
                                         separatorBuilder:

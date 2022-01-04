@@ -22,6 +22,12 @@ class DetailItemController extends GetxController {
   var _user = UserModel().obs;
   UserModel get user => this._user.value;
 
+  RxInt _count = 1.obs;
+  int get count => this._count.value;
+
+  RxBool isLoadingTrue = true.obs;
+  bool get isLoading => this.isLoadingTrue.value;
+
   @override
   void onReady() {
     super.onReady();
@@ -34,6 +40,13 @@ class DetailItemController extends GetxController {
   }
 
   RepositoryRemote get repo => this._repositoryRemote;
+
+  void countPlus(){
+    _count.value ++;
+  }
+  void countMinus(){
+    _count.value --;
+  }
 
   Stream<List<ProductModel>> getProduct(String vendorId) {
     try {
@@ -51,8 +64,6 @@ class DetailItemController extends GetxController {
       rethrow;
     }
   }
-
-  // TODO REVISI CODE
   void initFav(String? id) async {
     isFavorite(id).then((value) => {if (value) isFav.value = true});
   }
@@ -154,6 +165,7 @@ class DetailItemController extends GetxController {
         orderDate: formattedDate,
         rating: vendorModel.rating,
         address: addressC.text,
+        quantity: count,
         state: "PROPOSED",
         vendorId: vendorModel.uid
       );

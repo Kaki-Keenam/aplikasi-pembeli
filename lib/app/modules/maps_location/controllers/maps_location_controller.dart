@@ -114,7 +114,7 @@ class MapsLocationController extends GetxController {
       List<Markers> listData = List.empty(growable: true);
       for (var i = 0; i < query.docs.length; i++) {
         var mark = query.docs[i].data() as Map<String, dynamic>;
-        if (distanceVendor()[i] < 100) {
+        if (distanceVendor()[i] < 750) {
           listData.add(Markers()
             ..id = mark["uid"]
             ..latLng = mark["lastLocation"]

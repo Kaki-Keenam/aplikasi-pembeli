@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/modules/components/model_view/food_view.dart';
+import 'package:kakikeenam/app/modules/components/widgets/item_loading.dart';
 import 'package:kakikeenam/app/modules/near_vendor/controllers/near_vendor_controller.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/strings.dart';
@@ -45,14 +46,14 @@ class NearVendorView extends GetView<NearVendorController> {
                                 stream: controller.getVendor(
                                     product.data?[index].vendorId),
                                 builder: (context, vendor) {
-                                  return FoodView(
+                                  return (vendor.data?.location?.latitude != null) ? FoodView(
                                     buyerLoc: buyer.data,
                                     vendor: vendor.data,
                                     product: product.data?[index],
                                     func: () => Get.toNamed(
                                         Routes.DETAILITEM,
                                         arguments: product.data?[index]),
-                                  );
+                                  ) : ItemLoadingView(isShimmer: true,);
                                 }
                               );
                             },

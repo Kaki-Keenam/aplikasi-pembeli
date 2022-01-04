@@ -1,10 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/data/models/banner_model.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
@@ -12,6 +9,7 @@ import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/modules/components/model_view/food_view.dart';
 import 'package:kakikeenam/app/modules/components/widgets/custom_app_bar.dart';
 import 'package:kakikeenam/app/modules/components/widgets/search_bar.dart';
+import 'package:kakikeenam/app/modules/components/widgets/item_loading.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/app_colors.dart';
 import 'package:kakikeenam/app/utils/strings.dart';
@@ -155,6 +153,7 @@ class HomeView extends GetView<HomeController> {
                     ),
                   ],
                 ),
+                // ShimmerLoadingView(),
                 Container(
                   height: Get.height * 0.67,
                   width: double.infinity,
@@ -180,7 +179,7 @@ class HomeView extends GetView<HomeController> {
                                             stream: controller.getVendor(
                                                 product.data?[index].vendorId),
                                             builder: (context, vendor) {
-                                              return FoodView(
+                                              return (vendor.data?.location?.latitude != null) ? FoodView(
                                                 buyerLoc: buyer.data,
                                                 vendor: vendor.data,
                                                 product: product.data?[index],
@@ -188,7 +187,7 @@ class HomeView extends GetView<HomeController> {
                                                     Routes.DETAILITEM,
                                                     arguments:
                                                       product.data?[index],),
-                                              );
+                                              ) : ItemLoadingView(isShimmer: true,);
                                             });
                                       },
                                       separatorBuilder:

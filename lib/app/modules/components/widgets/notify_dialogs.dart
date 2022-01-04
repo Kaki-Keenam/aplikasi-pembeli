@@ -97,13 +97,13 @@ class NotifyDialogs {
     );
   }
 
-  void noInternetConnection({VoidCallback? confirm}) {
-    Get.defaultDialog(
-      title: "Masalah Koneksi",
-      middleText: "Tidak ada koneksi saat ini!",
-      onConfirm: confirm,
-      barrierDismissible: false,
-      textConfirm: "Ok",
+  void noInternetConnection() {
+    Get.snackbar(
+      "Tidak ada koneksi internet",
+      "Koneksi internet sepertinya bermasalah",
+      backgroundColor: Colors.red,
+      snackPosition: SnackPosition.BOTTOM,
+      colorText: Colors.white,
     );
   }
 
@@ -288,8 +288,13 @@ class NotifyDialogs {
     );
   }
 
-  void orderConfirm(
-      {ProductModel? product, VoidCallback? okFunc, VoidCallback? cancelFunc, TextEditingController? controller}) {
+  void orderConfirm({
+    ProductModel? product,
+    VoidCallback? okFunc,
+    VoidCallback? cancelFunc,
+    Widget? child,
+    TextEditingController? controller,
+  }) {
     Get.bottomSheet(
       Container(
         height: Get.height * 0.7,
@@ -320,7 +325,8 @@ class NotifyDialogs {
                   children: [
                     Text(
                       'Detail Pesanan',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
                     ),
                     SizedBox(
                       height: 10,
@@ -352,7 +358,7 @@ class NotifyDialogs {
                           '${NumberFormat.currency(
                             name: "id",
                             decimalDigits: 0,
-                            symbol: "Rp",
+                            symbol: "Rp ",
                           ).format(product?.price)}',
                           style: TextStyle(fontSize: 16),
                         )
@@ -386,7 +392,7 @@ class NotifyDialogs {
                                 : Icon(Icons.error),
                           ),
                         ),
-                        Text('X 1'),
+                        child!,
                       ],
                     ),
                     SizedBox(
@@ -395,7 +401,7 @@ class NotifyDialogs {
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       width: Get.width,
-                      height: Get.height * 0.14,
+                      height: Get.height * 0.12,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.white,
@@ -404,7 +410,7 @@ class NotifyDialogs {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Lokasi anda',
+                            'Catatan',
                             style: TextStyle(fontWeight: FontWeight.w600),
                           ),
                           TextFormField(
@@ -413,13 +419,13 @@ class NotifyDialogs {
                             keyboardType: TextInputType.multiline,
                             scrollPhysics: AlwaysScrollableScrollPhysics(),
                             decoration: InputDecoration(
-                              hintText: 'Alamat Lengkap / No Rumah / Gang',
+                              hintText: 'Catatan untuk pedagang',
                               hintStyle: TextStyle(
                                   fontSize: 14, color: Colors.grey[400]),
                               border: InputBorder.none,
                             ),
-                            validator: (text){
-                              if(text!.isEmpty){
+                            validator: (text) {
+                              if (text!.isEmpty) {
                                 return 'Tidak boleh kosong';
                               }
                             },

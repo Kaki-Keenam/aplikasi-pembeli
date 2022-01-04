@@ -161,6 +161,7 @@ class DbRemote{
             "image": product.image,
             "name": product.name,
             "price": product.price,
+            "quantity": trans.quantity,
           }
         ],
         "transactionId": transId,
@@ -168,6 +169,7 @@ class DbRemote{
         "orderDate": trans.orderDate,
         "address": trans.address,
         "rating": 0.0,
+        "totalPrice": trans.quantity! * product.price!,
         "state": trans.state,
         "vendorId": trans.vendorId,
       });
