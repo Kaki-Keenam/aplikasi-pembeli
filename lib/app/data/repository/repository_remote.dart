@@ -18,6 +18,7 @@ class RepositoryRemote{
 
   var isAuth = false.obs;
   var isSkipIntro = false.obs;
+  
 
   Future<void> firsInitialized() async {
       skipIntro.then((value) => isSkipIntro.value = value);

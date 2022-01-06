@@ -51,7 +51,7 @@ class FoodNearbyView extends StatelessWidget {
                           child: CircularProgressIndicator(),
                         ),
                       )
-                    : Icon(Icons.error),
+                    : Image.asset('assets/images/no-food.png'),
               ),
             ),
             SizedBox(

@@ -70,6 +70,15 @@ class ChatView extends GetView<ChatController> {
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
+                                subtitle: StreamBuilder<ChatRoomModel>(
+                                  stream: controller.chatsRoom(chat.data?.chats?[index].chatId),
+                                  builder: (context, lastChat) {
+                                   if(lastChat.hasData){
+                                     return Text("${lastChat.data?.chatRoom?[lastChat.data!.chatRoom!.length - 1].message}");
+                                   }
+                                   return Container();
+                                  }
+                                ),
                                 trailing: StreamBuilder<ChatRoomModel>(
                                     stream: controller.getUnread(
                                         chat.data!.chats![index]),

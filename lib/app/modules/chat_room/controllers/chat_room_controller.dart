@@ -74,7 +74,7 @@ class ChatRoomController extends GetxController {
   }
 
   Future updateUnread(ChatRoom? chatRoom, Chat chat) async {
-    if(chatRoom?.pengirim == chat.connection?[0]){
+    if(chatRoom?.sender == chat.connection?[0]){
 
       await _repositoryRemote.updateUnread(chatRoom, chat);
     }

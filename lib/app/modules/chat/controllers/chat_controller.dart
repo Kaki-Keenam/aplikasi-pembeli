@@ -49,4 +49,14 @@ class ChatController extends GetxController {
       return ChatRoomModel(chatRoom: listData);
     });
   }
+
+  Stream<ChatRoomModel> chatsRoom(String? chatId){
+    return _repositoryRemote.getChatRoom(chatId!).map((room) {
+      List<ChatRoom> listData = List.empty(growable: true);
+      room.docs.forEach((element) {
+        listData.add(ChatRoom.fromJson(element.data() as Map<String, dynamic>));
+      });
+      return ChatRoomModel(chatRoom: listData);
+    });
+  }
 }

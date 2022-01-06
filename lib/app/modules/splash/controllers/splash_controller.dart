@@ -6,15 +6,20 @@ class SplashController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
 
-  var user = Rxn<User>();
+  Stream<User?> get user => _auth.authStateChanges();
 
   bool get isAuth => this._repositoryRemote.isAuth.value;
   bool get isSkip => this._repositoryRemote.isSkipIntro.value;
 
+
   @override
   void onInit() {
-    user.bindStream(_auth.authStateChanges());
+
     super.onInit();
+  }
+
+  @override
+  void onReady(){
   }
 
   Future<void> initialize() async {

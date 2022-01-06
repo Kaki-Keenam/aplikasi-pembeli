@@ -94,7 +94,7 @@ class ItemMarker extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      "Jarak: ${(listNear![i].distance! * 4.0).toStringAsFixed(0).length == 4 ? (listNear![i].distance! * 4.0).toStringAsExponential(2).substring(0,3) + "km" : (listNear![i].distance! * 4.0).toStringAsFixed(0) + "meter"} ",
+                                      "Jarak: ${(listNear![i].distance! * 4.0).toStringAsFixed(0).length == 4 ? (listNear![i].distance! * 4.0).toStringAsExponential(2).substring(0,3) + " km" : (listNear![i].distance! * 4.0).toStringAsFixed(0) + " meter"} ",
                                       style: TextStyle(
                                         fontFamily: "inter",
                                         fontSize: 15,

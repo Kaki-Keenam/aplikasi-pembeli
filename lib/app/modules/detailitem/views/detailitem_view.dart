@@ -38,7 +38,7 @@ class DetailItemView extends GetView<DetailItemController> {
                         child: CircularProgressIndicator(),
                       ),
                     )
-                  : Icon(Icons.error),
+                  : Image.asset('assets/images/no-food.png'),
             ),
             AppBar(
               backgroundColor: Colors.transparent,
@@ -47,7 +47,7 @@ class DetailItemView extends GetView<DetailItemController> {
               leading: IconButton(
                 icon: Icon(Icons.arrow_back_ios, color: Colors.white),
                 onPressed: () {
-                  Get.offAllNamed(Routes.PAGE_SWITCHER);
+                  Get.back();
                 },
               ),
             ),
@@ -236,6 +236,7 @@ class DetailItemView extends GetView<DetailItemController> {
                                                                     10),
                                                           ),
                                                         ),
+                                                  child: Image.asset('assets/images/no-vendor.png'),
                                                       ),
                                               ),
                                             ),

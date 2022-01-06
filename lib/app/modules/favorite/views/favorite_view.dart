@@ -140,52 +140,42 @@ class FavoriteView extends GetView<FavoriteController> {
           // Section 2 - Search Result
           Container(
             padding: EdgeInsets.all(16),
+            height: Get.height * 0.62,
             width: MediaQuery.of(context).size.width,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Obx(() {
-                  print("data: ${controller.searchResult}");
-                  if (controller.searchResult != null && controller.searchInputController.text.isNotEmpty) {
-                    return ListView.separated(
-                      shrinkWrap: true,
-                      itemCount: controller.searchResult!.length,
-                      physics: AlwaysScrollableScrollPhysics(),
-                      separatorBuilder: (context, index) {
-                        return SizedBox(height: 16);
-                      },
-                      itemBuilder: (context, index) {
-                        return FoodView(
-                          subscribed: true,
-                          product: controller.searchResult?[index],
-                          func: () => Get.toNamed(Routes.DETAILITEM,
-                              arguments: controller.searchResult?[index]),
-                        );
-                      },
+            child: Obx(() {
+              if (controller.searchResult != null && controller.searchInputController.text.isNotEmpty) {
+                return ListView.separated(
+                  itemCount: controller.searchResult!.length,
+                  separatorBuilder: (context, index) {
+                    return SizedBox(height: 16);
+                  },
+                  itemBuilder: (context, index) {
+                    return FoodView(
+                      subscribed: true,
+                      product: controller.searchResult?[index],
+                      func: () => Get.toNamed(Routes.DETAILITEM,
+                          arguments: controller.searchResult?[index]),
                     );
-                  } else if (controller.food != null && controller.food?.length != 0) {
-                    return ListView.separated(
-                      shrinkWrap: true,
-                      itemCount: controller.food!.length,
-                      physics: AlwaysScrollableScrollPhysics(),
-                      separatorBuilder: (context, index) {
-                        return SizedBox(height: 16);
-                      },
-                      itemBuilder: (context, index) {
-                        return FoodView(
-                          subscribed: true,
-                          product: controller.food?[index],
-                          func: () => Get.toNamed(Routes.DETAILITEM,
-                              arguments: controller.food?[index]),
-                        );
-                      },
+                  },
+                );
+              } else if (controller.food != null && controller.food?.length != 0) {
+                return ListView.separated(
+                  itemCount: controller.food!.length,
+                  separatorBuilder: (context, index) {
+                    return SizedBox(height: 16);
+                  },
+                  itemBuilder: (context, index) {
+                    return FoodView(
+                      subscribed: true,
+                      product: controller.food?[index],
+                      func: () => Get.toNamed(Routes.DETAILITEM,
+                          arguments: controller.food?[index]),
                     );
-                  }
-                  return Lottie.asset(Strings.no_data);
-                }),
-              ],
-            ),
+                  },
+                );
+              }
+              return Lottie.asset(Strings.no_data);
+            }),
           ),
         ],
       ),

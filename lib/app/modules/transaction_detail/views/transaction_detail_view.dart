@@ -40,22 +40,22 @@ class TransactionDetailView extends GetView<TransactionDetailController> {
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.amber[600],
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(height: 20,),
-                        StreamBuilder<TransactionModel>(
-                          stream: controller.detailTrans(transId),
-                          builder: (context, trans) {
-                            if(trans.hasData){
-                              return Text('${NumberFormat.currency(name: "id", decimalDigits: 0, symbol: "Rp",).format(trans.data?.product?[0].price)}', style: TextStyle(fontSize: 28, fontFamily: 'inter', fontWeight: FontWeight.w600, color: Colors.white),);
-                            }
-                            return Container();
-                          }
-                        ),
-                        SizedBox(height: 10,),
-                        Text('Pembayaran Tunai', style: TextStyle(fontSize: 20,fontFamily: 'inter', fontWeight: FontWeight.w600, color: Colors.white),),
-                      ],
+                    child: StreamBuilder<TransactionModel>(
+                      stream: controller.detailTrans(transId),
+                      builder: (context, trans) {
+                        if(trans.hasData){
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(height: 20,),
+                              Text('${NumberFormat.currency(name: "id", decimalDigits: 0, symbol: "Rp ",).format(trans.data!.product![0].price! * trans.data!.product![0].quantity!)}', style: TextStyle(fontSize: 28, fontFamily: 'inter', fontWeight: FontWeight.w600, color: Colors.white),),
+                              SizedBox(height: 10,),
+                              Text('Pembayaran Tunai', style: TextStyle(fontSize: 20,fontFamily: 'inter', fontWeight: FontWeight.w600, color: Colors.white),),
+                            ],
+                          );
+                        }
+                        return Container();
+                      }
                     ),
                   ),
                 ),
@@ -117,6 +117,22 @@ class TransactionDetailView extends GetView<TransactionDetailController> {
                 builder: (context, trans) {
                   if(trans.hasData){
                     return Text('${trans.data?.product?[0].name}', style: TextStyle(fontSize: 16, fontFamily: 'sans-serif'));
+                  }
+                  return Container();
+                }
+              ),
+            ],
+          ),
+          SizedBox(height: 10,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Harga', style: TextStyle(fontSize: 16, fontFamily: 'sans-serif')),
+              StreamBuilder<TransactionModel>(
+                stream: controller.detailTrans(transId),
+                builder: (context, trans) {
+                  if(trans.hasData){
+                    return Text('${NumberFormat.currency(name: "id", decimalDigits: 0, symbol: "Rp ",).format(trans.data!.product![0].price!)} x${trans.data!.product![0].quantity!}', style: TextStyle(fontSize: 16, fontFamily: 'sans-serif') );
                   }
                   return Container();
                 }

@@ -24,7 +24,7 @@ class WelcomeController extends GetxController{
 
   @override
   void onInit() {
-    getLocationPermission();
+
     init();
     super.onInit();
   }
@@ -114,6 +114,7 @@ class WelcomeController extends GetxController{
 
   @override
   void onReady(){
+    getLocationPermission();
     _helper.connectivitySubscription.onData((data) {
       if(data == ConnectivityResult.none){
         Dialogs.noInternetConnection();

@@ -28,18 +28,12 @@ class WelcomePage extends GetView<WelcomeController> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 190,
-                            height: 190,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(image: AssetImage('assets/images/logo.png')),
-                            ),
-                          ),
-                        ],
+                      Container(
+                        width: Get.width * 0.5,
+                        height: Get.width * 0.5,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(image: AssetImage('assets/images/logo.png')),
+                        ),
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,

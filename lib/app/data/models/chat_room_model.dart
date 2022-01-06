@@ -30,33 +30,33 @@ class ChatRoom {
   ChatRoom({
     this.isRead,
     this.messageId,
-    this.penerima,
-    this.pengirim,
-    this.pesan,
+    this.receiver,
+    this.sender,
+    this.message,
     this.time,
   });
 
   bool? isRead;
   String? messageId;
-  String? penerima;
-  String? pengirim;
-  String? pesan;
+  String? receiver;
+  String? sender;
+  String? message;
   Timestamp? time;
 
   factory ChatRoom.fromJson(Map<String, dynamic> json) => ChatRoom(
     messageId: json["messageId"],
     isRead: json["isRead"],
-    penerima: json["penerima"],
-    pengirim: json["pengirim"],
-    pesan: json["pesan"],
+    receiver: json["penerima"],
+    sender: json["pengirim"],
+    message: json["pesan"],
     time: json["time"],
   );
 
   Map<String, dynamic> toJson() => {
     "isRead": isRead,
-    "penerima": penerima,
-    "pengirim": pengirim,
-    "pesan": pesan,
+    "penerima": receiver,
+    "pengirim": sender,
+    "pesan": message,
     "time": time,
   };
 }

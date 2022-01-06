@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakikeenam/app/routes/app_pages.dart';
@@ -11,28 +12,36 @@ class SplashView extends GetView<SplashController> {
       future: Future.delayed(Duration(seconds: 3)),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return Obx(() => GetMaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: "Kaki Keenam",
-            theme: ThemeData(
-              colorScheme: ColorScheme.light(primary: Color(0xFFFFB300)),
-              primaryIconTheme: IconThemeData(color: Colors.white),
-              scaffoldBackgroundColor: Colors.white,
-              primaryTextTheme: TextTheme(
-                headline6: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            initialRoute: controller.isSkip
-                ? controller.isAuth ||
-                controller.user.value?.emailVerified == true ||
-                snapshot.hasData
-                ? Routes.PAGE_SWITCHER
-                : Routes.WELCOME_PAGE
-                : Routes.ONBOARDING,
-            getPages: AppPages.routes,
-          ));
+          return StreamBuilder<User?>(
+            stream: controller.user,
+            builder: (context, user) {
+              if(user.hasData){
+                return GetMaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  title: "Kaki Keenam",
+                  theme: ThemeData(
+                    colorScheme: ColorScheme.light(primary: Color(0xFFFFB300)),
+                    primaryIconTheme: IconThemeData(color: Colors.white),
+                    scaffoldBackgroundColor: Colors.white,
+                    primaryTextTheme: TextTheme(
+                      headline6: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  initialRoute: controller.isSkip
+                      ? controller.isAuth ||
+                      user.data?.emailVerified == true ||
+                      user.hasData
+                      ? Routes.PAGE_SWITCHER
+                      : Routes.WELCOME_PAGE
+                      : Routes.ONBOARDING,
+                  getPages: AppPages.routes,
+                );
+              }
+              return Splash();
+            }
+          );
         }
         return FutureBuilder(
           future: controller.initialize(),

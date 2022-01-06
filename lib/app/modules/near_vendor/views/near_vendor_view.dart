@@ -21,7 +21,7 @@ class NearVendorView extends GetView<NearVendorController> {
         centerTitle: true,
       ),
       body: Container(
-        margin: EdgeInsets.fromLTRB(16, 16, 16, 0),
+        margin: EdgeInsets.all(16),
         height: Get.height,
         width: double.infinity,
         child: StreamBuilder<GeoPoint>(
@@ -38,9 +38,7 @@ class NearVendorView extends GetView<NearVendorController> {
                         if (product.hasData &&
                             vendor.data!.isNotEmpty) {
                           return ListView.separated(
-                            shrinkWrap: true,
-                            physics: BouncingScrollPhysics(),
-                            itemCount: product.data?.length ?? 3,
+                            itemCount: product.data?.length ?? 3 ,
                             itemBuilder: (context, index) {
                               return StreamBuilder<VendorModel>(
                                 stream: controller.getVendor(

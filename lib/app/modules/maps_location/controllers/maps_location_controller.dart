@@ -62,6 +62,7 @@ class MapsLocationController extends GetxController {
     locationTimer = Timer.periodic(Duration(seconds: 5), (timer) {
       allVendors();
     });
+    Timer(Duration(seconds: 2), ()=> allVendors());
     super.onReady();
   }
 
@@ -114,7 +115,7 @@ class MapsLocationController extends GetxController {
       List<Markers> listData = List.empty(growable: true);
       for (var i = 0; i < query.docs.length; i++) {
         var mark = query.docs[i].data() as Map<String, dynamic>;
-        if (distanceVendor()[i] < 750) {
+        if (distanceVendor()[i] < Constants.MAPS_DISTANCE) {
           listData.add(Markers()
             ..id = mark["uid"]
             ..latLng = mark["lastLocation"]
@@ -187,8 +188,8 @@ class MapsLocationController extends GetxController {
           markerId: MarkerId(markerModel[i].markerId ?? ""),
           icon: vendorMarker ?? BitmapDescriptor.defaultMarker,
           position: LatLng(
-              markerModel[i].latLng?.latitude ?? -8.583453197331222,
-              markerModel[i].latLng?.longitude ?? 116.10029494504296),
+              markerModel[i].latLng!.latitude,
+              markerModel[i].latLng!.longitude),
         );
       }
     }
@@ -205,8 +206,21 @@ class MapsLocationController extends GetxController {
       CameraPosition(
         bearing: Constants.CAMERA_BEARING,
         target: LatLng(
-          user?.latitude ?? -8.582572687412386,
-          user?.longitude ?? 116.1013248977757,
+          user!.latitude,
+          user!.longitude,
+        ),
+        zoom: Constants.CAMERA_ZOOM_OUT,
+      ),
+    ));
+  }
+
+  Future searchOut() async {
+    mController.value?.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: Constants.CAMERA_BEARING,
+        target: LatLng(
+          user!.latitude,
+          user!.longitude,
         ),
         zoom: Constants.CAMERA_ZOOM_OUT,
       ),
@@ -231,10 +245,10 @@ class MapsLocationController extends GetxController {
     List<double> listNearChallenge = List.empty(growable: true);
     for (var i = 0; i < markerModel.length; i++) {
       var distance = tool.SphericalUtil.computeDistanceBetween(
-              tool.LatLng(user?.latitude ?? -8.582572687412386,
-                  user?.longitude ?? 116.1013248977757),
-              tool.LatLng(markerModel[i].latLng?.latitude ?? -8.582572687412386,
-                  markerModel[i].latLng?.longitude ?? 116.1013248977757)) /
+              tool.LatLng(user!.latitude,
+                  user!.longitude),
+              tool.LatLng(markerModel[i].latLng!.latitude,
+                  markerModel[i].latLng!.longitude)) /
           4.0;
       listNearChallenge.add(distance);
     }

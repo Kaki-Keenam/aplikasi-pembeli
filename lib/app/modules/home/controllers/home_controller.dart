@@ -10,6 +10,7 @@ import 'package:kakikeenam/app/data/models/user_model.dart';
 import 'package:kakikeenam/app/data/models/vendor_model.dart';
 import 'package:kakikeenam/app/data/repository/repository_remote.dart';
 import 'package:kakikeenam/app/data/services/helper_controller.dart';
+import 'package:kakikeenam/app/data/services/location_service.dart';
 import 'package:kakikeenam/app/data/services/messaging/fcm.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 import 'package:kakikeenam/app/utils/utils.dart';
@@ -17,6 +18,7 @@ import 'package:kakikeenam/app/utils/utils.dart';
 class HomeController extends GetxController {
   final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
   final HelperController _helper = Get.find<HelperController>();
+  final LocationService _locationService = Get.find<LocationService>();
   GeolocatorPlatform locator = GeolocatorPlatform.instance;
   Rxn<List<ProductModel>> searchList = Rxn<List<ProductModel>>();
 
@@ -44,13 +46,19 @@ class HomeController extends GetxController {
     _position.bindStream(locator.getPositionStream(timeInterval: 5));
     _user.bindStream(_repositoryRemote.userModel);
     setFcm();
+    toggleLocation();
     super.onInit();
   }
 
   @override
   void onReady() {
     connectivityChecker();
+    Timer(Duration(seconds: 5), toggleLocation);
     super.onReady();
+  }
+
+  Future<void> toggleLocation() async {
+    await _locationService.toggleListening();
   }
 
   void connectivityChecker() {

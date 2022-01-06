@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +19,11 @@ class VendorDetailView extends GetView<VendorDetailController> {
         backgroundColor: AppColor.primary,
         elevation: 0,
         centerTitle: true,
-        title: Text("Detail Pedagang", style: TextStyle(fontFamily: 'inter', fontWeight: FontWeight.w400, fontSize: 16)),
+        title: Text("Detail Pedagang",
+            style: TextStyle(
+                fontFamily: 'inter',
+                fontWeight: FontWeight.w400,
+                fontSize: 16)),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
@@ -30,7 +33,6 @@ class VendorDetailView extends GetView<VendorDetailController> {
       ),
       body: ListView(
         shrinkWrap: true,
-        physics: BouncingScrollPhysics(),
         children: [
           // Section 1 - Search
           Stack(
@@ -41,7 +43,8 @@ class VendorDetailView extends GetView<VendorDetailController> {
                 color: AppColor.primary,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -53,29 +56,52 @@ class VendorDetailView extends GetView<VendorDetailController> {
                           height: 130,
                           margin: EdgeInsets.only(bottom: 15),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: vendor.image != null ? CachedNetworkImage(
-                              imageUrl: "${vendor.image}",
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => Transform.scale(
-                                scale: 0.5,
-                                child: CircularProgressIndicator(),
-                              ),
-                            ): Image.asset(Strings.avatar)
-                          ),
+                              borderRadius: BorderRadius.circular(100),
+                              child: vendor.image != null
+                                  ? CachedNetworkImage(
+                                      imageUrl: "${vendor.image}",
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          Transform.scale(
+                                        scale: 0.5,
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    )
+                                  : Image.asset(Strings.avatar)),
                         ),
-                        SizedBox(width: 20,),
+                        SizedBox(
+                          width: 20,
+                        ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('${vendor.name}', style: TextStyle(color:Colors.white, fontSize: 18, fontWeight: FontWeight.w600),),
-                            SizedBox(height: 20,),
+                            Container(
+                                height: 25,
+                                width: Get.width * 0.47,
+                                child: Text(
+                                  '${vendor.name}',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600),
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                ),),
+                            SizedBox(
+                              height: 20,
+                            ),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Icon(Icons.circle, color: Colors.green, size: 20,),
-                                SizedBox(width: 10,),
+                                Icon(
+                                  Icons.circle,
+                                  color: Colors.green,
+                                  size: 20,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
                                 Text("Sedang aktif"),
                               ],
                             )
@@ -84,7 +110,9 @@ class VendorDetailView extends GetView<VendorDetailController> {
                       ],
                     ),
                     Text('Kualitas Layanan'),
-                    SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -111,23 +139,36 @@ class VendorDetailView extends GetView<VendorDetailController> {
           // Section 2 - Search Result
           Container(
             padding: EdgeInsets.all(16),
-            width: MediaQuery.of(context).size.width,
-            height: Get.height,
+            width: double.infinity,
+            height: Get.height * 0.6,
             child: DefaultTabController(
               length: 2,
               child: Scaffold(
                 appBar: TabBar(
                   indicatorColor: AppColor.primary,
-                    tabs: [
-                      Tab(child: Text('Produk', style: TextStyle(color: Colors.black54),),),
-                      Tab(child: Text('Ulasan', style: TextStyle(color: Colors.black54),),),
-                    ],
-
+                  tabs: [
+                    Tab(
+                      child: Text(
+                        'Produk',
+                        style: TextStyle(color: Colors.black54),
+                      ),
+                    ),
+                    Tab(
+                      child: Text(
+                        'Ulasan',
+                        style: TextStyle(color: Colors.black54),
+                      ),
+                    ),
+                  ],
                 ),
                 body: TabBarView(
                   children: [
-                    ProductView(vendorId: vendor.id,),
-                    ReviewsView(vendorId: vendor.id,),
+                    ProductView(
+                      vendorId: vendor.id,
+                    ),
+                    ReviewsView(
+                      vendorId: vendor.id,
+                    ),
                   ],
                 ),
               ),

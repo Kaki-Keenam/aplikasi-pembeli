@@ -16,7 +16,6 @@ class ChatRoomView extends GetView<ChatRoomController> {
 
   @override
   Widget build(BuildContext context) {
-    print('object $chatId');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.amber[600],
@@ -152,14 +151,14 @@ class ChatRoomView extends GetView<ChatRoomController> {
                                       ),
                                       ItemChat(
                                         onDelete: (){
-                                          if(room.data?.chatRoom?[index].pengirim ==
+                                          if(room.data?.chatRoom?[index].sender ==
                                               chat.data?.connection?[1]){
                                             controller.deleteChat(room.data?.chatRoom?[index], chat.data!);
                                           }
                                         },
-                                        msg: "${room.data?.chatRoom?[index].pesan}",
+                                        msg: "${room.data?.chatRoom?[index].message}",
                                         isSender:
-                                        room.data?.chatRoom?[index].pengirim ==
+                                        room.data?.chatRoom?[index].sender ==
                                             chat.data?.connection?[1]
                                             ? true
                                             : false,
@@ -176,13 +175,13 @@ class ChatRoomView extends GetView<ChatRoomController> {
                                           .toDate())) {
                                     return ItemChat(
                                       onDelete: (){
-                                        if(room.data?.chatRoom?[index].pengirim ==
+                                        if(room.data?.chatRoom?[index].sender ==
                                             chat.data?.connection?[1]){
                                           controller.deleteChat(room.data?.chatRoom?[index], chat.data!);
                                         }
                                       },
-                                      msg: "${room.data?.chatRoom?[index].pesan}",
-                                      isSender: room.data?.chatRoom?[index].pengirim ==
+                                      msg: "${room.data?.chatRoom?[index].message}",
+                                      isSender: room.data?.chatRoom?[index].sender ==
                                           chat.data?.connection?[1]
                                           ? true
                                           : false,
@@ -200,15 +199,15 @@ class ChatRoomView extends GetView<ChatRoomController> {
                                         ),
                                         ItemChat(
                                           onDelete: (){
-                                            if(room.data?.chatRoom?[index].pengirim ==
+                                            if(room.data?.chatRoom?[index].sender ==
                                                 chat.data?.connection?[1]){
                                               controller.deleteChat(room.data?.chatRoom?[index], chat.data!);
                                             }
 
                                           },
-                                          msg: "${room.data?.chatRoom?[index].pesan}",
+                                          msg: "${room.data?.chatRoom?[index].message}",
                                           isSender:
-                                          room.data?.chatRoom?[index].pengirim ==
+                                          room.data?.chatRoom?[index].sender ==
                                               chat.data?.connection?[1]
                                               ? true
                                               : false,

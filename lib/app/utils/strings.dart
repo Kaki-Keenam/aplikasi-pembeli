@@ -14,7 +14,7 @@ abstract class Strings {
   // Detail
   static String position = 'Posisi saat ini';
   static String status = 'Status: ';
-  static String call_know = 'Panggil Sekarang';
+  static String call_know = 'Pesan Sekarang';
   static String other_foods = 'Makanan Lainnya';
   static String distance = 'm dari sini';
 
@@ -67,7 +67,7 @@ abstract class Strings {
   static String set_realtime = 'Realtime Lokasi anda';
 
   // Transaction
-  static String trans_title = 'Histori Transaksi';
+  static String trans_title = 'Riwayat Transaksi';
 
   // Welcome
   static String login = 'Masuk';

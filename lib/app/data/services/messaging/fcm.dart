@@ -19,7 +19,7 @@ enum StateDialog {
   FINISHED
 }
 
-class Fcm {
+class Fcm{
   final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
 
   Future<void> initFirebaseMessaging({
@@ -30,12 +30,12 @@ class Fcm {
       FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
         print('ON MESSAGE');
         if (!kReleaseMode) print('onMessage: ${message.data}');
-        handleMessage(message.data);
+        handleMessage(message.data, user);
       });
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
         print('ON MESSAGE OPENED APP');
         if (!kReleaseMode) print('onLaunch: $message');
-        handleMessageAction(message.data);
+        handleMessageAction(message.data, user);
       });
 
       await FirebaseMessaging.instance
@@ -65,8 +65,13 @@ class Fcm {
     }
   }
 
-  void handleMessageAction(Map<String, dynamic> message){
-    Get.toNamed(Routes.CHAT_ROOM, arguments: message['chatId']);
+  void handleMessageAction(Map<String, dynamic> message, [UserModel? user]){
+    if(message['chatId'] != null){
+      Get.toNamed(Routes.CHAT_ROOM, arguments: message['chatId']); 
+    }else if(message['transId'] != null){
+      Get.toNamed(Routes.TRANSACTION_DETAIL, arguments: message['transId']);
+      Dialogs.finished(message, _repositoryRemote, user);
+    }
   }
 
   void handleMessage(Map<String, dynamic> message, [UserModel? user]) {

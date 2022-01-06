@@ -5,7 +5,7 @@ abstract class Constants {
 
   // map camera initialized
   static const double CAMERA_ZOOM_INIT = 15;
-  static const double CAMERA_ZOOM_OUT = 16;
+  static const double CAMERA_ZOOM_OUT = 13;
   static const double CAMERA_ZOOM_IN = 17;
   static const double CAMERA_TILT = 0;
   static const double CAMERA_BEARING = 30;
@@ -24,7 +24,7 @@ abstract class Constants {
 
   // animarker
   static const double RIPPLE_RADIUS = 0.35;
-  static const double CIRCLE_RADIUS = 400;
+  static const double CIRCLE_RADIUS = 1000 * 3;
 
   //  collection constants
   // child collection of  database
@@ -63,5 +63,5 @@ abstract class Constants {
   static double DISTANCE_MILE =0.9;
   static double LAT = 0.0144927536231884;
   static double LONG = 0.0181818181818182;
-  static double MARKER_RADIUS = 1040.0;
+  static double MAPS_DISTANCE = 750;
 }
