@@ -97,12 +97,29 @@ class DetailItemView extends GetView<DetailItemController> {
                                       future: controller
                                           .vendorDetail(prod.vendorId!),
                                       builder: (context, vendor) {
+                                        if(vendor.hasData){
+                                          return RatingBar.builder(
+                                            initialRating:
+                                            vendor.data?.rating ?? 0.0,
+                                            minRating: 0,
+                                            direction: Axis.horizontal,
+                                            allowHalfRating: true,
+                                            itemCount: 5,
+                                            itemSize: 20,
+                                            itemBuilder: (context, _) => Icon(
+                                              Icons.star,
+                                              color: Colors.amber,
+                                            ),
+                                            ignoreGestures: true,
+                                            onRatingUpdate: (rating) {
+                                              print(rating);
+                                            },
+                                          );
+                                        }
                                         return RatingBar.builder(
-                                          initialRating:
-                                              vendor.data?.rating ?? 0.0,
+                                          initialRating: 0.0,
                                           minRating: 0,
                                           direction: Axis.horizontal,
-                                          allowHalfRating: true,
                                           itemCount: 5,
                                           itemSize: 20,
                                           itemBuilder: (context, _) => Icon(
@@ -121,8 +138,12 @@ class DetailItemView extends GetView<DetailItemController> {
                                       future:
                                           controller.reviews(prod.vendorId!),
                                       builder: (context, reviews) {
+                                        if(reviews.hasData){
+                                          return Text(
+                                              "${reviews.data ?? 0} Ulasan");
+                                        }
                                         return Text(
-                                            "${reviews.data ?? 0} Review");
+                                            "${reviews.data ?? 0} Ulasan");;
                                       }),
                                 ],
                               ),

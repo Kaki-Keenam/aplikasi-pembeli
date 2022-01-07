@@ -27,6 +27,7 @@ class Review {
     this.rating,
     this.buyerImage,
     this.buyerName,
+    this.reviewId,
     this.time,
   });
 
@@ -35,6 +36,7 @@ class Review {
   String? buyerName;
   String? buyerImage;
   double? rating;
+  String? reviewId;
   String? time;
 
   factory Review.fromJson(Map<String, dynamic> json) => Review(

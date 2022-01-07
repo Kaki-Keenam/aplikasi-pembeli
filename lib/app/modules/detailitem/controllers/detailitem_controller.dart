@@ -164,8 +164,10 @@ class DetailItemController extends GetxController {
         storeName: vendorModel.storeName,
         orderDate: formattedDate,
         rating: vendorModel.rating,
+        isRated: false,
         address: addressC.text,
         quantity: count,
+
         state: "PROPOSED",
         vendorId: vendorModel.uid
       );

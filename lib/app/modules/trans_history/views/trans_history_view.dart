@@ -15,18 +15,25 @@ class TransHistoryView extends GetView<TransHistoryController> {
         title: Text(Strings.trans_title),
         centerTitle: true,
       ),
-      body: Obx(() => controller.transaction?.length != 0
-          ? ListView.separated(
-        separatorBuilder: (context, index){
-          return SizedBox(height: 10,);
-        },
-          itemCount: controller.transaction!.length,
-          itemBuilder: (context, index) {
-            return TransactionView(
-              trans: controller.transaction?[index],
-            );
-          },
-        ): Center(child: Lottie.asset(Strings.no_data)),
+      body: Column(
+        children: [
+          SizedBox(height: 16,),
+          Obx(() => controller.transaction?.length != 0
+              ? ListView.separated(
+            shrinkWrap: true,
+            separatorBuilder: (context, index){
+              return SizedBox(height: 16,);
+            },
+              itemCount: controller.transaction!.length,
+              itemBuilder: (context, index) {
+                return TransactionView(
+                  trans: controller.transaction?[index],
+                  index: index,
+                );
+              },
+            ): Center(child: Lottie.asset(Strings.no_data)),
+          ),
+        ],
       )
     );
   }

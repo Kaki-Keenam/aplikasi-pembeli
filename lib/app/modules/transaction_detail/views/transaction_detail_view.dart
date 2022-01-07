@@ -238,6 +238,7 @@ class TransactionDetailView extends GetView<TransactionDetailController> {
               }
             ),
           ),
+          SizedBox()
         ],
       ),
     );

@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kakikeenam/app/data/models/product_model.dart';
 import 'package:kakikeenam/app/data/models/vendor_model.dart';
-import 'package:shimmer/shimmer.dart';
+
 
 class FoodView extends StatelessWidget {
   const FoodView({
@@ -128,7 +128,7 @@ class FoodView extends StatelessWidget {
                               "${NumberFormat.currency(
                                 name: "id",
                                 decimalDigits: 0,
-                                symbol: "Rp",
+                                symbol: "Rp ",
                               ).format(product?.price)}",
                               style: TextStyle(
                                 color: Colors.black45,

@@ -15,7 +15,7 @@ class SplashView extends GetView<SplashController> {
           return StreamBuilder<User?>(
             stream: controller.user,
             builder: (context, user) {
-              if(user.hasData){
+              if(user.connectionState == ConnectionState.active){
                 return GetMaterialApp(
                   debugShowCheckedModeBanner: false,
                   title: "Kaki Keenam",

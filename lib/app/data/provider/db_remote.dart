@@ -169,6 +169,7 @@ class DbRemote{
         "orderDate": trans.orderDate,
         "address": trans.address,
         "rating": 0.0,
+        "isRated": trans.isRated,
         "totalPrice": trans.quantity! * product.price!,
         "state": trans.state,
         "vendorId": trans.vendorId,
@@ -178,11 +179,11 @@ class DbRemote{
     }
   }
 
-  Future updateTrans(String currentTransId, double rating, String state) async {
+  Future updateTrans(String currentTransId, double rating, bool isRated) async {
     var upTrans = _db.collection(Constants.TRANSACTION);
     await upTrans.doc(currentTransId).update({
       'rating': rating,
-      'state': state
+      'isRated': isRated,
     });
   }
 
@@ -191,7 +192,7 @@ class DbRemote{
   }
 
   Stream<QuerySnapshot> getVendorStreamQuery() {
-    return _db.collection(Constants.VENDOR).where(Constants.STATUS_QUERY, isEqualTo: Constants.ONLINE) .snapshots();
+    return _db.collection(Constants.VENDOR).where(Constants.LAST_LOCATION, isNotEqualTo: GeoPoint(0.0, 0.0)) .snapshots();
   }
   Stream<DocumentSnapshot> getVendorStream(String vendorId) {
     return _db.collection(Constants.VENDOR).doc(vendorId).snapshots();
@@ -201,12 +202,15 @@ class DbRemote{
     return _db.collection(Constants.BANNER).get();
   }
 
-  Future<void> addReviews(Review review) async {
-    return _db.collection(Constants.REVIEWS).doc().set({
+  Future addReviews(Review review) async {
+    var reviewId = await _db.collection(Constants.REVIEWS).doc().id;
+
+    await _db.collection(Constants.REVIEWS).doc(reviewId).set({
       "vendorId": review.vendorId,
       "buyerId": review.buyerId,
       "buyerName": review.buyerName,
       "rating": review.rating,
+      "reviewId": reviewId,
       "buyerImage": review.buyerImage ?? _auth.currentUser?.photoURL,
       "time": DateTime.now().toIso8601String(),
     });

@@ -19,6 +19,7 @@ class TransactionModel {
     this.buyerName,
     this.rating,
     this.state,
+    this.isRated,
     this.address,
     this.totalPrice,
     this.quantity,
@@ -35,6 +36,7 @@ class TransactionModel {
   String? address;
   int? totalPrice;
   int? quantity;
+  bool? isRated;
   double? rating;
   String? state;
   List<ProductModel>? product;
@@ -51,6 +53,7 @@ class TransactionModel {
         storeImage: json["storeImage"],
         storeName: json["storeName"],
         orderDate: json["orderDate"],
+        isRated: json["isRated"],
         rating: json["rating"].toDouble(),
         state: json["state"],
       product: List<ProductModel>.from(json["products"]?.map((x) => ProductModel.fromMap(x))),

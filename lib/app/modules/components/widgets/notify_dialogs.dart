@@ -179,8 +179,7 @@ class NotifyDialogs {
     });
   }
 
-  void finished(dynamic message, RepositoryRemote repository, UserModel? user) {
-    var state = message['state'];
+  void finished(RepositoryRemote repository, UserModel? user) {
     List<Review> _review = List.empty(growable: true);
     Get.bottomSheet(
       Container(
@@ -204,7 +203,7 @@ class NotifyDialogs {
                 children: [
                   Center(
                     child: Text(
-                      'Berikan Penilaian Pedagang',
+                      'Berikan Penilaian ke Pedagang',
                       style: TextStyle(fontSize: 20, color: Colors.white),
                     ),
                   ),
@@ -230,7 +229,7 @@ class NotifyDialogs {
                           ..buyerImage = user?.photoUrl
                           ..rating = rating;
                         repository.updateTrans(
-                            trans.transactionId!, state, rating);
+                            trans.transactionId!, rating);
                         _review.add(review);
                       });
                     },
@@ -247,9 +246,7 @@ class NotifyDialogs {
                             repository.addReview(_review.last);
                             _review.clear();
                             Get.back();
-                            if (Get.isBottomSheetOpen == true) {
-                              Get.back();
-                            }
+
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(

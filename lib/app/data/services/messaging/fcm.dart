@@ -67,10 +67,9 @@ class Fcm{
 
   void handleMessageAction(Map<String, dynamic> message, [UserModel? user]){
     if(message['chatId'] != null){
-      Get.toNamed(Routes.CHAT_ROOM, arguments: message['chatId']); 
+      Get.toNamed(Routes.CHAT_ROOM, arguments: message['chatId']);
     }else if(message['transId'] != null){
       Get.toNamed(Routes.TRANSACTION_DETAIL, arguments: message['transId']);
-      Dialogs.finished(message, _repositoryRemote, user);
     }
   }
 
@@ -95,7 +94,6 @@ class Fcm{
     switch (_state()){
       case StateDialog.REJECTED:
         Dialogs.rejected(_repositoryRemote);
-
         break;
       case StateDialog.PROPOSED:
         break;
@@ -106,7 +104,7 @@ class Fcm{
         Dialogs.arrived(_repositoryRemote);
         break;
       case StateDialog.FINISHED:
-        Dialogs.finished(message, _repositoryRemote, user);
+        Dialogs.finished(_repositoryRemote, user);
         break;
       default:
         break;

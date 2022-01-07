@@ -125,7 +125,7 @@ class VendorDetailView extends GetView<VendorDetailController> {
                         Padding(
                           padding: EdgeInsets.only(left: 5),
                           child: Text(
-                            "${vendor.rating} Reviews",
+                            "${vendor.rating} Ulasan",
                             style: TextStyle(fontSize: 10, fontFamily: "inter"),
                           ),
                         ),

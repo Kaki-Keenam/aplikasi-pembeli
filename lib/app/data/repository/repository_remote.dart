@@ -100,8 +100,8 @@ class RepositoryRemote{
     _dbRemote.createTrans(trans, product);
   }
 
-  Future updateTrans(String currentTransId, [String? state, double rating = 0.0]) async {
-    await _dbRemote.updateTrans(currentTransId, rating, state!);
+  Future updateTrans(String currentTransId, [double rating = 0.0, bool isRated = false]) async {
+    await _dbRemote.updateTrans(currentTransId, rating, isRated);
   }
 
   Future<VendorModel> getVendor(String vendorId) async{
@@ -121,8 +121,8 @@ class RepositoryRemote{
     return _dbRemote.getBanner();
   }
 
-  Future<void> addReview(Review review) async {
-    return await _dbRemote.addReviews(review);
+  Future addReview(Review review) async {
+    await _dbRemote.addReviews(review);
   }
 
   Future<QuerySnapshot> getReviews(String vendorId) async {
