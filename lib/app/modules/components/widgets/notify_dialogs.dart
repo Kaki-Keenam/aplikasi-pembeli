@@ -229,7 +229,7 @@ class NotifyDialogs {
                           ..buyerImage = user?.photoUrl
                           ..rating = rating;
                         repository.updateTrans(
-                            trans.transactionId!, rating);
+                            trans.transactionId!, rating, true);
                         _review.add(review);
                       });
                     },

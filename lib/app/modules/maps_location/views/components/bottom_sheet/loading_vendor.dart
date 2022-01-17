@@ -41,7 +41,6 @@ class LoadingVendor extends StatelessWidget {
                 child: ListTile(
                   title: Text('Mencari Kaki Lima Keliling ...'),
                   leading: Image.asset("assets/images/merchant.png"),
-                  onTap: () {},
                 ),
               ),
             ),

@@ -11,7 +11,6 @@ import '../controllers/chat_controller.dart';
 class ChatView extends GetView<ChatController> {
   @override
   Widget build(BuildContext context) {
-    print("hello");
     return Scaffold(
         appBar: AppBar(
           title: Text('Pesan'),

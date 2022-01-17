@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -10,20 +8,14 @@ import 'package:kakikeenam/app/routes/app_pages.dart';
 import 'package:kakikeenam/app/utils/constants/constants.dart';
 import 'package:kakikeenam/app/utils/utils.dart';
 
-enum StateDialog {
-  NONE,
-  REJECTED,
-  PROPOSED,
-  OTW,
-  ARRIVED,
-  FINISHED
-}
+enum StateDialog { NONE, REJECTED, PROPOSED, OTW, ARRIVED, FINISHED }
 
-class Fcm{
+class Fcm {
   final RepositoryRemote _repositoryRemote = Get.find<RepositoryRemote>();
 
   Future<void> initFirebaseMessaging({
-    String? userId, UserModel? user,
+    String? userId,
+    UserModel? user,
   }) async {
     try {
       print('INIT FIREBASE MESSAGING');
@@ -32,10 +24,11 @@ class Fcm{
         if (!kReleaseMode) print('onMessage: ${message.data}');
         handleMessage(message.data, user);
       });
-      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
+      FirebaseMessaging.onMessageOpenedApp
+          .listen((RemoteMessage message) async {
         print('ON MESSAGE OPENED APP');
         if (!kReleaseMode) print('onLaunch: $message');
-        handleMessageAction(message.data, user);
+        handleMessageAction(message.data);
       });
 
       await FirebaseMessaging.instance
@@ -52,7 +45,8 @@ class Fcm{
       print('CHANGE TOKEN!');
       CollectionReference users =
           FirebaseFirestore.instance.collection(Constants.BUYER);
-      users.doc(userId)
+      users
+          .doc(userId)
           .update({
             'token': token,
           })
@@ -65,33 +59,38 @@ class Fcm{
     }
   }
 
-  void handleMessageAction(Map<String, dynamic> message, [UserModel? user]){
-    if(message['chatId'] != null){
+  void handleMessageAction(Map<String, dynamic> message) {
+    if (message['chatId'] != null) {
       Get.toNamed(Routes.CHAT_ROOM, arguments: message['chatId']);
-    }else if(message['transId'] != null){
+    }
+    if (message['transId'] != null) {
       Get.toNamed(Routes.TRANSACTION_DETAIL, arguments: message['transId']);
     }
   }
 
   void handleMessage(Map<String, dynamic> message, [UserModel? user]) {
-    StateDialog _state(){
-      var msg =  message['state'];
-      if(msg == 'REJECTED'){
+    StateDialog _state() {
+      var msg = message['state'];
+      if (msg == 'REJECTED') {
         return StateDialog.REJECTED;
-      }if(msg == 'PROPOSED'){
+      }
+      if (msg == 'PROPOSED') {
         return StateDialog.PROPOSED;
-      }if(msg == 'OTW'){
+      }
+      if (msg == 'OTW') {
         return StateDialog.OTW;
-      }if(msg == "ARRIVED"){
+      }
+      if (msg == "ARRIVED") {
         return StateDialog.ARRIVED;
-      }if(msg == 'TRANSACTION_FINISHED'){
+      }
+      if (msg == 'TRANSACTION_FINISHED') {
         return StateDialog.FINISHED;
-      }else{
+      } else {
         return StateDialog.NONE;
       }
     }
 
-    switch (_state()){
+    switch (_state()) {
       case StateDialog.REJECTED:
         Dialogs.rejected(_repositoryRemote);
         break;
@@ -109,6 +108,5 @@ class Fcm{
       default:
         break;
     }
-
   }
 }

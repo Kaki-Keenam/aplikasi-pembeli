@@ -47,7 +47,7 @@ class ItemVendor extends StatelessWidget {
                       width: Get.width,
                       padding: EdgeInsets.symmetric(vertical: 5),
                       decoration: BoxDecoration(
-                        color: Colors.amber[600],
+                        color: Colors.amber,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Material(
@@ -72,7 +72,7 @@ class ItemVendor extends StatelessWidget {
                               ),
                               Text(
                                 "Kaki Lima Keliling",
-                                style: TextStyle(fontSize: 18),
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                               ),
                             ],
                           ),
